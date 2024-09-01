@@ -1,0 +1,6 @@
+JDK: Oracle OpenJDK 21.0.4
+
+Banco: JDBC - Usando o MySQL Workbench
+
+IDE que inicei o projeto: IntelliJ IDEA 2024.2.0.2
+
