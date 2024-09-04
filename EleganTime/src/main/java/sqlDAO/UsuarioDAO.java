@@ -93,7 +93,7 @@ public class UsuarioDAO {
             );
 
             // Pegando as informações do objeto para mandar para o banco
-            comandoSQL.setString(1, senha);
+            comandoSQL.setString(1, novaSenha);
             comandoSQL.setInt(2, idUsuario);
 
             int linhasAfetadas = comandoSQL.executeUpdate();
@@ -124,6 +124,67 @@ public class UsuarioDAO {
         }
 
         return atualizarSenha;
+    }
+
+    public static boolean atualizarUsuario(Usuario usuario) {
+
+        if (usuario.getIdUsuario() == usuario.getIdUsuario()) {
+            System.out.println("Você não pode alterar o seu próprio grupo.");
+            return false;
+        }
+        // Criando conexão
+        Connection conexao = null;
+        PreparedStatement comandoSQL = null;
+        boolean usuarioAtualizado = false;
+
+        try {
+            // Carregando o Driver
+            Class.forName("com.mysql.cj.jdbc.Driver"); // driver
+
+            // Abrindo a conexão com o banco
+            conexao = DriverManager.getConnection(url, login, senha);
+
+            // Preparando o comando SQL para atualização dos dados do usuário
+            comandoSQL = conexao.prepareStatement(
+                    "UPDATE Usuario SET nome = ?, cpf = ?, grupo = ?"
+            );
+
+            // Definindo os valores dos parâmetros
+            comandoSQL.setString(1, usuario.getNome());
+            comandoSQL.setString(2, usuario.getCpf());
+            comandoSQL.setString(3, usuario.getGrupo());
+
+            // Executar o comando
+            int linhasAfetadas = comandoSQL.executeUpdate();
+
+            // Verifica se a atualização foi bem-sucedida
+            if (linhasAfetadas > 0) {
+                usuarioAtualizado = true;
+            }
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            usuarioAtualizado = false;
+
+        } finally {
+            // Fechar conexão, statements, etc.
+            if (comandoSQL != null) {
+                try {
+                    comandoSQL.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return usuarioAtualizado;
     }
 
     public static ArrayList<Usuario> listar() {
