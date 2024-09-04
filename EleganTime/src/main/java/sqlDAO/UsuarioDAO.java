@@ -11,8 +11,8 @@ public class UsuarioDAO {
 
     // Criando o caminho/conexão com o banco de dados
     static String url = "jdbc:mysql://localhost:3306/elegantime";
-    static String login = "admin";  // login do seu usuário/conexão no Workbench
-    static String senha = "admin"; // senha do seu usuário/conexão Workbench
+    static String login = "root";  // login do seu usuário/conexão no Workbench
+    static String senha = "root"; // senha do seu usuário/conexão Workbench
 
     public static boolean salvar(Usuario novoUsuario) {
 
@@ -20,16 +20,13 @@ public class UsuarioDAO {
         Connection conexao = null;
         PreparedStatement comandoSQL = null;
         ResultSet resultado = null;
-        boolean retorno = false;
+        boolean salvarUsuario = false;
 
         try {
-            // Carregando o Driver
             Class.forName("com.mysql.cj.jdbc.Driver"); // driver
 
-            // Abrindo a conexão com o banco
             conexao = DriverManager.getConnection(url, login, senha);
 
-            // Preparando os comandos SQL a ser executado
             comandoSQL = conexao.prepareStatement(
                     "INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicaoDoUsuario) VALUES(?, ?, ?, ?, ?, ?)",
                     PreparedStatement.RETURN_GENERATED_KEYS
@@ -43,11 +40,10 @@ public class UsuarioDAO {
             comandoSQL.setString(5, novoUsuario.getSenha());
             comandoSQL.setBoolean(6, novoUsuario.getCondicaoDoUsuario());
 
-            // Executar os comandos
             int linhasAfetadas = comandoSQL.executeUpdate();
 
             if (linhasAfetadas > 0) {
-                retorno = true;
+                salvarUsuario = true;
 
                 ResultSet rs = comandoSQL.getGeneratedKeys();
                 if (rs != null && rs.next()) {
@@ -59,10 +55,9 @@ public class UsuarioDAO {
 
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
-            retorno = false;
+            salvarUsuario = false;
 
         } finally {
-            // Fechar conexão, statements, etc.
             if (comandoSQL != null) {
                 try {
                     comandoSQL.close();
@@ -80,32 +75,74 @@ public class UsuarioDAO {
             }
         }
 
-        return retorno;
+        return salvarUsuario;
+    }
+
+    public static boolean atualizarSenha(int idUsuario, String novaSenha) {
+
+        Connection conexao = null;
+        PreparedStatement comandoSQL = null;
+        boolean atualizarSenha = false;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            conexao = DriverManager.getConnection(url, login, senha);
+
+            comandoSQL = conexao.prepareStatement("UPDATE Usuario SET senha = ? WHERE idUsuario = ?"
+            );
+
+            // Pegando as informações do objeto para mandar para o banco
+            comandoSQL.setString(1, senha);
+            comandoSQL.setInt(2, idUsuario);
+
+            int linhasAfetadas = comandoSQL.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                atualizarSenha = true;
+            }
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+            atualizarSenha = false;
+
+        } finally {
+            if (comandoSQL != null) {
+                try {
+                    comandoSQL.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        return atualizarSenha;
     }
 
     public static ArrayList<Usuario> listar() {
 
-        // Criando conexão
         ArrayList<Usuario> lista = new ArrayList<>();
         Connection conexao = null;
         PreparedStatement comandoSQL = null;
         ResultSet rs = null;
 
         try {
-            // Passo 1: Carregar o Driver
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Passo 2: Abrir a conexão com o banco
             conexao = DriverManager.getConnection(url, login, senha);
 
-            // Passo 3: Preparar os comandos SQL a ser executado
             comandoSQL = conexao.prepareStatement("SELECT * FROM Usuario");
 
-            // Passo 4: Executar o comando SQL
             rs = comandoSQL.executeQuery();
 
             if (rs != null) {
-                // Percorrer as linhas do ResultSet
                 while (rs.next()) {
 
                     Usuario dados = new Usuario();
