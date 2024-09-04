@@ -40,7 +40,7 @@ public class UsuarioDAO {
             comandoSQL.setString(2, novoUsuario.getCpf());
             comandoSQL.setString(3, novoUsuario.getEmail());
             comandoSQL.setString(4, novoUsuario.getGrupo());
-            comandoSQL.setInt(5, novoUsuario.getSenha());
+            comandoSQL.setString(5, novoUsuario.getSenha());
             comandoSQL.setBoolean(6, novoUsuario.getCondicaoDoUsuario());
 
             // Executar os comandos
@@ -115,7 +115,7 @@ public class UsuarioDAO {
                     dados.setCpf(rs.getString("cpf"));
                     dados.setEmail(rs.getString("email"));
                     dados.setGrupo(rs.getString("grupo"));
-                    dados.setSenha(rs.getInt("senha"));
+                    dados.setSenha(rs.getString("senha"));
                     dados.setCondicaoDoUsuario(rs.getBoolean("condicaoDoUsuario"));
 
                     lista.add(dados);

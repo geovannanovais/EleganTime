@@ -12,7 +12,7 @@ public class Main {
         String cpf = "11122233344";
         String email = "teste@teste.com.br";
         String grupo = "Administrador";
-        int senha = 121212;
+        String senha = "121212";
         boolean condicaoDoUsuario = true;
 
         // Criando um novo usuário com os dados fornecidos

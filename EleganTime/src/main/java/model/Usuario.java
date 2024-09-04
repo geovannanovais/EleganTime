@@ -7,7 +7,7 @@ public class Usuario {
     private String cpf;
     private String email;
     private String grupo; // Administrador ou Estoquista
-    private int senha;
+    private String senha;
     private boolean condicaoDoUsuario;
 
     // Construtor vazio
@@ -16,13 +16,13 @@ public class Usuario {
     }
 
     // Construtor para fazer o login
-    public Usuario(String email, int senha) {
+    public Usuario(String email, String senha) {
         this.email = email;
         this.senha = senha;
     }
 
     // Construtor com todos os parâmetros
-    public Usuario(int idUsuario, String nome, String cpf, String email, String grupo, int senha, boolean condicaoDoUsuario) {
+    public Usuario(int idUsuario, String nome, String cpf, String email, String grupo, String senha, boolean condicaoDoUsuario) {
         this.idUsuario = idUsuario;
         this.nome = nome;
         this.cpf = cpf;
@@ -33,7 +33,7 @@ public class Usuario {
     }
 
     // Construtor sem o parâmetro idUsuario
-    public Usuario(String nome, String cpf, String email, String grupo, int senha, boolean condicaoDoUsuario) {
+    public Usuario(String nome, String cpf, String email, String grupo, String senha, boolean condicaoDoUsuario) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
@@ -82,13 +82,11 @@ public class Usuario {
         this.grupo = grupo;
     }
 
-    public int getSenha() {
+    public String getSenha() {
         return senha;
     }
 
-    public void setSenha(int senha) {
-        this.senha = senha;
-    }
+    public void setSenha(String senha) {this.senha = senha; }
 
     public boolean getCondicaoDoUsuario() {
         return condicaoDoUsuario;
