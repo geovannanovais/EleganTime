@@ -110,7 +110,7 @@ public class UsuarioDAO {
 
                     Usuario dados = new Usuario();
 
-                    dados.setIdUsuario(rs.getInt("id_Usuario"));
+                    dados.setIdUsuario(rs.getInt("idUsuario"));
                     dados.setNome(rs.getString("nome"));
                     dados.setCpf(rs.getString("cpf"));
                     dados.setEmail(rs.getString("email"));
