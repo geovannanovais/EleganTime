@@ -2,7 +2,7 @@ package controller;
 
 import model.Usuario;
 import service.UsuarioService;
-
+import java.util.List;
 import java.util.Scanner;
 
 import static sqlDAO.UsuarioDAO.listar;
@@ -112,6 +112,32 @@ public class UsuarioController {
         } else {
             System.out.println("Erro ao atualizar o usuário.");
         }
+    }
+
+    public void listar() {
+        List<Usuario> usuarios = usuarioService.listar();
+
+        if (usuarios.isEmpty()) {
+            System.out.println("Nenhum usuário encontrado.");
+            return;
+        }
+
+        System.out.printf("%-10s %-20s %-15s %-30s %-10s %-10s %-15s%n",
+                "ID", "Nome", "CPF", "Email", "Grupo", "Condicao", "Senha");
+
+        System.out.println("-----------------------------------------------------------------------------------------------");
+
+        for (Usuario usuario : usuarios) {
+            System.out.printf("%-10d %-20s %-15s %-30s %-10s %-10s %-15s%n",
+                    usuario.getIdUsuario(),
+                    usuario.getNome(),
+                    usuario.getCpf(),
+                    usuario.getEmail(),
+                    usuario.getGrupo(),
+                    usuario.getCondicaoDoUsuario()? "Ativo" : "Inativo",
+                    usuario.getSenha());
+        }
+
     }
 
 //    private void deletarUsuario() {

@@ -3,7 +3,7 @@ package service;
 import model.Usuario;
 import sqlDAO.UsuarioDAO;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class UsuarioService {
 
@@ -19,7 +19,7 @@ public class UsuarioService {
         //return UsuarioDAO.deletarUsuario(idUsuario);  // Supondo que você implemente o método de exclusão
     // }
 
-    public List<Usuario> listarUsuarios() {
+    public ArrayList<Usuario> listar() {
         return UsuarioDAO.listar();
     }
 
