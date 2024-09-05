@@ -1,7 +1,6 @@
 package sqlDAO;
 
 import model.Usuario;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -9,30 +8,19 @@ import java.util.logging.Logger;
 
 public class UsuarioDAO {
 
-    // Criando o caminho/conexão com o banco de dados
-    static String url = "jdbc:mysql://localhost:3306/elegantime";
-    static String login = "root";  // login do seu usuário/conexão no Workbench
-    static String senha = "root"; // senha do seu usuário/conexão Workbench
+    // Dados de conexão
+    private static final String URL = "jdbc:mysql://localhost:3306/elegantime";
+    private static final String LOGIN = "root";
+    private static final String SENHA = "admin";
 
     public static boolean salvar(Usuario novoUsuario) {
 
-        // Criando conexão
-        Connection conexao = null;
-        PreparedStatement comandoSQL = null;
-        ResultSet resultado = null;
-        boolean salvarUsuario = false;
+        String query = "INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicaoDoUsuario) VALUES(?, ?, ?, ?, ?, ?)";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // driver
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+             PreparedStatement comandoSQL = conexao.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-            conexao = DriverManager.getConnection(url, login, senha);
-
-            comandoSQL = conexao.prepareStatement(
-                    "INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicaoDoUsuario) VALUES(?, ?, ?, ?, ?, ?)",
-                    PreparedStatement.RETURN_GENERATED_KEYS
-            );
-
-            // Pegando as informações do objeto para mandar para o banco
+            // Configurando os parâmetros
             comandoSQL.setString(1, novoUsuario.getNome());
             comandoSQL.setString(2, novoUsuario.getCpf());
             comandoSQL.setString(3, novoUsuario.getEmail());
@@ -43,195 +31,135 @@ public class UsuarioDAO {
             int linhasAfetadas = comandoSQL.executeUpdate();
 
             if (linhasAfetadas > 0) {
-                salvarUsuario = true;
-
-                ResultSet rs = comandoSQL.getGeneratedKeys();
-                if (rs != null && rs.next()) {
-                    int idGerado = rs.getInt(1);
-                    novoUsuario.setIdUsuario(idGerado);
+                try (ResultSet rs = comandoSQL.getGeneratedKeys()) {
+                    if (rs != null && rs.next()) {
+                        int idGerado = rs.getInt(1);
+                        novoUsuario.setIdUsuario(idGerado);
+                    }
                 }
-                rs.close(); // Fechar o ResultSet após o uso
+                return true;
             }
 
-        } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
-            salvarUsuario = false;
-
-        } finally {
-            if (comandoSQL != null) {
-                try {
-                    comandoSQL.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            if (conexao != null) {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao salvar usuário", ex);
         }
 
-        return salvarUsuario;
+        return false;
     }
 
     public static boolean atualizarSenha(int idUsuario, String novaSenha) {
+        String query = "UPDATE Usuario SET senha = ? WHERE idUsuario = ?";
 
-        Connection conexao = null;
-        PreparedStatement comandoSQL = null;
-        boolean atualizarSenha = false;
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            conexao = DriverManager.getConnection(url, login, senha);
-
-            comandoSQL = conexao.prepareStatement("UPDATE Usuario SET senha = ? WHERE idUsuario = ?"
-            );
-
-            // Pegando as informações do objeto para mandar para o banco
             comandoSQL.setString(1, novaSenha);
             comandoSQL.setInt(2, idUsuario);
 
             int linhasAfetadas = comandoSQL.executeUpdate();
+            return linhasAfetadas > 0;
 
-            if (linhasAfetadas > 0) {
-                atualizarSenha = true;
-            }
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
-            atualizarSenha = false;
-
-        } finally {
-            if (comandoSQL != null) {
-                try {
-                    comandoSQL.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (conexao != null) {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao atualizar senha", ex);
         }
 
-        return atualizarSenha;
+        return false;
     }
 
     public static boolean atualizarUsuario(Usuario usuario) {
+        String query = "UPDATE Usuario SET nome = ?, cpf = ?, grupo = ? WHERE idUsuario = ?";
 
-        if (usuario.getIdUsuario() == usuario.getIdUsuario()) {
-            System.out.println("Você não pode alterar o seu próprio grupo.");
-            return false;
-        }
-        // Criando conexão
-        Connection conexao = null;
-        PreparedStatement comandoSQL = null;
-        boolean usuarioAtualizado = false;
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
 
-        try {
-            // Carregando o Driver
-            Class.forName("com.mysql.cj.jdbc.Driver"); // driver
-
-            // Abrindo a conexão com o banco
-            conexao = DriverManager.getConnection(url, login, senha);
-
-            // Preparando o comando SQL para atualização dos dados do usuário
-            comandoSQL = conexao.prepareStatement(
-                    "UPDATE Usuario SET nome = ?, cpf = ?, grupo = ?"
-            );
-
-            // Definindo os valores dos parâmetros
             comandoSQL.setString(1, usuario.getNome());
             comandoSQL.setString(2, usuario.getCpf());
             comandoSQL.setString(3, usuario.getGrupo());
+            comandoSQL.setInt(4, usuario.getIdUsuario());
 
-            // Executar o comando
             int linhasAfetadas = comandoSQL.executeUpdate();
+            return linhasAfetadas > 0;
 
-            // Verifica se a atualização foi bem-sucedida
-            if (linhasAfetadas > 0) {
-                usuarioAtualizado = true;
-            }
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            ex.printStackTrace();
-            usuarioAtualizado = false;
-
-        } finally {
-            // Fechar conexão, statements, etc.
-            if (comandoSQL != null) {
-                try {
-                    comandoSQL.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (conexao != null) {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao atualizar usuário", ex);
         }
 
-        return usuarioAtualizado;
+        return false;
     }
 
     public static ArrayList<Usuario> listar() {
 
+        String query = "SELECT * FROM Usuario";
         ArrayList<Usuario> lista = new ArrayList<>();
-        Connection conexao = null;
-        PreparedStatement comandoSQL = null;
-        ResultSet rs = null;
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+             PreparedStatement comandoSQL = conexao.prepareStatement(query);
+             ResultSet rs = comandoSQL.executeQuery()) {
 
-            conexao = DriverManager.getConnection(url, login, senha);
+            while (rs.next()) {
+                Usuario dados = new Usuario();
+                dados.setIdUsuario(rs.getInt("idUsuario"));
+                dados.setNome(rs.getString("nome"));
+                dados.setCpf(rs.getString("cpf"));
+                dados.setEmail(rs.getString("email"));
+                dados.setGrupo(rs.getString("grupo"));
+                dados.setSenha(rs.getString("senha"));
+                dados.setCondicaoDoUsuario(rs.getBoolean("condicaoDoUsuario"));
 
-            comandoSQL = conexao.prepareStatement("SELECT * FROM Usuario");
-
-            rs = comandoSQL.executeQuery();
-
-            if (rs != null) {
-                while (rs.next()) {
-
-                    Usuario dados = new Usuario();
-
-                    dados.setIdUsuario(rs.getInt("idUsuario"));
-                    dados.setNome(rs.getString("nome"));
-                    dados.setCpf(rs.getString("cpf"));
-                    dados.setEmail(rs.getString("email"));
-                    dados.setGrupo(rs.getString("grupo"));
-                    dados.setSenha(rs.getString("senha"));
-                    dados.setCondicaoDoUsuario(rs.getBoolean("condicaoDoUsuario"));
-
-                    lista.add(dados);
-                }
+                lista.add(dados);
             }
 
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (conexao != null) {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao listar usuários", ex);
         }
 
         return lista;
+    }
+
+//    public static boolean deletarUsuario(int idUsuario) {
+//        String query = "DELETE FROM Usuario WHERE idUsuario = ?";
+//
+//        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+//             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
+//
+//            comandoSQL.setInt(1, idUsuario);
+//
+//            int linhasAfetadas = comandoSQL.executeUpdate();
+//            return linhasAfetadas > 0;
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao deletar usuário", ex);
+//        }
+//
+//        return false;
+//    }
+
+    public static Usuario buscarUsuarioPorId(int idUsuario) {
+        String query = "SELECT * FROM Usuario WHERE idUsuario = ?";
+        Usuario usuarioEncontrado = null;
+
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
+
+            comandoSQL.setInt(1, idUsuario);
+
+            try (ResultSet rs = comandoSQL.executeQuery()) {
+                if (rs.next()) {
+                    usuarioEncontrado = new Usuario();
+                    usuarioEncontrado.setIdUsuario(rs.getInt("idUsuario"));
+                    usuarioEncontrado.setNome(rs.getString("nome"));
+                    usuarioEncontrado.setCpf(rs.getString("cpf"));
+                    usuarioEncontrado.setEmail(rs.getString("email"));
+                    usuarioEncontrado.setGrupo(rs.getString("grupo"));
+                    usuarioEncontrado.setSenha(rs.getString("senha"));
+                    usuarioEncontrado.setCondicaoDoUsuario(rs.getBoolean("condicaoDoUsuario"));
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao buscar usuário por ID", ex);
+        }
+
+        return usuarioEncontrado;
     }
 }
