@@ -10,7 +10,7 @@ public class UsuarioDAO {
 
     // Dados de conexão
     private static final String URL = "jdbc:mysql://localhost:3306/elegantime";
-    private static final String LOGIN = "root";
+    private static final String LOGIN = "admin";
     private static final String SENHA = "admin";
 
     public static boolean salvar(Usuario novoUsuario) {
