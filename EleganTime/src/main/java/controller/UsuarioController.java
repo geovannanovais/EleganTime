@@ -17,13 +17,62 @@ public class UsuarioController {
     }
 
     public void iniciar() {
+        // Exibir tela de login
+        if (exibirTelaLogin()) {
+            boolean continuar = true;
+            while (continuar) {
+                // Tela para escolher entre Usuário ou Produto
+                System.out.println("\nEscolha uma opção:");
+                System.out.println("1. Gerenciar Usuários");
+                System.out.println("2. Gerenciar Produtos");
+                System.out.println("3. Sair");
+
+                System.out.print("Escolha sua opção: ");
+                int opcao = scanner.nextInt();
+                scanner.nextLine(); // Consumir a quebra de linha
+
+                switch (opcao) {
+                    case 1:
+                        menuUsuario();
+                        break;
+                    case 2:
+                        menuProduto();
+                        break;
+                    case 3:
+                        continuar = false;
+                        System.out.println("Saindo...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida.");
+                }
+            }
+        } else {
+            System.out.println("Login falhou. Encerrando o sistema.");
+        }
+    }
+
+    // Tela de login
+    private boolean exibirTelaLogin() {
+        System.out.println("------------ Tela de Login ------------");
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Senha: ");
+        String senha = scanner.nextLine();
+
+        // Simulação de login bem-sucedido (por enquanto sem validação real)
+        System.out.println("Login realizado com sucesso!");
+        return true;
+    }
+
+    private void menuUsuario() {
         boolean continuar = true;
         while (continuar) {
             System.out.println("\nEscolha uma operação:");
             System.out.println("1. Cadastrar Usuário");
             System.out.println("2. Atualizar Usuário");
             System.out.println("3. Listar Usuários");
-            System.out.println("4. Sair");
+            System.out.println("4. Voltar");
 
             System.out.print("Escolha sua opção: ");
             int opcao = scanner.nextInt();
@@ -41,7 +90,6 @@ public class UsuarioController {
                     break;
                 case 4:
                     continuar = false;
-                    System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
@@ -49,8 +97,12 @@ public class UsuarioController {
         }
     }
 
-    private void cadastrarUsuario() {
+    private void menuProduto() {
+        // Lógica para gerenciar produtos (pode ser adicionada no futuro)
+        System.out.println("Funcionalidade de gerenciamento de produtos em desenvolvimento.");
+    }
 
+    private void cadastrarUsuario() {
         // Loop para forçar a preencher o nome
         String nome;
         do {
@@ -71,7 +123,7 @@ public class UsuarioController {
             }
         } while (cpf.contains(" ") || cpf.isEmpty());
 
-        // // Loop para forçar a preencher o email
+        // Loop para forçar a preencher o email
         String email;
         do {
             System.out.print("Email: ");
@@ -93,7 +145,7 @@ public class UsuarioController {
         } while (grupo.contains(" ") || grupo.isEmpty() ||
                 (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista")));
 
-        // // Loop para forçar a preencher a senha
+        // Loop para forçar a preencher a senha
         String senha;
         do {
             System.out.print("Senha: ");
@@ -130,7 +182,6 @@ public class UsuarioController {
         }
     }
 
-    // Atualizar o usuario
     private void atualizarUsuario() {
         System.out.println("ID do Usuário a ser atualizado:");
         int idUsuario = scanner.nextInt();
@@ -188,9 +239,9 @@ public class UsuarioController {
             }
         } while (senha.length() < 5 || senha.contains(" "));
 
-        // Loop para forçar a preencher o condicaoDoUsuario, verificar o true e false
+        // Loop para forçar a preencher a condicao do usuario
         boolean condicaoDoUsuario;
-        String condicaoInput; // Para verificar se a entrada e false ou true
+        String condicaoInput;
         do {
             System.out.print("Condição do Usuário (true/false): ");
             condicaoInput = scanner.nextLine().trim().toLowerCase();
@@ -200,11 +251,11 @@ public class UsuarioController {
                 condicaoDoUsuario = false;
             } else {
                 System.out.println("Erro: A condição do usuário deve ser 'true' ou 'false'.");
-                condicaoDoUsuario = false; // Inicializar com um valor válido para continuar o loop
+                condicaoDoUsuario = false;
             }
-        } while (!condicaoInput.equals("true") && !condicaoInput.equals("false")); // continuara ate que a entrada do usuário seja "true" ou "false". Quando um desses valores for inserido, o loop termina.
+        } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
 
-        // Atualizando o usuario apos as validacoes
+        // Atualizando o usuario
         Usuario usuarioAtualizado = new Usuario(idUsuario, nome, cpf, email, grupo, senha, condicaoDoUsuario);
         boolean sucesso = usuarioService.atualizarUsuario(usuarioAtualizado);
 
@@ -215,7 +266,6 @@ public class UsuarioController {
         }
     }
 
-    // Listando os usuarios
     public void listar() {
         List<Usuario> usuarios = usuarioService.listar();
 
@@ -224,20 +274,23 @@ public class UsuarioController {
             return;
         }
 
-        System.out.printf("%-10s %-20s %-15s %-30s %-10s %-10s %-15s%n",
-                "ID", "Nome", "CPF", "Email", "Grupo", "Condicao", "Senha");
+        // Cabeçalho da tabela
+        System.out.printf("%-10s %-20s %-30s %-15s %-15s%n",
+                "ID", "Nome", "Email", "Status", "Grupo");
 
-        System.out.println("-----------------------------------------------------------------------------------------------");
+        // Linha de separação
+        System.out.println("=".repeat(90));
 
+        // Conteúdo da tabela
         for (Usuario usuario : usuarios) {
-            System.out.printf("%-10d %-20s %-15s %-30s %-10s %-10s %-15s%n",
+            System.out.printf("%-10d %-20s %-30s %-15s %-15s%n",
                     usuario.getIdUsuario(),
                     usuario.getNome(),
-                    usuario.getCpf(),
                     usuario.getEmail(),
-                    usuario.getGrupo(),
                     usuario.getCondicaoDoUsuario() ? "Ativo" : "Inativo",
-                    usuario.getSenha());
+                    usuario.getGrupo());
         }
     }
+
+
 }

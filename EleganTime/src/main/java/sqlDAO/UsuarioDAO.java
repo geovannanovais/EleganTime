@@ -67,7 +67,7 @@ public class UsuarioDAO {
     }
 
     public static boolean atualizarUsuario(Usuario usuario) {
-        String query = "UPDATE Usuario SET nome = ?, cpf = ?, grupo = ? WHERE idUsuario = ?";
+        String query = "UPDATE Usuario SET nome = ?, cpf = ?, grupo = ?, senha = ?, condicaoDoUsuario = ? WHERE idUsuario = ?";
 
         try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
              PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
@@ -75,7 +75,9 @@ public class UsuarioDAO {
             comandoSQL.setString(1, usuario.getNome());
             comandoSQL.setString(2, usuario.getCpf());
             comandoSQL.setString(3, usuario.getGrupo());
-            comandoSQL.setInt(4, usuario.getIdUsuario());
+            comandoSQL.setString(4, usuario.getSenha());
+            comandoSQL.setBoolean(5, usuario.getCondicaoDoUsuario());
+            comandoSQL.setInt(6, usuario.getIdUsuario());
 
             int linhasAfetadas = comandoSQL.executeUpdate();
             return linhasAfetadas > 0;

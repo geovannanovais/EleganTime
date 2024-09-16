@@ -42,6 +42,8 @@ public class Usuario {
         this.condicaoDoUsuario = condicaoDoUsuario;
     }
 
+
+
     public int getIdUsuario() {
         return idUsuario;
     }
