@@ -26,4 +26,24 @@ public class UsuarioService {
     public Usuario buscarUsuarioPorId(int idUsuario) {
         return UsuarioDAO.buscarUsuarioPorId(idUsuario);  // Se você implementar essa função
     }
+
+    // Fazer login
+    public String validarLogin(String email, String senha) {
+        Usuario usuario = UsuarioDAO.buscarUsuarioPorEmail(email);  // Agora pode chamar como estático
+
+
+        if (usuario == null) {
+            return "Usuário não encontrado.";
+        }
+
+        if (!usuario.getCondicaoDoUsuario()) {
+            return "Usuário inativo.";
+        }
+
+        if (!usuario.getSenha().equals(senha)) {
+            return "Email ou senha incorretos.";
+        }
+
+        return "Login realizado com sucesso!";
+    }
 }

@@ -118,24 +118,6 @@ public class UsuarioDAO {
         return lista;
     }
 
-//    public static boolean deletarUsuario(int idUsuario) {
-//        String query = "DELETE FROM Usuario WHERE idUsuario = ?";
-//
-//        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
-//             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
-//
-//            comandoSQL.setInt(1, idUsuario);
-//
-//            int linhasAfetadas = comandoSQL.executeUpdate();
-//            return linhasAfetadas > 0;
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao deletar usuário", ex);
-//        }
-//
-//        return false;
-//    }
-
     public static Usuario buscarUsuarioPorId(int idUsuario) {
         String query = "SELECT * FROM Usuario WHERE idUsuario = ?";
         Usuario usuarioEncontrado = null;
@@ -164,4 +146,52 @@ public class UsuarioDAO {
 
         return usuarioEncontrado;
     }
+
+    // funcao para validar o login
+    public static Usuario buscarUsuarioPorEmail(String email) {
+        String query = "SELECT * FROM Usuario WHERE email = ?";
+        Usuario usuarioEncontrado = null;
+
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
+
+            comandoSQL.setString(1, email);
+
+            try (ResultSet rs = comandoSQL.executeQuery()) {
+                if (rs.next()) {
+                    usuarioEncontrado = new Usuario();
+                    usuarioEncontrado.setIdUsuario(rs.getInt("idUsuario"));
+                    usuarioEncontrado.setNome(rs.getString("nome"));
+                    usuarioEncontrado.setCpf(rs.getString("cpf"));
+                    usuarioEncontrado.setEmail(rs.getString("email"));
+                    usuarioEncontrado.setGrupo(rs.getString("grupo"));
+                    usuarioEncontrado.setSenha(rs.getString("senha"));
+                    usuarioEncontrado.setCondicaoDoUsuario(rs.getBoolean("condicaoDoUsuario"));
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao buscar usuário por email", ex);
+        }
+
+        return usuarioEncontrado;
+    }
 }
+
+//    public static boolean deletarUsuario(int idUsuario) {
+//        String query = "DELETE FROM Usuario WHERE idUsuario = ?";
+//
+//        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
+//             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
+//
+//            comandoSQL.setInt(1, idUsuario);
+//
+//            int linhasAfetadas = comandoSQL.executeUpdate();
+//            return linhasAfetadas > 0;
+//
+//        } catch (SQLException ex) {
+//            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao deletar usuário", ex);
+//        }
+//
+//        return false;
+//    }

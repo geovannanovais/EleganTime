@@ -17,53 +17,72 @@ public class UsuarioController {
     }
 
     public void iniciar() {
-        // Exibir tela de login
-        if (exibirTelaLogin()) {
-            boolean continuar = true;
-            while (continuar) {
-                // Tela para escolher entre Usuário ou Produto
-                System.out.println("\nEscolha uma opção:");
-                System.out.println("1. Gerenciar Usuários");
-                System.out.println("2. Gerenciar Produtos");
-                System.out.println("3. Sair");
+        boolean loginBemSucedido = false;
 
-                System.out.print("Escolha sua opção: ");
-                int opcao = scanner.nextInt();
-                scanner.nextLine(); // Consumir a quebra de linha
+        // Loop até que o login seja bem-sucedido ou o usuário decida sair
+        while (!loginBemSucedido) {
 
-                switch (opcao) {
-                    case 1:
-                        menuUsuario();
-                        break;
-                    case 2:
-                        menuProduto();
-                        break;
-                    case 3:
-                        continuar = false;
-                        System.out.println("Saindo...");
-                        break;
-                    default:
-                        System.out.println("Opção inválida.");
+            if (exibirTelaLogin()) {
+                loginBemSucedido = true; // Login bem-sucedido
+            } else {
+                System.out.println("Falha no login. Deseja tentar novamente? (S/N)");
+                String resposta = scanner.nextLine().trim().toLowerCase();
+                if (resposta.equals("n")) {
+                    System.out.println("Encerrando o sistema...");
+                    return; // Encerra o sistema
                 }
             }
-        } else {
-            System.out.println("Login falhou. Encerrando o sistema.");
+        }
+
+        // Se o login for bem-sucedido, entra no menu principal
+        boolean continuar = true;
+        while (continuar) {
+            System.out.println("\nEscolha uma opção:");
+            System.out.println("1. Gerenciar Usuários");
+            System.out.println("2. Gerenciar Produtos");
+            System.out.println("3. Sair");
+
+            System.out.print("Escolha sua opção: ");
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // Consumir a quebra de linha
+
+            switch (opcao) {
+                case 1:
+                    menuUsuario();
+                    break;
+                case 2:
+                    menuProduto();
+                    break;
+                case 3:
+                    continuar = false;
+                    System.out.println("Saindo...");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
         }
     }
+
 
     // Tela de login
     private boolean exibirTelaLogin() {
         System.out.println("------------ Tela de Login ------------");
         System.out.print("Email: ");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim();
 
         System.out.print("Senha: ");
-        String senha = scanner.nextLine();
+        String senha = scanner.nextLine().trim();
 
-        // Simulação de login bem-sucedido (por enquanto sem validação real)
-        System.out.println("Login realizado com sucesso!");
-        return true;
+        // Chama o serviço para validar o login
+        String resultadoLogin = usuarioService.validarLogin(email, senha);
+
+        // Exibe o resultado da validação
+        System.out.println(resultadoLogin);
+
+        // Retorna true apenas se o login for bem-sucedido
+        return resultadoLogin.equals("Login realizado com sucesso!");
     }
+
 
     private void menuUsuario() {
         boolean continuar = true;
