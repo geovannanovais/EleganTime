@@ -1,6 +1,8 @@
 package service;
 
+import model.Produto;
 import model.Usuario;
+import sqlDAO.ProdutoDAO;
 import sqlDAO.UsuarioDAO;
 
 import java.util.ArrayList;
@@ -15,16 +17,26 @@ public class UsuarioService {
         return UsuarioDAO.atualizarUsuario(usuario);
     }
 
-    //public boolean deletarUsuario(int idUsuario) {
-        //return UsuarioDAO.deletarUsuario(idUsuario);  // Supondo que você implemente o método de exclusão
-    // }
+    public static boolean cadastrarProduto(Produto produto) { return ProdutoDAO.salvar(produto);
+    }
 
-    public ArrayList<Usuario> listar() {
-        return UsuarioDAO.listar();
+    public static boolean atualizarProduto(Produto produto) { return ProdutoDAO.atualizarProduto(produto);
+    }
+
+    public ArrayList<Usuario> listarUsuario() {
+        return UsuarioDAO.listarUsuario();
+    }
+
+    public ArrayList<Produto> listarProduto() {
+        return ProdutoDAO.listarProduto();
     }
 
     public Usuario buscarUsuarioPorId(int idUsuario) {
-        return UsuarioDAO.buscarUsuarioPorId(idUsuario);  // Se você implementar essa função
+        return UsuarioDAO.buscarUsuarioPorId(idUsuario);
+    }
+
+    public Produto buscarProdutoPorId (int idProduto) {
+        return ProdutoDAO.buscarProdutoPorId(idProduto);
     }
 
     // Fazer login
