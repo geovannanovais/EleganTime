@@ -10,8 +10,8 @@ public class UsuarioDAO {
 
     // Dados de conexão
     private static final String URL = "jdbc:mysql://localhost:3306/elegantime";
-    private static final String LOGIN = "admin";
-    private static final String SENHA = "admin";
+    private static final String LOGIN = "root";
+    private static final String SENHA = "root";
 
     public static boolean salvar(Usuario novoUsuario) {
 
@@ -66,6 +66,8 @@ public class UsuarioDAO {
         return false;
     }
 
+
+
     public static boolean atualizarUsuario(Usuario usuario) {
         String query = "UPDATE Usuario SET nome = ?, cpf = ?, grupo = ?, senha = ?, condicaoDoUsuario = ? WHERE idUsuario = ?";
 
@@ -89,7 +91,7 @@ public class UsuarioDAO {
         return false;
     }
 
-    public static ArrayList<Usuario> listar() {
+    public static ArrayList<Usuario> listarUsuario() {
 
         String query = "SELECT * FROM Usuario";
         ArrayList<Usuario> lista = new ArrayList<>();
@@ -177,21 +179,3 @@ public class UsuarioDAO {
         return usuarioEncontrado;
     }
 }
-
-//    public static boolean deletarUsuario(int idUsuario) {
-//        String query = "DELETE FROM Usuario WHERE idUsuario = ?";
-//
-//        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
-//             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
-//
-//            comandoSQL.setInt(1, idUsuario);
-//
-//            int linhasAfetadas = comandoSQL.executeUpdate();
-//            return linhasAfetadas > 0;
-//
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, "Erro ao deletar usuário", ex);
-//        }
-//
-//        return false;
-//    }
