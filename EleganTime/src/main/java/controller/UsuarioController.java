@@ -177,8 +177,7 @@ public class UsuarioController {
                 case 2:
                     listarProduto();
                     System.out.println();
-                    if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador") ||
-                            usuarioLogado.getGrupo().equalsIgnoreCase("Estoquista")) {
+                    if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador") || usuarioLogado.getGrupo().equalsIgnoreCase("Estoquista")) {
                         atualizarProduto();
                     } else {
                         System.out.println("Acesso negado. Apenas administradores e estoquistas podem atualizar produtos.");
@@ -232,12 +231,10 @@ public class UsuarioController {
         do {
             System.out.print("Grupo (Administrador ou Estoquista): ");
             grupo = scanner.nextLine().trim();
-            if (grupo.contains(" ") || grupo.isEmpty() ||
-                    (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista"))) {
+            if (grupo.contains(" ") || grupo.isEmpty() || (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista"))) {
                 System.out.println("Erro: Grupo inválido. Escolha 'Administrador' ou 'Estoquista'.");
             }
-        } while (grupo.contains(" ") || grupo.isEmpty() ||
-                (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista")));
+        } while (grupo.contains(" ") || grupo.isEmpty() || (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista")));
 
         // Loop para forçar a preencher a senha
         String senha;
@@ -281,75 +278,91 @@ public class UsuarioController {
         int idUsuario = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha após o número
 
+        // Obtém o usuário pelo ID
+        Usuario usuario = usuarioService.buscarUsuarioPorId(idUsuario);
+        if (usuario == null) {
+            System.out.println("Usuário não encontrado.");
+            return;
+        }
+
+        // Exibe todos os dados do usuário antes de permitir a atualização
+        System.out.println("Usuário selecionado:");
+        System.out.println("Nome: " + usuario.getNome());
+        System.out.println("CPF: " + usuario.getCpf());
+        System.out.println("Email: " + usuario.getEmail());
+        System.out.println("Grupo: " + usuario.getGrupo());
+        System.out.println("Status: " + (usuario.getCondicaoDoUsuario() ? "Ativo" : "Inativo"));
+
+        // Agora o usuário pode alterar as informações
         // Loop para forçar a preencher o nome
         String nome;
         do {
-            System.out.print("Nome: ");
+            System.out.print("Novo Nome (ou aperte Enter para manter o mesmo): ");
             nome = scanner.nextLine().trim();
             if (nome.isEmpty()) {
-                System.out.println("Erro: O nome não pode estar vazio.");
+                nome = usuario.getNome(); // Mantém o nome atual se o usuário não inserir nada
             }
         } while (nome.isEmpty());
 
-        // Loop para forçar a preencher o cpf
+        // Loop para forçar a preencher o CPF
         String cpf;
         do {
-            System.out.print("CPF: ");
+            System.out.print("Novo CPF (ou aperte Enter para manter o mesmo): ");
             cpf = scanner.nextLine().trim();
-            if (cpf.contains(" ") || cpf.isEmpty()) {
-                System.out.println("Erro: O CPF não pode conter espaços ou estar vazio.");
+            if (cpf.isEmpty()) {
+                cpf = usuario.getCpf(); // Mantém o CPF atual se o usuário não inserir nada
+            } else if (cpf.contains(" ")) {
+                System.out.println("Erro: O CPF não pode conter espaços.");
             }
-        } while (cpf.contains(" ") || cpf.isEmpty());
+        } while (cpf.contains(" "));
 
         // Loop para forçar a preencher o email
-        String email;
-        do {
-            System.out.print("Email: ");
-            email = scanner.nextLine().trim();
-            if (email.contains(" ") || email.isEmpty()) {
-                System.out.println("Erro: O Email não pode conter espaços ou estar vazio.");
-            }
-        } while (email.contains(" ") || email.isEmpty());
+        // O e-mail será sempre o mesmo do usuário original
+        String email = usuario.getEmail();
 
         // Loop para forçar a preencher o grupo
         String grupo;
         do {
-            System.out.print("Grupo (Administrador ou Estoquista): ");
+            System.out.print("Novo Grupo (Administrador ou Estoquista) (ou aperte Enter para manter o mesmo): ");
             grupo = scanner.nextLine().trim();
-            if (grupo.contains(" ") || grupo.isEmpty() ||
-                    (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista"))) {
+            if (grupo.isEmpty()) {
+                grupo = usuario.getGrupo(); // Mantém o grupo atual se o usuário não inserir nada
+            } else if (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista")) {
                 System.out.println("Erro: Grupo inválido. Escolha 'Administrador' ou 'Estoquista'.");
             }
-        } while (grupo.contains(" ") || grupo.isEmpty() ||
-                (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista")));
+        } while (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista"));
 
         // Loop para forçar a preencher a senha
         String senha;
         do {
-            System.out.print("Senha: ");
+            System.out.print("Nova Senha (ou aperte Enter para manter a mesma): ");
             senha = scanner.nextLine().trim();
-            if (senha.length() < 5 || senha.contains(" ")) {
+            if (senha.isEmpty()) {
+                senha = usuario.getSenha(); // Mantém a senha atual se o usuário não inserir nada
+            } else if (senha.length() < 5 || senha.contains(" ")) {
                 System.out.println("Erro: A senha deve ter pelo menos 5 caracteres e não pode conter espaços.");
             }
         } while (senha.length() < 5 || senha.contains(" "));
 
-        // Loop para forçar a preencher a condicao do usuario
+        // Loop para forçar a preencher a condição do usuário
         boolean condicaoDoUsuario;
         String condicaoInput;
         do {
-            System.out.print("Condição do Usuário (true/false): ");
+            System.out.print("Condição do Usuário (true/false) (ou aperte Enter para manter o mesmo): ");
             condicaoInput = scanner.nextLine().trim().toLowerCase();
-            if (condicaoInput.equals("true")) {
+            if (condicaoInput.isEmpty()) {
+                condicaoDoUsuario = usuario.getCondicaoDoUsuario(); // Mantém a condição atual se o usuário não inserir nada
+            } else if (condicaoInput.equals("true")) {
                 condicaoDoUsuario = true;
             } else if (condicaoInput.equals("false")) {
                 condicaoDoUsuario = false;
             } else {
                 System.out.println("Erro: A condição do usuário deve ser 'true' ou 'false'.");
-                condicaoDoUsuario = false;
+                condicaoDoUsuario = usuario.getCondicaoDoUsuario();
             }
-        } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
+        } while (!condicaoInput.equals("true") && !condicaoInput.equals("false") && !condicaoInput.isEmpty());
 
-        // Atualizando o usuario
+        // Atualizando o usuário
         Usuario usuarioAtualizado = new Usuario(idUsuario, nome, cpf, email, grupo, senha, condicaoDoUsuario);
         boolean sucesso = usuarioService.atualizarUsuario(usuarioAtualizado);
 
@@ -369,20 +382,14 @@ public class UsuarioController {
         }
 
         // Cabeçalho da tabela
-        System.out.printf("%-10s %-20s %-30s %-15s %-15s%n",
-                "ID", "Nome", "Email", "Status", "Grupo");
+        System.out.printf("%-10s %-20s %-30s %-15s %-15s%n", "ID", "Nome", "Email", "Status", "Grupo");
 
         // Linha de separação
         System.out.println("=".repeat(90));
 
         // Conteúdo da tabela
         for (Usuario usuario : usuarios) {
-            System.out.printf("%-10d %-20s %-30s %-15s %-15s%n",
-                    usuario.getIdUsuario(),
-                    usuario.getNome(),
-                    usuario.getEmail(),
-                    usuario.getCondicaoDoUsuario() ? "Ativo" : "Inativo",
-                    usuario.getGrupo());
+            System.out.printf("%-10d %-20s %-30s %-15s %-15s%n", usuario.getIdUsuario(), usuario.getNome(), usuario.getEmail(), usuario.getCondicaoDoUsuario() ? "Ativo" : "Inativo", usuario.getGrupo());
         }
     }
 
@@ -398,7 +405,88 @@ public class UsuarioController {
             return;
         }
 
-        // Pergunta ao estoquista apenas pela quantidade
+        // Exibe os detalhes do produto
+        System.out.println("Produto selecionado:");
+        System.out.println("Nome: " + produto.getNome());
+        System.out.println("Avaliação: " + produto.getAvaliacao());
+        System.out.println("Descrição: " + produto.getDescricao());
+        System.out.println("Preço: " + produto.getPreco());
+        System.out.println("Quantidade Atual em Estoque: " + produto.getQuantidadeEmEstoque());
+        System.out.println("Condição do Produto: " + (produto.getCondicaoDoProduto() ? "Ativo" : "Inativo"));
+
+        Usuario usuarioLogado = SessaoUsuario.getUsuario();
+
+        // Verifica se o usuário é administrador ou estoquista
+        if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador")) {
+            // Administrador pode alterar todos os campos do produto
+
+            // Alterar Nome
+            System.out.print("Novo Nome: ");
+            String nome = scanner.nextLine().trim();
+            if (!nome.isEmpty()) {
+                produto.setNome(nome);
+            }
+
+            // Alterar Avaliação
+            double avaliacao;
+            do {
+                System.out.print("Nova Avaliação (1 a 5): ");
+                while (!scanner.hasNextDouble()) {
+                    System.out.println("Erro: A avaliação deve ser um número decimal.");
+                    scanner.next(); // Consumir a entrada inválida
+                    System.out.print("Nova Avaliação (1 a 5): ");
+                }
+                avaliacao = scanner.nextDouble();
+                scanner.nextLine(); // Consumir a quebra de linha após o número
+                if (avaliacao < 1 || avaliacao > 5) {
+                    System.out.println("Erro: A avaliação deve estar entre 1 e 5.");
+                }
+            } while (avaliacao < 1 || avaliacao > 5);
+            produto.setAvaliacao(avaliacao);
+
+            // Alterar Descrição
+            System.out.print("Nova Descrição: ");
+            String descricao = scanner.nextLine().trim();
+            if (!descricao.isEmpty()) {
+                produto.setDescricao(descricao);
+            }
+
+            // Alterar Preço
+            double preco;
+            do {
+                System.out.print("Novo Preço: ");
+                while (!scanner.hasNextDouble()) {
+                    System.out.println("Erro: O preço deve ser um número decimal.");
+                    scanner.next(); // Consumir a entrada inválida
+                    System.out.print("Novo Preço: ");
+                }
+                preco = scanner.nextDouble();
+                scanner.nextLine(); // Consumir a quebra de linha após o número
+                if (preco < 0) {
+                    System.out.println("Erro: O preço não pode ser negativo.");
+                }
+            } while (preco < 0);
+            produto.setPreco(preco);
+
+            // Alterar Condição
+            String condicaoInput;
+            boolean condicaoProduto;
+            do {
+                System.out.print("Condição do Produto (true/false): ");
+                condicaoInput = scanner.nextLine().trim().toLowerCase();
+                if (condicaoInput.equals("true")) {
+                    condicaoProduto = true;
+                } else if (condicaoInput.equals("false")) {
+                    condicaoProduto = false;
+                } else {
+                    System.out.println("Erro: A condição do produto deve ser 'true' ou 'false'.");
+                    condicaoProduto = produto.getCondicaoDoProduto(); // Mantém o valor atual se entrada inválida
+                }
+            } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
+            produto.setCondicaoDoProduto(condicaoProduto);
+        }
+
+        // Estoquista e Administrador podem alterar a quantidade de estoque
         int novaQuantidade;
         do {
             System.out.print("Nova Quantidade em Estoque: ");
@@ -414,17 +502,24 @@ public class UsuarioController {
             }
         } while (novaQuantidade < 0);
 
-        // Atualizar apenas a quantidade de estoque do produto
+        // Atualizar a quantidade de estoque do produto
         produto.setQuantidadeEmEstoque(novaQuantidade);
-        boolean sucesso = usuarioService.atualizarProdutoEstoque(produto);
+
+        boolean sucesso;
+        if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador")) {
+            // Se for administrador, atualiza todas as informações
+            sucesso = usuarioService.atualizarProduto(produto);
+        } else {
+            // Se for estoquista, atualiza apenas a quantidade de estoque
+            sucesso = usuarioService.atualizarProdutoEstoque(produto);
+        }
 
         if (sucesso) {
-            System.out.println("Quantidade de estoque atualizada com sucesso!");
+            System.out.println("Produto atualizado com sucesso!");
         } else {
-            System.out.println("Erro ao atualizar a quantidade de estoque.");
+            System.out.println("Erro ao atualizar o produto.");
         }
     }
-
 
     private void cadastrarProduto() {
 
@@ -532,21 +627,14 @@ public class UsuarioController {
         }
 
         // Cabeçalho da tabela
-        System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n",
-                "ID", "Nome", "Avaliacao", "Valor", "Qtde Estoque", "Status");
+        System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n", "ID", "Nome", "Avaliacao", "Valor", "Qtde Estoque", "Status");
 
         // Linha de separação
         System.out.println("=".repeat(100));
 
         // Conteúdo da tabela
         for (Produto produto : produtos) {
-            System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n",
-                    produto.getIdProduto(),
-                    produto.getNome(),
-                    produto.getAvaliacao(),
-                    produto.getPreco(),
-                    produto.getQuantidadeEmEstoque(),
-                    produto.getCondicaoDoProduto() ? "Ativo" : "Inativo");
+            System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n", produto.getIdProduto(), produto.getNome(), produto.getAvaliacao(), produto.getPreco(), produto.getQuantidadeEmEstoque(), produto.getCondicaoDoProduto() ? "Ativo" : "Inativo");
         }
     }
 
