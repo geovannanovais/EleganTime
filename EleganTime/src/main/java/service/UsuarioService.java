@@ -1,11 +1,12 @@
 package service;
 
+import java.util.ArrayList;
+
+import model.Imagem;
 import model.Produto;
 import model.Usuario;
 import sqlDAO.ProdutoDAO;
 import sqlDAO.UsuarioDAO;
-
-import java.util.ArrayList;
 
 public class UsuarioService {
 
@@ -17,11 +18,25 @@ public class UsuarioService {
         return UsuarioDAO.atualizarUsuario(usuario);
     }
 
-    public static boolean cadastrarProduto(Produto produto) {
-        return ProdutoDAO.salvar(produto);
+    public boolean cadastrarProduto(Produto produto) {
+        boolean sucesso = ProdutoDAO.salvar(produto);
+
+        // Se o produto foi cadastrado com sucesso, exibe as imagens
+        if (sucesso) {
+            if (!produto.getImagens().isEmpty()) {
+                System.out.println("Produto cadastrado com sucesso! Imagens cadastradas:");
+                for (Imagem imagem : produto.getImagens()) {
+                    System.out.println(" - " + imagem.getCaminho());
+                }
+            } else {
+                System.out.println("Produto cadastrado com sucesso! Nenhuma imagem cadastrada.");
+            }
+        }
+
+        return sucesso;
     }
 
-    public static boolean atualizarProduto(Produto produto) {
+    public boolean atualizarProduto(Produto produto) {
         return ProdutoDAO.atualizarProduto(produto);
     }
 
@@ -41,35 +56,33 @@ public class UsuarioService {
         return ProdutoDAO.buscarProdutoPorId(idProduto);
     }
 
-    // Implementação do método de autenticação de usuário
+    // Novo método para carregar imagens de um produto
+    public ArrayList<Imagem> carregarImagensProduto(int idProduto) {
+        return ProdutoDAO.carregarImagens(idProduto);
+    }
+
     public Usuario autenticar(String email, String senha) {
-        // Busca o usuário pelo email
         Usuario usuario = UsuarioDAO.buscarUsuarioPorEmail(email);
 
-        // Verifica se o usuário existe
         if (usuario == null) {
             System.out.println("Usuário não encontrado.");
             return null;
         }
 
-        // Verifica se o usuário está ativo
         if (!usuario.getCondicaoDoUsuario()) {
             System.out.println("Usuário inativo.");
             return null;
         }
 
-        // Verifica se a senha está correta
         if (!usuario.getSenha().equals(senha)) {
             System.out.println("Email ou senha incorretos.");
             return null;
         }
 
-        // Retorna o usuário autenticado
         return usuario;
     }
 
     public boolean atualizarProdutoEstoque(Produto produto) {
-        // Chama o DAO para atualizar apenas a quantidade em estoque
         return ProdutoDAO.atualizarQuantidadeEstoque(produto);
     }
 }

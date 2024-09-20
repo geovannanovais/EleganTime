@@ -1,12 +1,14 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import model.Imagem;
 import model.Produto;
 import model.Usuario;
 import service.UsuarioService;
 import utils.SessaoUsuario;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class UsuarioController {
 
@@ -522,7 +524,6 @@ public class UsuarioController {
     }
 
     private void cadastrarProduto() {
-
         // Loop para forçar a preencher o nome
         String nome;
         do {
@@ -532,7 +533,7 @@ public class UsuarioController {
                 System.out.println("Erro: O nome não pode estar vazio.");
             }
         } while (nome.isEmpty());
-
+    
         // Loop para forçar a preencher a avaliação
         double avaliacao;
         do {
@@ -548,7 +549,7 @@ public class UsuarioController {
                 System.out.println("Erro: A avaliação deve estar entre 1 e 5.");
             }
         } while (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0);
-
+    
         // Loop para forçar a preencher a descrição
         String descricao;
         do {
@@ -558,7 +559,7 @@ public class UsuarioController {
                 System.out.println("Erro: A descrição não pode estar vazia.");
             }
         } while (descricao.isEmpty());
-
+    
         // Loop para forçar a preencher o preço
         double preco;
         do {
@@ -574,7 +575,7 @@ public class UsuarioController {
                 System.out.println("Erro: O preço não pode ser negativo.");
             }
         } while (preco < 0);
-
+    
         // Loop para forçar a preencher a quantidade em estoque
         int quantidadeEmEstoque;
         do {
@@ -590,7 +591,7 @@ public class UsuarioController {
                 System.out.println("Erro: A quantidade em estoque não pode ser negativa.");
             }
         } while (quantidadeEmEstoque < 0);
-
+    
         // Loop para forçar a preencher a condição do produto
         boolean condicaoDoProduto;
         String condicaoInput;
@@ -606,17 +607,80 @@ public class UsuarioController {
                 condicaoDoProduto = false;
             }
         } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
-
+    
+        // Lista para armazenar imagens
+        ArrayList<Imagem> imagens = new ArrayList<>();
+        int escolha;
+        do {
+            System.out.print("Digite 1 para adicionar mais uma imagem ao produto ou 2 para sair: ");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Erro: Deve ser um número inteiro.");
+                scanner.next(); // Consumir a entrada inválida
+                System.out.print("Digite 1 para adicionar uma imagem ao produto ou 2 para sair: ");
+            }
+            escolha = scanner.nextInt();
+            scanner.nextLine(); // Consumir a quebra de linha após o número
+    
+            if (escolha == 1) {
+                System.out.print("Digite o nome da imagem: ");
+                String nomeImagem = scanner.nextLine().trim();
+                System.out.print("Digite o caminho da imagem: ");
+                String caminhoImagem = scanner.nextLine().trim();
+    
+                // Pergunta se a imagem é principal
+                boolean isPrincipal = false;
+                if (imagens.isEmpty()) {
+                    String principalInput;
+                    do {
+                        System.out.print("Esta imagem é a principal? (true/false): ");
+                        principalInput = scanner.nextLine().trim().toLowerCase();
+                        if (principalInput.equals("true")) {
+                            isPrincipal = true;
+                        } else if (principalInput.equals("false")) {
+                            isPrincipal = false;
+                        } else {
+                            System.out.println("Erro: A entrada deve ser 'true' ou 'false'.");
+                            continue; // Reinicia o loop
+                        }
+                        break; // Sair do loop se a entrada estiver correta
+                    } while (true);
+                } else {
+                    System.out.println("Já existe uma imagem principal. A nova imagem será adicionada como secundária.");
+                }
+    
+                if (!nomeImagem.isEmpty() && !caminhoImagem.isEmpty()) {
+                    imagens.add(new Imagem(nomeImagem, caminhoImagem, isPrincipal));
+                } else {
+                    System.out.println("Erro: O nome e o caminho da imagem não podem estar vazios.");
+                }
+            } else if (escolha != 2) {
+                System.out.println("Erro: Opção inválida.");
+            }
+        } while (escolha != 2);
+    
         // Cadastrando o produto
-        Produto produto = new Produto(nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
-        boolean sucesso = UsuarioService.cadastrarProduto(produto);
-
+        Produto produto = new Produto(nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto, imagens);
+        boolean sucesso = usuarioService.cadastrarProduto(produto);
+    
         if (sucesso) {
             System.out.println("Produto cadastrado com sucesso!");
+    
+            // Exibir imagens cadastradas em formato de tabela
+            System.out.println("\nImagens cadastradas:");
+            System.out.printf("%-20s %-50s %-10s%n", "Nome", "Caminho", "Principal");
+            System.out.println("-------------------------------------------------------------");
+            if (!imagens.isEmpty()) {
+                for (Imagem img : imagens) {
+                    System.out.printf("%-20s %-50s %-10s%n", img.getNome(), img.getCaminho(), img.isPrincipal());
+                }
+            } else {
+                System.out.println("Nenhuma imagem cadastrada.");
+            }
         } else {
             System.out.println("Erro ao cadastrar o produto.");
         }
     }
+    
 
     public void listarProduto() {
         List<Produto> produtos = usuarioService.listarProduto();

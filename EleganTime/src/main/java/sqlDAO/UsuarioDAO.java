@@ -1,17 +1,22 @@
 package sqlDAO;
 
-import model.Usuario;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import model.Usuario;
 
 public class UsuarioDAO {
 
     // Dados de conexão
     private static final String URL = "jdbc:mysql://localhost:3306/elegantime";
     private static final String LOGIN = "root";
-    private static final String SENHA = "root";
+    private static final String SENHA = "2004Vit@";
 
     public static boolean salvar(Usuario novoUsuario) {
 
