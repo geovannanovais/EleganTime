@@ -15,17 +15,18 @@ public class ProdutoDAO {
     private static final String SENHA = "root";
 
     public static boolean salvar(Produto novoProduto) {
-        String query = "INSERT INTO Produto (nome, descricao, preco, quantidadeEmEstoque, condicaoDoProduto) VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Produto (nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto) VALUES(?, ?, ?, ?, ?, ?)";
 
         try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
              PreparedStatement comandoSQL = conexao.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             // Configurando os parâmetros
             comandoSQL.setString(1, novoProduto.getNome());
-            comandoSQL.setString(2, novoProduto.getDescricao());
-            comandoSQL.setDouble(3, novoProduto.getPreco());
-            comandoSQL.setInt(4, novoProduto.getQuantidadeEmEstoque());
-            comandoSQL.setBoolean(5, novoProduto.getCondicaoDoProduto()); // Ajuste aqui
+            comandoSQL.setDouble(2, novoProduto.getAvaliacao());
+            comandoSQL.setString(3, novoProduto.getDescricao());
+            comandoSQL.setDouble(4, novoProduto.getPreco());
+            comandoSQL.setInt(5, novoProduto.getQuantidadeEmEstoque());
+            comandoSQL.setBoolean(6, novoProduto.getCondicaoDoProduto()); // Ajuste aqui
 
             int linhasAfetadas = comandoSQL.executeUpdate();
 
@@ -47,17 +48,18 @@ public class ProdutoDAO {
     }
 
     public static boolean atualizarProduto(Produto produto) {
-        String query = "UPDATE Produto SET nome = ?, descricao = ?, preco = ?, quantidadeEmEstoque = ?, condicaoDoProduto = ? WHERE idProduto = ?";
+        String query = "UPDATE Produto SET nome = ?, avaliacao = ?, descricao = ?, preco = ?, quantidadeEmEstoque = ?, condicaoDoProduto = ? WHERE idProduto = ?";
 
         try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
              PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
 
             comandoSQL.setString(1, produto.getNome());
-            comandoSQL.setString(2, produto.getDescricao());
-            comandoSQL.setDouble(3, produto.getPreco());
-            comandoSQL.setInt(4, produto.getQuantidadeEmEstoque());
-            comandoSQL.setBoolean(5, produto.getCondicaoDoProduto());
-            comandoSQL.setInt(6, produto.getIdProduto());
+            comandoSQL.setDouble(2, produto.getAvaliacao());
+            comandoSQL.setString(3, produto.getDescricao());
+            comandoSQL.setDouble(4, produto.getPreco());
+            comandoSQL.setInt(5, produto.getQuantidadeEmEstoque());
+            comandoSQL.setBoolean(6, produto.getCondicaoDoProduto());
+            comandoSQL.setInt(7, produto.getIdProduto());
 
             int linhasAfetadas = comandoSQL.executeUpdate();
             return linhasAfetadas > 0;
@@ -81,6 +83,7 @@ public class ProdutoDAO {
                 Produto produto = new Produto();
                 produto.setIdProduto(rs.getInt("idProduto"));
                 produto.setNome(rs.getString("nome"));
+                produto.setAvaliacao(rs.getDouble("avaliacao"));
                 produto.setDescricao(rs.getString("descricao"));
                 produto.setPreco(rs.getDouble("preco"));
                 produto.setQuantidadeEmEstoque(rs.getInt("quantidadeEmEstoque"));
@@ -110,6 +113,7 @@ public class ProdutoDAO {
                     produtoEncontrado = new Produto();
                     produtoEncontrado.setIdProduto(rs.getInt("idProduto"));
                     produtoEncontrado.setNome(rs.getString("nome"));
+                    produtoEncontrado.setAvaliacao(rs.getDouble("avaliacao"));
                     produtoEncontrado.setDescricao(rs.getString("descricao"));
                     produtoEncontrado.setPreco(rs.getDouble("preco"));
                     produtoEncontrado.setQuantidadeEmEstoque(rs.getInt("quantidadeEmEstoque"));
