@@ -358,6 +358,22 @@ public class UsuarioController {
             }
         } while (nome.isEmpty());
 
+        // Loop para forçar a preencher a avaliação
+        double avaliacao;
+        do {
+            System.out.print("Avaliação (1 a 5): ");
+            while (!scanner.hasNextDouble()) {
+                System.out.println("Erro: A avaliação deve ser um número decimal.");
+                scanner.next(); // Consumir a entrada inválida
+                System.out.print("Avaliação (1 a 5): ");
+            }
+            avaliacao = scanner.nextDouble();
+            scanner.nextLine(); // Consumir a quebra de linha após o número
+            if (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0) {
+                System.out.println("Erro: A avaliação deve estar entre 1 e 5.");
+            }
+        } while (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0);
+
         // Loop para forçar a preencher a descrição
         String descricao;
         do {
@@ -417,7 +433,7 @@ public class UsuarioController {
         } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
 
         // Atualizando o produto
-        Produto produto = new Produto(idProduto, nome, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
+        Produto produto = new Produto(idProduto, nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
         boolean sucesso = UsuarioService.atualizarProduto(produto);
 
         if (sucesso) {
@@ -440,6 +456,21 @@ public class UsuarioController {
             }
         } while (nome.isEmpty());
 
+        // Loop para forçar a preencher a avaliação
+        double avaliacao;
+        do {
+            System.out.print("Avaliação (1 a 5): ");
+            while (!scanner.hasNextDouble()) {
+                System.out.println("Erro: A avaliação deve ser um número decimal.");
+                scanner.next(); // Consumir a entrada inválida
+                System.out.print("Avaliação (1 a 5): ");
+            }
+            avaliacao = scanner.nextDouble();
+            scanner.nextLine(); // Consumir a quebra de linha após o número
+            if (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0) {
+                System.out.println("Erro: A avaliação deve estar entre 1 e 5, em incrementos de 0,5.");
+            }
+        } while (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0);
 
         // Loop para forçar a preencher a descrição
         String descricao;
@@ -500,7 +531,7 @@ public class UsuarioController {
         } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
 
         // Cadastrando o produto
-        Produto produto = new Produto(nome, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
+        Produto produto = new Produto(nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
         boolean sucesso = UsuarioService.cadastrarProduto(produto);
 
         if (sucesso) {
@@ -520,17 +551,18 @@ public class UsuarioController {
         }
 
         // Cabeçalho da tabela
-        System.out.printf("%-10s %-30s %-15s %-20s %-20s%n",
-                "ID", "Nome", "Valor", "Qtde Estoque", "Status");
+        System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n",
+                "ID", "Nome", "Avaliacao","Valor", "Qtde Estoque", "Status");
 
         // Linha de separação
-        System.out.println("=".repeat(90));
+        System.out.println("=".repeat(100));
 
         // Conteúdo da tabela
         for (Produto produto : produtos) {
-            System.out.printf("%-10s %-30s %-15s %-20s %-20s%n",
+            System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n",
                     produto.getIdProduto(),
                     produto.getNome(),
+                    produto.getAvaliacao(),
                     produto.getPreco(),
                     produto.getQuantidadeEmEstoque(),
                     produto.getCondicaoDoProduto() ? "Ativo" : "Inativo");
