@@ -18,6 +18,7 @@ CREATE TABLE Usuario (
 CREATE TABLE Produto (
 	idProduto INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(200) NOT NULL,
+    avaliacao DECIMAL(2,1) NOT NULL CHECK (avaliacao >= 1 AND avaliacao <= 5),
     descricao VARCHAR(2000) NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
     quantidadeEmEstoque INT NOT NULL,
@@ -28,8 +29,8 @@ CREATE TABLE Produto (
 INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicaoDoUsuario) 
 VALUES ('Admin', 12345678900, 'admin@admin.com.br', 'Administrador', '12345', TRUE);
 
-INSERT INTO Produto (nome, descricao, preco, quantidadeEmEstoque, condicaoDoProduto) 
-VALUES ('Relógio Feminino Lince Urban', 'O relógio feminino da marca Lince é um acessório elegante e sofisticado que certamente chamará a atenção.', 400.00, 50, TRUE);
+INSERT INTO Produto (nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto) 
+VALUES ('Relógio Feminino Lince Urban', 2, 'O relógio feminino da marca Lince é um acessório elegante e sofisticado que certamente chamará a atenção.', 400.00, 50, TRUE);
 
 
 -- Selecionando todos os registros da tabela Usuario
