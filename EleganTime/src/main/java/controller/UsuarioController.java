@@ -417,7 +417,7 @@ public class UsuarioController {
         } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
 
         // Atualizando o produto
-        Produto produto = new Produto(nome, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
+        Produto produto = new Produto(idProduto, nome, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
         boolean sucesso = UsuarioService.atualizarProduto(produto);
 
         if (sucesso) {
