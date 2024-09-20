@@ -4,6 +4,7 @@ public class Produto {
 
     private int idProduto;
     private String nome;
+    private double avaliacao;
     private String descricao;
     private double preco;
     private int quantidadeEmEstoque;
@@ -14,9 +15,10 @@ public class Produto {
     }
 
     // Construtor com todos os parâmetros
-    public Produto(int idProduto, String nome, String descricao, double preco, int quantidadeEmEstoque, boolean condicaoDoProduto) {
+    public Produto(int idProduto, String nome, double avaliacao, String descricao, double preco, int quantidadeEmEstoque, boolean condicaoDoProduto) {
         this.idProduto = idProduto;
         this.nome = nome;
+        this.avaliacao = avaliacao;
         this.descricao = descricao;
         this.preco = preco;
         this.quantidadeEmEstoque = quantidadeEmEstoque;
@@ -24,8 +26,9 @@ public class Produto {
     }
 
     // Construtor sem o parâmetro idProduto
-    public Produto(String nome, String descricao, double preco, int quantidadeEmEstoque, boolean condicaoDoProduto) {
+    public Produto(String nome, double avaliacao, String descricao, double preco, int quantidadeEmEstoque, boolean condicaoDoProduto) {
         this.nome = nome;
+        this.avaliacao = avaliacao;
         this.descricao = descricao;
         this.preco = preco;
         this.quantidadeEmEstoque = quantidadeEmEstoque;
@@ -48,9 +51,11 @@ public class Produto {
         this.nome = nome;
     }
 
-    public String getDescricao() {
-        return descricao;
-    }
+    public double getAvaliacao() { return avaliacao; }
+
+    public void setAvaliacao(double avaliacao) { this.avaliacao = avaliacao; }
+
+    public String getDescricao() { return descricao; }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
@@ -83,6 +88,6 @@ public class Produto {
     // Para exibir
     @Override
     public String toString() {
-        return idProduto + " | " + nome + " | " + descricao + " | " + preco + " | " + quantidadeEmEstoque + " | " + condicaoDoProduto;
+        return idProduto + " | " + nome + " | " + avaliacao + " | " + descricao + " | " + preco + " | " + quantidadeEmEstoque + " | " + condicaoDoProduto;
     }
 }
