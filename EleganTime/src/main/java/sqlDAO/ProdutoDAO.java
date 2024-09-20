@@ -17,8 +17,7 @@ public class ProdutoDAO {
     public static boolean salvar(Produto novoProduto) {
         String query = "INSERT INTO Produto (nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto) VALUES(?, ?, ?, ?, ?, ?)";
 
-        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
-             PreparedStatement comandoSQL = conexao.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA); PreparedStatement comandoSQL = conexao.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             // Configurando os parâmetros
             comandoSQL.setString(1, novoProduto.getNome());
@@ -50,8 +49,7 @@ public class ProdutoDAO {
     public static boolean atualizarProduto(Produto produto) {
         String query = "UPDATE Produto SET nome = ?, avaliacao = ?, descricao = ?, preco = ?, quantidadeEmEstoque = ?, condicaoDoProduto = ? WHERE idProduto = ?";
 
-        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
-             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA); PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
 
             comandoSQL.setString(1, produto.getNome());
             comandoSQL.setDouble(2, produto.getAvaliacao());
@@ -75,9 +73,7 @@ public class ProdutoDAO {
         String query = "SELECT * FROM Produto";
         ArrayList<Produto> lista = new ArrayList<>();
 
-        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
-             PreparedStatement comandoSQL = conexao.prepareStatement(query);
-             ResultSet rs = comandoSQL.executeQuery()) {
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA); PreparedStatement comandoSQL = conexao.prepareStatement(query); ResultSet rs = comandoSQL.executeQuery()) {
 
             while (rs.next()) {
                 Produto produto = new Produto();
@@ -103,8 +99,7 @@ public class ProdutoDAO {
         String query = "SELECT * FROM Produto WHERE idProduto = ?";
         Produto produtoEncontrado = null;
 
-        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA);
-             PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
+        try (Connection conexao = DriverManager.getConnection(URL, LOGIN, SENHA); PreparedStatement comandoSQL = conexao.prepareStatement(query)) {
 
             comandoSQL.setInt(1, idProduto);
 
@@ -126,6 +121,23 @@ public class ProdutoDAO {
         }
 
         return produtoEncontrado;
+    }
+
+    public static boolean atualizarQuantidadeEstoque(Produto produto) {
+        String sql = "UPDATE Produto SET quantidadeEmEstoque = ? WHERE idProduto = ?";
+
+        // Utilizando DriverManager para obter a conexão
+        try (Connection conn = DriverManager.getConnection(URL, LOGIN, SENHA); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, produto.getQuantidadeEmEstoque());
+            stmt.setInt(2, produto.getIdProduto());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

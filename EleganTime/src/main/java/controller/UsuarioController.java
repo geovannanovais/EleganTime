@@ -3,6 +3,7 @@ package controller;
 import model.Produto;
 import model.Usuario;
 import service.UsuarioService;
+import utils.SessaoUsuario;
 
 import java.util.List;
 import java.util.Scanner;
@@ -11,6 +12,7 @@ public class UsuarioController {
 
     private UsuarioService usuarioService;
     private Scanner scanner;
+    private Usuario usuarioLogado;
 
     public UsuarioController() {
         usuarioService = new UsuarioService();
@@ -22,7 +24,6 @@ public class UsuarioController {
 
         // Loop até que o login seja bem-sucedido ou o usuário decida sair
         while (!loginBemSucedido) {
-
             if (exibirTelaLogin()) {
                 loginBemSucedido = true; // Login bem-sucedido
             } else {
@@ -38,10 +39,27 @@ public class UsuarioController {
         // Se o login for bem-sucedido, entra no menu principal
         boolean continuar = true;
         while (continuar) {
-            System.out.println("\nEscolha uma opção:");
-            System.out.println("1. Gerenciar Usuários");
-            System.out.println("2. Gerenciar Produtos");
-            System.out.println("3. Sair");
+            Usuario usuarioLogado = SessaoUsuario.getUsuario();
+
+            if (usuarioLogado == null) {
+                System.out.println("Usuário não autenticado. Por favor, faça login.");
+                continuar = false;
+                return;
+            }
+
+            // Exibir opções dependendo do tipo de usuário (Administrador ou Estoquista)
+            if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador")) {
+                System.out.println("\nEscolha uma opção:");
+                System.out.println("1. Gerenciar Usuários");
+                System.out.println("2. Gerenciar Produtos");
+                System.out.println("3. Logout");
+            } else if (usuarioLogado.getGrupo().equalsIgnoreCase("Estoquista")) {
+                // Exibir opções restritas para estoquista
+                System.out.println("\nEscolha uma opção:");
+                System.out.println("1. Listar Produtos");
+                System.out.println("2. Atualizar Quantidade de Estoque");
+                System.out.println("3. Logout");
+            }
 
             System.out.print("Escolha sua opção: ");
             int opcao = scanner.nextInt();
@@ -49,21 +67,33 @@ public class UsuarioController {
 
             switch (opcao) {
                 case 1:
-                    menuUsuario();
+                    if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador")) {
+                        // Administrador acessa menu de usuários
+                        menuUsuario();
+                    } else if (usuarioLogado.getGrupo().equalsIgnoreCase("Estoquista")) {
+                        // Estoquista lista produtos
+                        listarProduto();
+                    }
                     break;
                 case 2:
-                    menuProduto();
+                    if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador")) {
+                        // Administrador acessa menu de produtos
+                        menuProduto();
+                    } else if (usuarioLogado.getGrupo().equalsIgnoreCase("Estoquista")) {
+                        // Estoquista pode atualizar a quantidade de estoque
+                        atualizarProduto();
+                    }
                     break;
                 case 3:
+                    SessaoUsuario.logout();  // Limpa a sessão
+                    System.out.println("Você foi desconectado.");
                     continuar = false;
-                    System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida.");
             }
         }
     }
-
 
     // Tela de login
     private boolean exibirTelaLogin() {
@@ -75,15 +105,17 @@ public class UsuarioController {
         String senha = scanner.nextLine().trim();
 
         // Chama o serviço para validar o login
-        String resultadoLogin = usuarioService.validarLogin(email, senha);
+        Usuario usuario = usuarioService.autenticar(email, senha);
 
-        // Exibe o resultado da validação
-        System.out.println(resultadoLogin);
-
-        // Retorna true apenas se o login for bem-sucedido
-        return resultadoLogin.equals("Login realizado com sucesso!");
+        if (usuario != null) {
+            SessaoUsuario.setUsuario(usuario);  // Armazenar o usuário logado na sessão
+            System.out.println("Login realizado com sucesso! Bem-vindo, " + usuario.getNome());
+            return true;
+        } else {
+            System.out.println("Email ou senha inválidos.");
+            return false;
+        }
     }
-
 
     private void menuUsuario() {
         boolean continuar = true;
@@ -132,14 +164,25 @@ public class UsuarioController {
             int opcao = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha
 
+            Usuario usuarioLogado = SessaoUsuario.getUsuario();
+
             switch (opcao) {
                 case 1:
-                    cadastrarProduto();
+                    if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador")) {
+                        cadastrarProduto();
+                    } else {
+                        System.out.println("Acesso negado. Apenas administradores podem cadastrar produtos.");
+                    }
                     break;
                 case 2:
                     listarProduto();
                     System.out.println();
-                    atualizarProduto();
+                    if (usuarioLogado.getGrupo().equalsIgnoreCase("Administrador") ||
+                            usuarioLogado.getGrupo().equalsIgnoreCase("Estoquista")) {
+                        atualizarProduto();
+                    } else {
+                        System.out.println("Acesso negado. Apenas administradores e estoquistas podem atualizar produtos.");
+                    }
                     break;
                 case 3:
                     listarProduto();
@@ -280,7 +323,7 @@ public class UsuarioController {
         } while (grupo.contains(" ") || grupo.isEmpty() ||
                 (!grupo.equalsIgnoreCase("Administrador") && !grupo.equalsIgnoreCase("Estoquista")));
 
-        // Loop para forçar a preencher o senha
+        // Loop para forçar a preencher a senha
         String senha;
         do {
             System.out.print("Senha: ");
@@ -347,6 +390,43 @@ public class UsuarioController {
         System.out.println("ID do Produto a ser atualizado:");
         int idProduto = scanner.nextInt();
         scanner.nextLine(); // Consumir a quebra de linha após o número
+
+        // Obtém o produto pelo ID
+        Produto produto = usuarioService.buscarProdutoPorId(idProduto);
+        if (produto == null) {
+            System.out.println("Produto não encontrado.");
+            return;
+        }
+
+        // Pergunta ao estoquista apenas pela quantidade
+        int novaQuantidade;
+        do {
+            System.out.print("Nova Quantidade em Estoque: ");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Erro: Quantidade em estoque deve ser um número inteiro.");
+                scanner.next(); // Consumir a entrada inválida
+                System.out.print("Nova Quantidade em Estoque: ");
+            }
+            novaQuantidade = scanner.nextInt();
+            scanner.nextLine(); // Consumir a quebra de linha após o número
+            if (novaQuantidade < 0) {
+                System.out.println("Erro: A quantidade em estoque não pode ser negativa.");
+            }
+        } while (novaQuantidade < 0);
+
+        // Atualizar apenas a quantidade de estoque do produto
+        produto.setQuantidadeEmEstoque(novaQuantidade);
+        boolean sucesso = usuarioService.atualizarProdutoEstoque(produto);
+
+        if (sucesso) {
+            System.out.println("Quantidade de estoque atualizada com sucesso!");
+        } else {
+            System.out.println("Erro ao atualizar a quantidade de estoque.");
+        }
+    }
+
+
+    private void cadastrarProduto() {
 
         // Loop para forçar a preencher o nome
         String nome;
@@ -432,104 +512,6 @@ public class UsuarioController {
             }
         } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
 
-        // Atualizando o produto
-        Produto produto = new Produto(idProduto, nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
-        boolean sucesso = UsuarioService.atualizarProduto(produto);
-
-        if (sucesso) {
-            System.out.println("Produto atualizado com sucesso!");
-        } else {
-            System.out.println("Erro ao atualizar o produto.");
-        }
-    }
-
-
-    private void cadastrarProduto() {
-
-        // Loop para forçar a preencher o nome
-        String nome;
-        do {
-            System.out.print("Nome: ");
-            nome = scanner.nextLine().trim();
-            if (nome.isEmpty()) {
-                System.out.println("Erro: O nome não pode estar vazio.");
-            }
-        } while (nome.isEmpty());
-
-        // Loop para forçar a preencher a avaliação
-        double avaliacao;
-        do {
-            System.out.print("Avaliação (1 a 5): ");
-            while (!scanner.hasNextDouble()) {
-                System.out.println("Erro: A avaliação deve ser um número decimal.");
-                scanner.next(); // Consumir a entrada inválida
-                System.out.print("Avaliação (1 a 5): ");
-            }
-            avaliacao = scanner.nextDouble();
-            scanner.nextLine(); // Consumir a quebra de linha após o número
-            if (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0) {
-                System.out.println("Erro: A avaliação deve estar entre 1 e 5, em incrementos de 0,5.");
-            }
-        } while (avaliacao < 1 || avaliacao > 5 || (avaliacao * 10) % 5 != 0);
-
-        // Loop para forçar a preencher a descrição
-        String descricao;
-        do {
-            System.out.print("Descrição Detalhada: ");
-            descricao = scanner.nextLine().trim();
-            if (descricao.isEmpty()) {
-                System.out.println("Erro: A descrição não pode estar vazia.");
-            }
-        } while (descricao.isEmpty());
-
-        // Loop para forçar a preencher o preço
-        double preco;
-        do {
-            System.out.print("Preço: ");
-            while (!scanner.hasNextDouble()) {
-                System.out.println("Erro: Preço deve ser um número decimal.");
-                scanner.next(); // Consumir a entrada inválida
-                System.out.print("Preço: ");
-            }
-            preco = scanner.nextDouble();
-            scanner.nextLine(); // Consumir a quebra de linha após o número
-            if (preco < 0) {
-                System.out.println("Erro: O preço não pode ser negativo.");
-            }
-        } while (preco < 0);
-
-        // Loop para forçar a preencher a quantidade em estoque
-        int quantidadeEmEstoque;
-        do {
-            System.out.print("Quantidade em Estoque: ");
-            while (!scanner.hasNextInt()) {
-                System.out.println("Erro: Quantidade em estoque deve ser um número inteiro.");
-                scanner.next(); // Consumir a entrada inválida
-                System.out.print("Quantidade em Estoque: ");
-            }
-            quantidadeEmEstoque = scanner.nextInt();
-            scanner.nextLine(); // Consumir a quebra de linha após o número
-            if (quantidadeEmEstoque < 0) {
-                System.out.println("Erro: A quantidade em estoque não pode ser negativa.");
-            }
-        } while (quantidadeEmEstoque < 0);
-
-        // Loop para forçar a preencher a condição do produto
-        boolean condicaoDoProduto;
-        String condicaoInput;
-        do {
-            System.out.print("Condição do Produto (true/false): ");
-            condicaoInput = scanner.nextLine().trim().toLowerCase();
-            if (condicaoInput.equals("true")) {
-                condicaoDoProduto = true;
-            } else if (condicaoInput.equals("false")) {
-                condicaoDoProduto = false;
-            } else {
-                System.out.println("Erro: A condição do produto deve ser 'true' ou 'false'");
-                condicaoDoProduto = false;
-            }
-        } while (!condicaoInput.equals("true") && !condicaoInput.equals("false"));
-
         // Cadastrando o produto
         Produto produto = new Produto(nome, avaliacao, descricao, preco, quantidadeEmEstoque, condicaoDoProduto);
         boolean sucesso = UsuarioService.cadastrarProduto(produto);
@@ -541,7 +523,6 @@ public class UsuarioController {
         }
     }
 
-
     public void listarProduto() {
         List<Produto> produtos = usuarioService.listarProduto();
 
@@ -552,7 +533,7 @@ public class UsuarioController {
 
         // Cabeçalho da tabela
         System.out.printf("%-10s %-30s %-10s %-15s %-20s %-10s%n",
-                "ID", "Nome", "Avaliacao","Valor", "Qtde Estoque", "Status");
+                "ID", "Nome", "Avaliacao", "Valor", "Qtde Estoque", "Status");
 
         // Linha de separação
         System.out.println("=".repeat(100));
@@ -570,4 +551,3 @@ public class UsuarioController {
     }
 
 }
-

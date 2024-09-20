@@ -17,10 +17,12 @@ public class UsuarioService {
         return UsuarioDAO.atualizarUsuario(usuario);
     }
 
-    public static boolean cadastrarProduto(Produto produto) { return ProdutoDAO.salvar(produto);
+    public static boolean cadastrarProduto(Produto produto) {
+        return ProdutoDAO.salvar(produto);
     }
 
-    public static boolean atualizarProduto(Produto produto) { return ProdutoDAO.atualizarProduto(produto);
+    public static boolean atualizarProduto(Produto produto) {
+        return ProdutoDAO.atualizarProduto(produto);
     }
 
     public ArrayList<Usuario> listarUsuario() {
@@ -35,27 +37,39 @@ public class UsuarioService {
         return UsuarioDAO.buscarUsuarioPorId(idUsuario);
     }
 
-    public Produto buscarProdutoPorId (int idProduto) {
+    public Produto buscarProdutoPorId(int idProduto) {
         return ProdutoDAO.buscarProdutoPorId(idProduto);
     }
 
-    // Fazer login
-    public String validarLogin(String email, String senha) {
-        Usuario usuario = UsuarioDAO.buscarUsuarioPorEmail(email);  // Agora pode chamar como estático
+    // Implementação do método de autenticação de usuário
+    public Usuario autenticar(String email, String senha) {
+        // Busca o usuário pelo email
+        Usuario usuario = UsuarioDAO.buscarUsuarioPorEmail(email);
 
-
+        // Verifica se o usuário existe
         if (usuario == null) {
-            return "Usuário não encontrado.";
+            System.out.println("Usuário não encontrado.");
+            return null;
         }
 
+        // Verifica se o usuário está ativo
         if (!usuario.getCondicaoDoUsuario()) {
-            return "Usuário inativo.";
+            System.out.println("Usuário inativo.");
+            return null;
         }
 
+        // Verifica se a senha está correta
         if (!usuario.getSenha().equals(senha)) {
-            return "Email ou senha incorretos.";
+            System.out.println("Email ou senha incorretos.");
+            return null;
         }
 
-        return "Login realizado com sucesso!";
+        // Retorna o usuário autenticado
+        return usuario;
+    }
+
+    public boolean atualizarProdutoEstoque(Produto produto) {
+        // Chama o DAO para atualizar apenas a quantidade em estoque
+        return ProdutoDAO.atualizarQuantidadeEstoque(produto);
     }
 }
