@@ -1,38 +1,31 @@
-package model;
+package com.eleganTime.elegantime.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "usuario")
 public class Usuario {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idUsuario")
     private int idUsuario;
     private String nome;
     private String cpf;
     private String email;
-    private String grupo; // Administrador ou Estoquista
+    private String grupo;
     private String senha;
     private boolean condicaoDoUsuario;
 
-    // Construtor vazio
-    public Usuario() {
 
-    }
+    public Usuario() {}
 
-    // Construtor para fazer o login
     public Usuario(String email, String senha) {
         this.email = email;
         this.senha = senha;
     }
 
-    // Construtor com todos os parâmetros
-    public Usuario(int idUsuario, String nome, String cpf, String email, String grupo, String senha, boolean condicaoDoUsuario) {
-        this.idUsuario = idUsuario;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.email = email;
-        this.grupo = grupo;
-        this.senha = senha;
-        this.condicaoDoUsuario = condicaoDoUsuario;
-    }
 
-    // Construtor sem o parâmetro idUsuario
     public Usuario(String nome, String cpf, String email, String grupo, String senha, boolean condicaoDoUsuario) {
         this.nome = nome;
         this.cpf = cpf;
@@ -41,8 +34,6 @@ public class Usuario {
         this.senha = senha;
         this.condicaoDoUsuario = condicaoDoUsuario;
     }
-
-
 
     public int getIdUsuario() {
         return idUsuario;
@@ -88,9 +79,11 @@ public class Usuario {
         return senha;
     }
 
-    public void setSenha(String senha) {this.senha = senha; }
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-    public boolean getCondicaoDoUsuario() {
+    public boolean isCondicaoDoUsuario() {
         return condicaoDoUsuario;
     }
 
@@ -98,9 +91,8 @@ public class Usuario {
         this.condicaoDoUsuario = condicaoDoUsuario;
     }
 
-    // Para exibir
     @Override
     public String toString() {
-        return idUsuario + " | " + nome + " | " + cpf + " | " + email + " | " + grupo + " | " + senha + " | " + condicaoDoUsuario;
+        return idUsuario + " | " + nome + " | " + cpf + " | " + email + " | " + grupo + " | " + condicaoDoUsuario + " | "+senha;
     }
 }
