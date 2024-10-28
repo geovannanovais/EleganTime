@@ -8,23 +8,34 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idUsuario")
+    @Column(name = "id_Usuario") // Nome da coluna no banco de dados
     private int idUsuario;
+
+    @Column(name = "nome", nullable = false) // Nome da coluna no banco de dados
     private String nome;
+
+    @Column(name = "cpf", nullable = false) // Nome da coluna no banco de dados
     private String cpf;
+
+    @Column(name = "email", nullable = false, unique = true) // Nome da coluna no banco de dados
     private String email;
+
+    @Column(name = "grupo", nullable = false) // Nome da coluna no banco de dados
     private String grupo;
+
+    @Column(name = "senha", nullable = false) // Nome da coluna no banco de dados
     private String senha;
-    private boolean condicaoDoUsuario;
 
+    @Column(name = "condicao_Do_Usuario", nullable = false) // Nome da coluna no banco de dados
+    private boolean condicaoDoUsuario = true;
 
-    public Usuario() {}
+    public Usuario() {
+    }
 
     public Usuario(String email, String senha) {
         this.email = email;
         this.senha = senha;
     }
-
 
     public Usuario(String nome, String cpf, String email, String grupo, String senha, boolean condicaoDoUsuario) {
         this.nome = nome;
@@ -93,6 +104,7 @@ public class Usuario {
 
     @Override
     public String toString() {
-        return idUsuario + " | " + nome + " | " + cpf + " | " + email + " | " + grupo + " | " + condicaoDoUsuario + " | "+senha;
+        return idUsuario + " | " + nome + " | " + cpf + " | " + email + " | " + grupo + " | " + condicaoDoUsuario
+                + " | " + senha;
     }
 }

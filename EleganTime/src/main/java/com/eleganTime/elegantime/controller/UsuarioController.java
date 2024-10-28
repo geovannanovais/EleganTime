@@ -1,76 +1,73 @@
 package com.eleganTime.elegantime.controller;
 
-import com.eleganTime.elegantime.model.Usuario;
 import com.eleganTime.elegantime.service.UsuarioService;
+import com.eleganTime.elegantime.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Controller
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/usuarios") // Define uma rota padrão para os GetMapping
 public class UsuarioController {
 
     @Autowired
+
     private UsuarioService usuarioService;
 
-    public List<Usuario> listarUsuarios() {
-        return usuarioService.listarUsuarios();
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
-    public Usuario criarUsuario(Usuario usuario) {
-        return usuarioService.salvar(usuario);
+    /**
+     * Lista todos os usuários.
+     *
+     * @return uma lista de todos os usuários.
+     */
+    @GetMapping()
+    public ResponseEntity<List<Usuario>> listaUsuarios() {
+        List<Usuario> lista = usuarioService.listarUsuarios();
+        return ResponseEntity.status(200).body(lista);
     }
 
-    public Usuario buscarPorId(int id) {
-        return usuarioService.buscarPorId(id);
+    /**
+     * Cria um novo usuário.
+     *
+     * @param usuario o usuário a ser criado.
+     * @return o usuário criado.
+     */
+    @PostMapping
+    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
+        return ResponseEntity.status(201).body(usuarioService.salvarUsuario(usuario));
     }
 
-    public Usuario atualizarUsuario(int id, Usuario usuario) {
-        return usuarioService.atualizarUsuario(id, usuario);
+    /**
+     * Edita um usuário existente.
+     *
+     * @param usuario o usuário com as alterações.
+     * @return o usuário atualizado.
+     */
+    @PutMapping
+    public ResponseEntity<Usuario> editarUsuario(@RequestBody Usuario usuario) {
+        return ResponseEntity.status(200).body(usuarioService.editUsuario(usuario));
     }
 
-    public void deletarUsuario(int id) {
-        usuarioService.deletarUsuario(id);
-    }
-
-    public void ativarUsuario(int id) {
-        usuarioService.ativarUsuario(id);
-    }
-
-    public void desativarUsuario(int id) {
-        usuarioService.desativarUsuario(id);
-    }
-
-    public static boolean validarCpf(String cpf) {
-        cpf = cpf.replaceAll("[^0-9]", "");
-
-        if (cpf.length() != 11) {
-            return false;
+    @PostMapping("/login")
+    public ResponseEntity<Usuario> validarSenha(@RequestBody Usuario usuario) {
+        Boolean valid = usuarioService.validarSenha(usuario);
+        if (!valid) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        if (cpf.chars().distinct().count() == 1) {
-            return false;
-        }
-
-        int soma = 0;
-        for (int i = 0; i < 9; i++) {
-            soma += Character.getNumericValue(cpf.charAt(i)) * (10 - i);
-        }
-        int primeiroDigitoVerificador = 11 - (soma % 11);
-        if (primeiroDigitoVerificador >= 10) {
-            primeiroDigitoVerificador = 0;
-        }
-
-        soma = 0;
-        for (int i = 0; i < 10; i++) {
-            soma += Character.getNumericValue(cpf.charAt(i)) * (11 - i);
-        }
-        int segundoDigitoVerificador = 11 - (soma % 11);
-        if (segundoDigitoVerificador >= 10) {
-            segundoDigitoVerificador = 0;
-        }
-
-        return (Character.getNumericValue(cpf.charAt(9)) == primeiroDigitoVerificador) &&
-                (Character.getNumericValue(cpf.charAt(10)) == segundoDigitoVerificador);
+        return ResponseEntity.status(200).build();
     }
 }
