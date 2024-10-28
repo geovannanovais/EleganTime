@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>3.3.5</version>
+        <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.eleganTime</groupId>
@@ -22,29 +22,49 @@
     </properties>
 
     <dependencies>
-
+        <!-- Dependência do Spring Boot Starter: 
+             Inclui todas as dependências básicas necessárias para um aplicativo Spring Boot.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- Dependência do Spring Boot para JPA: 
+             Permite o uso do Java Persistence API (JPA) para interação com bancos de dados.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!-- Dependência do Spring Boot para Web: 
+             Inclui o suporte ao Spring MVC para criar aplicativos web e APIs RESTful.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Dependência do Thymeleaf: 
+             Um mecanismo de template usado para gerar HTML em aplicações web.
+        -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>5.6.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <!-- Dependência do Spring Security: 
+             Para adicionar funcionalidades de segurança na aplicação, como autenticação e autorização.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
+        <!-- Dependência do MySQL Connector: 
+             O driver necessário para conectar a aplicação a um banco de dados MySQL.
+        -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -52,20 +72,40 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Ferramenta de Desenvolvimento (DevTools): 
+             Facilita o desenvolvimento com recursos como reinicialização automática da aplicação.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Dependência para Testes: 
+             Inclui ferramentas para escrever e executar testes em sua aplicação.
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.13.9</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Plugin Spring Boot para empacotamento -->
+            <!-- Plugin Spring Boot para empacotamento: 
+                 Facilita o empacotamento do aplicativo como um arquivo JAR executável.
+            -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.3.4</version>
                 <executions>
                     <execution>
                         <goals>
