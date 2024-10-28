@@ -4,3 +4,9 @@ Banco: JDBC - Usando o MySQL Workbench
 
 IDE que inicei o projeto: IntelliJ IDEA 2024.2.0.2
 
+Dependencias que tem no projeto:
+
+Spring Boot DevTools
+Spring Web
+Spring Data JPA
+MySQL Driver
