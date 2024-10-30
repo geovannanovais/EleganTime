@@ -31,7 +31,7 @@ public class UsuarioController {
 
     /**
      * Lista todos os usuários.
-     *
+     * 
      * @return uma lista de todos os usuários.
      */
     @GetMapping()
@@ -42,7 +42,7 @@ public class UsuarioController {
 
     /**
      * Cria um novo usuário.
-     *
+     * 
      * @param usuario o usuário a ser criado.
      * @return o usuário criado.
      */
@@ -53,7 +53,7 @@ public class UsuarioController {
 
     /**
      * Edita um usuário existente.
-     *
+     * 
      * @param usuario o usuário com as alterações.
      * @return o usuário atualizado.
      */

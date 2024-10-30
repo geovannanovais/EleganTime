@@ -10,4 +10,5 @@ public class ElegantimeApplication {
     public static void main(String[] args) {
         SpringApplication.run(ElegantimeApplication.class, args);
     }
+
 }

@@ -25,7 +25,6 @@ public class ImagemService {
         return imagemRepository.findById(idImagem).orElse(null);
     }
 
-
     public void deletarImagem(int idImagem) {
         imagemRepository.deleteById(idImagem);
     }

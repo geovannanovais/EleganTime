@@ -19,7 +19,7 @@ public class UsuarioService {
     /**
      * Salva um novo usuário no banco de dados após validar o CPF e encriptar a
      * senha.
-     *
+     * 
      * @param usuario O usuário a ser salvo.
      * @return O usuário salvo.
      * @throws IllegalArgumentException se o CPF for inválido.
@@ -40,7 +40,7 @@ public class UsuarioService {
 
     /**
      * Lista todos os usuários.
-     *
+     * 
      * @return lista de todos os usuários.
      */
     public List<Usuario> listarUsuarios() {
@@ -50,7 +50,7 @@ public class UsuarioService {
     /**
      * Edita um usuário existente após validar o CPF e encriptar a senha se
      * alterada.
-     *
+     * 
      * @param usuario O usuário com as alterações.
      * @return O usuário atualizado.
      * @throws IllegalArgumentException se o CPF for inválido.
@@ -74,7 +74,7 @@ public class UsuarioService {
 
     /**
      * Busca um usuário pelo ID.
-     *
+     * 
      * @param id o ID do usuário.
      * @return o usuário encontrado ou null.
      */
@@ -84,7 +84,7 @@ public class UsuarioService {
 
     /**
      * Autentica um usuário pelo email e senha fornecidos.
-     *
+     * 
      * @param email          o email do usuário.
      * @param senhaInformada a senha informada para autenticação.
      * @return o usuário autenticado ou null se as credenciais forem inválidas.
@@ -100,7 +100,7 @@ public class UsuarioService {
 
     /**
      * Ativa o usuário com o ID fornecido.
-     *
+     * 
      * @param id o ID do usuário.
      */
     public void ativarUsuario(int id) {
@@ -113,7 +113,7 @@ public class UsuarioService {
 
     /**
      * Desativa o usuário com o ID fornecido.
-     *
+     * 
      * @param id o ID do usuário.
      */
     public void desativarUsuario(int id) {
