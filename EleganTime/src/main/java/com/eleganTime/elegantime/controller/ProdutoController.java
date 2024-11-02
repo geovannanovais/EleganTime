@@ -4,7 +4,6 @@ import com.eleganTime.elegantime.model.Produto;
 import com.eleganTime.elegantime.service.ProdutoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
