@@ -1,5 +1,6 @@
 package com.eleganTime.elegantime.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class Imagem {
 
     @ManyToOne
     @JoinColumn(name = "id_Produto") // Chave estrangeira para a tabela Produto
+    @JsonIgnore // Ignora a serialização do Produto nesta relação para evitar loop
     private Produto produto;
 
     public Imagem() {

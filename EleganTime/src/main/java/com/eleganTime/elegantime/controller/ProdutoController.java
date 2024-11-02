@@ -5,18 +5,26 @@ import com.eleganTime.elegantime.service.ProdutoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/produtos")
 public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
 
+    @GetMapping()
     public List<Produto> listarProdutosInterno() {
-        return produtoService.listarProdutos();
+        List<Produto> lista = produtoService.listarProdutos();
+        return lista;
     }
 
     public Produto salvar(Produto produto) {
