@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Relógios - Elegantime</title>
+    <link rel="stylesheet" href="../static/css/index.css">
+</head>
+
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/img/Elegantime.jpg">
+                </a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Digite o que você procura">
+                <button>Buscar</button>
+            </div>
+            <div class="menu-icons">
+                <a href="login.html">Entrar </a> ou
+                <a href="../templates/cadastrarUsuario.html">Cadastrar</a>
+                <a href="#" id="cartLink">Carrinho</a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Todas Categorias</a></li>
+                <li><a href="#">Joias</a></li>
+                <li><a href="#">Relógios Masculinos</a></li>
+                <li><a href="#">Relógios Femininos</a></li>
+                <li><a href="#">Presentes</a></li>
+                <li><a href="#">Promoções</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Seu Carrinho</h2>
+            <p>Aqui estão os itens que você adicionou ao carrinho.</p>
+        </div>
+    </div>
+
+    <section class="products">
+        <div class="product">
+            <img src="img/relogio1.jpg" alt="Relógio Mondaine Feminino">
+            <h3>Relógio Mondaine Feminino</h3>
+            <p>R$ 220,00</p>
+            <p>até 6x de R$ 36,66</p>
+            <button>Comprar</button>
+        </div>
+        <div class="product">
+            <img src="img/relogio2.jpg" alt="Kit Relógio Champion Feminino">
+            <h3>Kit Relógio Champion Feminino</h3>
+            <p>R$ 240,00</p>
+            <p>até 6x de R$ 40,00</p>
+            <button>Comprar</button>
+        </div>
+        <div class="product">
+            <img src="img/relogio3.jpg" alt="Relógio Orient Masculino">
+            <h3>Relógio Orient Masculino Automático</h3>
+            <p>R$ 898,00</p>
+            <p>até 10x de R$ 89,80</p>
+            <button>Comprar</button>
+        </div>
+        <div class="product">
+            <img src="img/relogio4.jpg" alt="Relógio Mondaine Masculino">
+            <h3>Relógio Mondaine Masculino</h3>
+            <p>R$ 220,00</p>
+            <p>até 6x de R$ 36,66</p>
+            <button>Comprar</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>Entrega em até 48h - Frete Grátis!</p>
+        <p>Política de Privacidade</p>
+    </footer>
+
+    <script>
+        var modal = document.getElementById("cartModal");
+        var cartLink = document.getElementById("cartLink");
+        var span = document.getElementsByClassName("close")[0];
+
+        cartLink.onclick = function (event) {
+            event.preventDefault();
+            modal.style.display = "block";
+        }
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>

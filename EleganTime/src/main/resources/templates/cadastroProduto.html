@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+    <link rel="stylesheet" href="../static/css/cadastroProduto.css">
+</head>
+
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/img/Elegantime.jpg">
+                </a>
+            </div>
+            <div class="menu-icons">
+                <a>Perfil</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>Cadastrar Produto</h2>
+
+            <form>
+                <label for="productName">Nome do Produto:</label>
+                <input type="text" id="productName" name="productName" placeholder="Nome do Produto">
+
+                <label for="price">Preço:</label>
+                <input type="number" id="price" name="price" placeholder="Preço">
+
+                <label for="stock">Em Estoque:</label>
+                <input type="number" id="stock" name="stock" placeholder="Quantidade em Estoque">
+
+                <label for="description">Descrição Detalhada:</label>
+                <textarea id="description" name="description" placeholder="Descrição do Produto"></textarea>
+
+                <label for="rating">Avaliação:</label>
+                <input type="number" id="rating" name="rating" placeholder="Avaliação (1 a 5)" min="1" max="5">
+
+                <label for="imageUpload" class="btn">Adicionar Imagens do Produto</label>
+                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                <button type="button" class="btn cancel">Cancelar</button>
+            </form>
+        </div>
+
+        <div class="image-container">
+            <img id="productImage" src="img-placeholder.png" alt="Imagem do Produto">
+        </div>
+
+        <script>
+            const imageInput = document.getElementById('imageUpload');
+            const productImage = document.getElementById('productImage');
+
+            imageInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        productImage.src = e.target.result;
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.querySelector('label[for="imageUpload"]').onclick = function () {
+                imageInput.click();
+            };
+        </script>
+    </div>
+</body>
+
+</html>
