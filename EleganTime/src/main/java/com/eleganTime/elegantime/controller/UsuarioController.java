@@ -71,13 +71,26 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioService.editUsuario(usuario));
     }
 
+    /**
+     * Endpoint para validar a senha do usuário durante o login.
+     *
+     * @param usuario objeto que contém as informações do usuário, incluindo a
+     *                senha,
+     *                que será validada.
+     * @return ResponseEntity<Usuario> um objeto ResponseEntity que contém o status
+     *         HTTP da operação. Retorna status 200 (OK) se a senha for válida e
+     *         401 (UNAUTHORIZED) se a senha for inválida.
+     * 
+     * @throws Exception se ocorrer algum erro durante a validação da senha.
+     */
     @PostMapping("/login")
-    public ResponseEntity<Usuario> validarSenha(@Valid @RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> validarSenha(@RequestBody Usuario usuario) {
         Boolean valid = usuarioService.validarSenha(usuario);
         if (!valid) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.status(200).build();
+        // Retorna status 200 para sucesso no login
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
