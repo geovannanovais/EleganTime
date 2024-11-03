@@ -1,38 +1,29 @@
 package com.eleganTime.elegantime.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Column;
 
 @Entity
 public class Imagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") // Nome da coluna no banco de dados
     private int id;
-
-    @Column(name = "nome") // Nome da coluna no banco de dados
     private String nome;
-
-    @Column(name = "caminho", nullable = false) // Nome da coluna no banco de dados
     private String caminho;
-
-    @Column(name = "principal", nullable = false) // Nome da coluna no banco de dados
     private boolean principal;
 
     @ManyToOne
-    @JoinColumn(name = "id_Produto") // Chave estrangeira para a tabela Produto
-    @JsonIgnore // Ignora a serialização do Produto nesta relação para evitar loop
+    @JoinColumn(name = "idProduto")
     private Produto produto;
 
-    public Imagem() {
-    }
+
+    public Imagem() {}
+
 
     public Imagem(String nome, String caminho, boolean principal, Produto produto) {
         this.nome = nome;
@@ -40,6 +31,7 @@ public class Imagem {
         this.principal = principal;
         this.produto = produto;
     }
+
 
     public int getId() {
         return id;

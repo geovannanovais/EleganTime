@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Relógios - Elegantime</title>
+    <link rel="stylesheet" th:href="@{/css/areaUsuario.css}">
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/index}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+            </a>
+        </div>
+        <div class="menu-icons">
+            <a>Perfil</a>
+        </div>
+    </div>
+</header>
+
+<div class="admin-area">
+    <h1>Área do Estoquista</h1>
+
+    <!-- Dados do Usuário -->
+    <div class="user-info">
+        <p th:text="'Usuário: ' + ${usuario.nome}"></p>
+        <p th:text="'Email: ' + ${usuario.email}"></p>
+        <p th:text="'Grupo: ' + ${usuario.grupo}"></p>
+        <p th:text="'CPF: ' + ${usuario.cpf}"></p>
+    </div>
+
+    <div class="button-container">
+        <a th:href="@{/listaProduto}" class="admin-button">Listar Produtos</a>
+    </div>
+</div>
+
+<footer>
+    <p>Entrega em até 48h - Frete Grátis!</p>
+    <p>Política de Privacidade</p>
+</footer>
+</body>
+</html>

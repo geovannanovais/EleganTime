@@ -1,9 +1,10 @@
 package com.eleganTime.elegantime.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.eleganTime.elegantime.model.Produto;
 import com.eleganTime.elegantime.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.eleganTime.elegantime.model.Produto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Transactional
     public Produto salvar(Produto novoProduto) {
         return produtoRepository.save(novoProduto);
     }
@@ -23,8 +25,24 @@ public class ProdutoService {
     }
 
     public Produto atualizarProduto(int id, Produto produto) {
-        produto.setIdProduto(id);
-        return produtoRepository.save(produto);
+
+        Optional<Produto> produtoExistenteOpt = produtoRepository.findById(id);
+        if (produtoExistenteOpt.isPresent()) {
+            Produto produtoExistente = produtoExistenteOpt.get();
+
+
+            produtoExistente.setNome(produto.getNome());
+            produtoExistente.setPreco(produto.getPreco());
+            produtoExistente.setQuantidadeEmEstoque(produto.getQuantidadeEmEstoque());
+            produtoExistente.setDescricao(produto.getDescricao());
+            produtoExistente.setAvaliacao(produto.getAvaliacao());
+            produtoExistente.setImagens(produto.getImagens());
+
+            return produtoRepository.save(produtoExistente);
+        } else {
+
+            return null;
+        }
     }
 
     public void deletarProduto(Integer idProduto) {
@@ -35,3 +53,4 @@ public class ProdutoService {
         return produtoRepository.findById(idProduto);
     }
 }
+

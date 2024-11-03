@@ -1,72 +1,75 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Usuários</title>
-    <link rel="stylesheet" href="../static/css/listaUsuario.css">
+    <link rel="stylesheet" th:href="@{/css/listaUsuario.css}">
 </head>
 
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="/img/Elegantime.jpg">
-                </a>
-            </div>
-            <div class="menu-icons">
-                <a>Perfil</a>
-            </div>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/index}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+            </a>
         </div>
-    </header>
-
-    <div class="user-list-container">
-        <a href="areaAdmin.html" class="back">← Voltar</a>
-        <h2>Usuários</h2>
-        <div class="new-user">
-            <a href="/html/cadastroUsuario.html" class="add-user">+ Novo Usuário</a>
-            <div class="search-container">
-                <input type="text" placeholder="Pesquisar" class="search">
-                <button class="search-button">Procurar</button>
-            </div>
+        <div class="menu-icons">
+            <a>Perfil</a>
         </div>
+    </div>
+</header>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Alterar</th>
-                    <th>Habilitar/Inabilitar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Leo</td>
-                    <td>leo@gmail.com</td>
-                    <td>Ativo</td>
-                    <td> <a href="#">Alterar</a>
-                    <td><button>Inabilitar</button></td>
-                </tr>
-                <tr>
-                    <td>Maria</td>
-                    <td>maria@gmail.com</td>
-                    <td>Desativado</td>
-                    <td><a href="/html/cadastroUsuario.html">Alterar</a></td>
-                    <td><button>Ativar</button></td>
-                </tr>
-            </tbody>
-        </table>
+<div class="user-list-container">
+    <a th:href="@{/adminArea}" class="back">← Voltar</a>
+    <h2>Usuários</h2>
+    <div class="new-user">
+        <a th:href="@{/cadastrarUsuario}" class="add-user">+ Novo Usuário</a>
+        <div class="search-container">
+            <input type="text" placeholder="Pesquisar" class="search">
+            <button class="search-button">Procurar</button>
+        </div>
     </div>
 
-    <footer>
-        <p>Entrega em até 48h - Frete Grátis!</p>
-        <p>Política de Privacidade</p>
-    </footer>
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Email</th>
+            <th>Grupo</th>
+            <th>Status</th>
+            <th>Alterar</th>
+            <th>Habilitar/Inabilitar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario : ${usuarios}">
+            <td th:text="${usuario.nome}"></td>
+            <td th:text="${usuario.cpf}"></td>
+            <td th:text="${usuario.email}"></td>
+            <td th:text="${usuario.grupo}"></td>
+            <td th:text="${usuario.isCondicaoDoUsuario() ? 'Ativo' : 'Desativado'}"></td>
+            <td>
+                <a th:href="@{/editarUsuario/{id}(id=${usuario.idUsuario})}">Alterar</a>
+
+            </td>
+            <td>
+                <form th:action="@{/alterarStatusUsuario(id=${usuario.idUsuario})}" method="post">
+                    <button type="submit" th:text="${usuario.isCondicaoDoUsuario() ? 'Inabilitar' : 'Habilitar'}"></button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>Entrega em até 48h - Frete Grátis!</p>
+    <p>Política de Privacidade</p>
+</footer>
 
 </body>
-
 </html>

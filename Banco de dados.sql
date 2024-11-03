@@ -9,13 +9,13 @@ USE elegantime;
 
 -- Criação da tabela Usuario
 CREATE TABLE Usuario (
-    id_Usuario INT AUTO_INCREMENT PRIMARY KEY,  -- Nome do campo conforme a convenção Java
+    id_Usuario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(22) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,  -- Email único
+    email VARCHAR(100) NOT NULL UNIQUE,
     grupo VARCHAR(100) NOT NULL,
     senha VARCHAR(100) NOT NULL, 
-    condicao_Do_Usuario BOOLEAN NOT NULL DEFAULT TRUE  -- Condição do usuário
+    condicao_Do_Usuario BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 -- Criação da tabela Produto
@@ -34,23 +34,32 @@ CREATE TABLE Imagem (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255),
     caminho VARCHAR(255) NOT NULL,
-    id_Produto INT NOT NULL,  -- Relacionamento com Produto
+    id_Produto INT NOT NULL,
     principal BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (id_Produto) REFERENCES Produto(id_Produto)  -- Chave estrangeira
+    FOREIGN KEY (id_Produto) REFERENCES Produto(id_Produto)
 );
 
 -- Inserção de dados na tabela Usuario
 INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicao_Do_Usuario) 
-VALUES ('Admin', '68112417059', 'admin@admin.com', 'Administrador', '$2a$10$3wNYGSZKsN871KDvj2BIjuyXk4FIYRjx5219f7d2dfaWYQWzHFoom', TRUE);
+VALUES ('Admin', '68112417059', 'admin@admin.com', 'administrador', '12345', TRUE);
+
+INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicao_Do_Usuario) 
+VALUES ('Estoquista', '68112417022', 'estoquista@estoquista.com', 'estoquista', '12345', TRUE);
 
 -- Inserção de dados na tabela Produto
 INSERT INTO Produto (nome, avaliacao, descricao, preco, quantidade_Em_Estoque, condicao_Do_Produto) 
-VALUES ('Relógio Feminino Lince Urban', 2, 'O relógio feminino da marca Lince é um acessório elegante e sofisticado que certamente chamará a atenção.', 400.00, 50, TRUE);
+VALUES 
+('Relógio Feminino Lince Urban', 2, 'O relógio feminino da marca Lince é um acessório elegante e sofisticado que certamente chamará a atenção.', 400.00, 50, TRUE),
+('Relógio Masculino Lince Urban', 4, 'Relógio masculino Lince, perfeito para qualquer ocasião.', 450.00, 30, TRUE),
+('Relógio Digital Lince', 3, 'Relógio digital com diversas funcionalidades.', 300.00, 20, TRUE);
 
--- Inserção de dados na tabela ImagemProduto
-INSERT INTO Imagem(caminho, id_Produto, principal) 
-VALUES ('/imagens/relogio_feminino_lince_urban_01.jpg', 1, TRUE),
-       ('/imagens/relogio_feminino_lince_urban_02.jpg', 1, FALSE);
+-- Inserção de dados na tabela Imagem com caminho e nome da imagem
+INSERT INTO Imagem(caminho, nome, id_Produto, principal) 
+VALUES 
+('img/img1.jpg', 'imagem1.jpg', 1, TRUE),
+('img/img2.jpg', 'imagem2.jpg', 1, FALSE),
+('img/img3.jpg', 'imagem3.jpg', 2, TRUE),
+('img/img4.jpg', 'imagem4.jpg', 3, TRUE);
 
 -- Consulta todos os registros da tabela Usuario
 SELECT * FROM Usuario;
@@ -58,5 +67,8 @@ SELECT * FROM Usuario;
 -- Consulta todos os registros da tabela Produto
 SELECT * FROM Produto;
 
--- Consulta todos os registros da tabela ImagemProduto
+-- Consulta todos os registros da tabela Imagem
 SELECT * FROM Imagem;
+-- Inserção de dados na tabela Usuario
+
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${usuario.idUsuario != 0 ? 'Editar Usuário' : 'Cadastrar Usuário'}"></title>
+    <link rel="stylesheet" th:href="@{/css/cadastroUsuario.css}">
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/index}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+            </a>
+        </div>
+        <div class="menu-icons">
+            <a>Perfil</a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="form-container">
+        <h2 th:text="${usuario.idUsuario != 0 ? 'Editar Usuário' : 'Cadastrar Usuário'}"></h2>
+
+        <form id="userForm" th:action="${usuario.idUsuario != 0 ? '/editarUsuario/' + usuario.idUsuario : '/cadastrarUsuario'}" method="post">
+            <input type="hidden" th:name="id" th:value="${usuario.idUsuario}"/>
+
+            <label for="userName">Nome do Usuário:</label>
+            <input type="text" id="userName" name="nome" placeholder="Nome do Usuário" th:value="${usuario.nome}" required>
+
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" placeholder="CPF" th:value="${usuario.cpf}" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Email" th:value="${usuario.email}" required>
+
+            <label for="grupo">Grupo:</label>
+            <input type="text" id="grupo" name="grupo" placeholder="Grupo" th:value="${usuario.grupo}" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" placeholder="Senha" th:value="${usuario.senha}" required>
+
+            <label for="condicaoDoUsuario">Condição do Usuário:</label>
+            <input type="checkbox" id="condicaoDoUsuario" name="condicaoDoUsuario" th:checked="${usuario.condicaoDoUsuario}"> Ativo
+
+            <button type="submit" class="btn" id="submitButton" th:text="${usuario.idUsuario != 0 ? 'Salvar Alterações' : 'Cadastrar Usuário'}"></button>
+            <button type="button" class="btn cancel" onclick="window.location.href='@{/listarUsuarios}'">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const usuarioId = /*[[${usuario.idUsuario}]]*/ 0;
+    const form = document.getElementById('userForm');
+
+    if (usuarioId !== 0) { // Verifica se o ID é diferente de zero
+        form.action = '/editarUsuario/' + usuarioId;
+    } else {
+        form.action = '/cadastrarUsuario';
+    }
+</script>
+
+</body>
+</html>

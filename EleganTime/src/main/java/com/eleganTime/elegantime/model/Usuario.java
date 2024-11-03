@@ -1,53 +1,31 @@
 package com.eleganTime.elegantime.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
-@Entity // Define a classe como uma entidade JPA
-@Table(name = "usuario") // Mapeia a entidade para a tabela "usuario" no banco de dados
+@Entity
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Define o campo como chave primária com geração automática
-    @Column(name = "id_Usuario") // Nome da coluna no banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idUsuario")
     private int idUsuario;
-
-    @NotBlank(message = "O nome é obrigatório") // Valida que o campo não é nulo, vazio ou apenas espaços em branco
-    @Column(name = "nome", nullable = false) // Nome da coluna no banco de dados e define como obrigatório
     private String nome;
-
-    @NotBlank(message = "O CPF é obrigaório")
-    @Column(name = "cpf", nullable = false) // Nome da coluna no banco de dados e define como obrigatório
     private String cpf;
-
-    @Email(message = "Insira um e-mail válido!")
-    @NotBlank(message = "O e-mail é obrigaório")
-    @Column(name = "email", nullable = false, unique = true) // Nome da coluna, obrigatório e valor único
     private String email;
-
-    @NotBlank(message = "O grupo é obrigatório!")
-    @Column(name = "grupo", nullable = false) // Nome da coluna e define como obrigatório
     private String grupo;
-
-    @NotBlank(message = "A senha é obrigatório")
-    @Column(name = "senha", nullable = false) // Nome da coluna e define como obrigatório
     private String senha;
+    private boolean condicaoDoUsuario;
 
-    @Column(name = "condicao_Do_Usuario", nullable = false) // Nome da coluna e define como obrigatório
-    private boolean condicaoDoUsuario = true; // Define valor padrão como verdadeiro (ativo)
 
-    // Construtor vazio, necessário para o JPA
-    public Usuario() {
-    }
+    public Usuario() {}
 
-    // Construtor para login com email e senha
     public Usuario(String email, String senha) {
         this.email = email;
         this.senha = senha;
     }
 
-    // Construtor completo para todos os atributos
+
     public Usuario(String nome, String cpf, String email, String grupo, String senha, boolean condicaoDoUsuario) {
         this.nome = nome;
         this.cpf = cpf;
@@ -57,8 +35,7 @@ public class Usuario {
         this.condicaoDoUsuario = condicaoDoUsuario;
     }
 
-    // Métodos getters e setters para acesso e modificação dos atributos
-
+    
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -117,8 +94,6 @@ public class Usuario {
 
     @Override
     public String toString() {
-        // Representação em String do objeto Usuario
-        return idUsuario + " | " + nome + " | " + cpf + " | " + email + " | " + grupo + " | " + condicaoDoUsuario
-                + " | " + senha;
+        return idUsuario + " | " + nome + " | " + cpf + " | " + email + " | " + grupo + " | " + condicaoDoUsuario + " | "+senha;
     }
 }

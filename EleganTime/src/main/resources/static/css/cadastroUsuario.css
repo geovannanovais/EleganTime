@@ -4,11 +4,6 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-}
-
 header {
     background-color: #181818ee;
     padding: 10px;
@@ -28,41 +23,30 @@ header {
     margin-left: 30px;
 }
 
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    height: 100vh;
+}
+
 .container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: #f4faff;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
+    max-width: 500px;
     width: 100%;
 }
 
-/* Estilos para a lista de imagens */
-.image-list {
-    position: absolute;
-    top: 279px;
-    left: 1350px;
-    width: 20%;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow:
-}
-
 .form-container {
-    width: 60%;
     padding: 20px;
-    margin-left: 0;
 }
 
 h2 {
-    color: #ffaa00;
-    margin-bottom: 20px;
     text-align: center;
+    color: #38b6ff;
+    margin-bottom: 20px;
 }
 
 label {
@@ -72,17 +56,12 @@ label {
     display: block;
 }
 
-input, textarea {
+input, select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-textarea {
-    resize: none;
-    height: 60px;
 }
 
 .btn {
@@ -106,19 +85,5 @@ textarea {
 }
 
 .cancel:hover {
-    background-color: #e55959;
-}
-
-.image-container {
-    width: 35%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-}
-
-.image-container img {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 10px;
+    background-color: #e55959;
 }

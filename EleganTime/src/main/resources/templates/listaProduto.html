@@ -1,81 +1,68 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Produtos</title>
-    <link rel="stylesheet" href="../static/css/listaProduto.css">
+    <link rel="stylesheet" th:href="@{/css/listaProduto.css}">
 </head>
 
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="/img/Elegantime.jpg">
-                </a>
-            </div>
-            <div class="menu-icons">
-                <a>Perfil</a>
-            </div>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/home}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+            </a>
         </div>
-    </header>
-
-    <div class="user-list-container">
-        <a href="areaAdmin.html" class="back">← Voltar</a>
-        <h2>Usuários</h2>
-        <div class="new-user">
-            <a href="/html/cadastroProduto.html" class="add-user">+ Novo Produto</a>
-            <div class="search-container">
-                <input type="text" placeholder="Pesquisar" class="search">
-                <button class="search-button">Procurar</button>
-            </div>
+        <div class="menu-icons">
+            <a>Perfil</a>
         </div>
+    </div>
+</header>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Nome</th>
-                    <th>Quantidade</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                    <th>Opções</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Rolex Big 0</td>
-                    <td>0</td>
-                    <td>1.000</td>
-                    <td>Inativo</td>
-                    <td><a href="/html/cadastroProduto.html" class="alterar"> Alterar</a>
-                        <a href="/html/cadastroProduto.html" class="visualizar"> Visualizar</a>
-                        <input type="checkbox" class="ativo"> Ativo
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Rolex P. Diddy</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>Ativo</td>
-                    <td><a href="/html/cadastroProduto.html" class="alterar"> Alterar</a>
-                        <a href="/html/cadastroProduto.html" class="visualizar"> Visualizar</a>
-                        <input type="checkbox" class="ativo"> Ativo
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="user-list-container">
+    <a th:href="@{/login}" class="back">← Voltar</a>
+    <h2>Produtos</h2>
+    <div class="new-user">
+        <a th:href="@{/cadastrarProduto}" class="add-user">+ Novo Produto</a>
+        <div class="search-container">
+            <input type="text" placeholder="Pesquisar" class="search">
+            <button class="search-button">Procurar</button>
+        </div>
     </div>
 
+    <table>
+        <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Opções</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="produto : ${produtos}">
+            <td th:text="${produto.id_Produto}"></td>
+            <td th:text="${produto.nome}"></td>
+            <td th:text="${produto.quantidadeEmEstoque}"></td>
+            <td th:text="${#numbers.formatDecimal(produto.preco, 1, 2)}"></td>
+            <td th:text="${produto.condicaoDoProduto ? 'Ativo' : 'Inativo'}"></td>
+            <td>
+                <a th:href="@{'/editarProduto/' + ${produto.id_Produto}}" class="alterar">Alterar</a>
+                <a th:href="@{'/visualizarProduto/' + ${produto.id_Produto}}" class="visualizar">Visualizar</a>
+                <input type="checkbox" class="ativo" th:checked="${produto.condicaoDoProduto}"> <!-- Corrigido -->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-    <footer>
-        <p>Entrega em até 48h - Frete Grátis!</p>
-        <p>Política de Privacidade</p>
-    </footer>
+<footer>
+    <p>Entrega em até 48h - Frete Grátis!</p>
+    <p>Política de Privacidade</p>
+</footer>
 </body>
-
 </html>

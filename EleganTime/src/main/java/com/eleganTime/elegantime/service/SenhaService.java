@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 public class SenhaService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+
     public String encriptarSenha(String senha) {
         return passwordEncoder.encode(senha);
     }

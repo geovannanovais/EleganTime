@@ -1,6 +1,7 @@
 package com.eleganTime.elegantime.model;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,35 +10,21 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_Produto") // Nome da coluna no banco de dados
     private int id_Produto;
-
-    @Column(name = "nome", nullable = false) // Nome da coluna no banco de dados
     private String nome;
-
-    @Column(name = "avaliacao", nullable = false) // Nome da coluna no banco de dados
     private double avaliacao;
-
-    @Column(name = "descricao", nullable = false) // Nome da coluna no banco de dados
     private String descricao;
-
-    @Column(name = "preco", nullable = false) // Nome da coluna no banco de dados
     private double preco;
-
-    @Column(name = "quantidade_Em_Estoque", nullable = false) // Nome da coluna no banco de dados
     private int quantidadeEmEstoque;
-
-    @Column(name = "condicao_Do_Produto", nullable = false) // Nome da coluna no banco de dados
     private boolean condicaoDoProduto;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagem> imagens = new ArrayList<>();
 
-    public Produto() {
-    }
 
-    public Produto(String nome, double avaliacao, String descricao, double preco, int quantidadeEmEstoque,
-            boolean condicaoDoProduto, List<Imagem> imagens) {
+    public Produto() {}
+
+    public Produto(String nome, double avaliacao, String descricao, double preco, int quantidadeEmEstoque, boolean condicaoDoProduto, List<Imagem> imagens) {
         this.nome = nome;
         this.avaliacao = avaliacao;
         this.descricao = descricao;
@@ -46,6 +33,7 @@ public class Produto {
         this.condicaoDoProduto = condicaoDoProduto;
         this.imagens = imagens != null ? imagens : new ArrayList<>(); // Garantindo uma lista não nula
     }
+
 
     public int getId_Produto() {
         return id_Produto;
