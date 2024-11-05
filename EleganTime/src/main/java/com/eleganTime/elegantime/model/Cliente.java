@@ -3,12 +3,10 @@ package com.eleganTime.elegantime.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Cliente")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idCliente")
     private int idCliente;
 
     private String nome;
@@ -21,19 +19,24 @@ public class Cliente {
     private String bairro;
     private String cidade;
     private String uf;
+
+    @Column(name = "condicao_do_cliente")
     private boolean condicaoDoCliente;
 
-    public Cliente() {
-    }
+    private String dataNascimento;
+    private String genero;
+    private String cep;
+    private String enderecoEntrega;
 
-    public Cliente(String email, String senha) {
-        this.email = email;
-        this.senha = senha;
-    }
+    // Construtor vazio
+    public Cliente() {}
 
+    // Construtor com parâmetros
     public Cliente(String nome, String cpf, String email, String senha,
-            String logradouro, String numero, String complemento,
-            String bairro, String cidade, String uf, boolean condicaoDoCliente) {
+                   String logradouro, String numero, String complemento,
+                   String bairro, String cidade, String uf,
+                   boolean condicaoDoCliente, String dataNascimento,
+                   String genero, String cep, String enderecoEntrega) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
@@ -45,8 +48,13 @@ public class Cliente {
         this.cidade = cidade;
         this.uf = uf;
         this.condicaoDoCliente = condicaoDoCliente;
+        this.dataNascimento = dataNascimento;
+        this.genero = genero;
+        this.cep = cep;
+        this.enderecoEntrega = enderecoEntrega;
     }
 
+    // Getters e Setters
     public int getIdCliente() {
         return idCliente;
     }
@@ -143,10 +151,44 @@ public class Cliente {
         this.condicaoDoCliente = condicaoDoCliente;
     }
 
+    public String getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getEnderecoEntrega() {
+        return enderecoEntrega;
+    }
+
+    public void setEnderecoEntrega(String enderecoEntrega) {
+        this.enderecoEntrega = enderecoEntrega;
+    }
+
     @Override
     public String toString() {
         return idCliente + " | " + nome + " | " + cpf + " | " + email + " | "
                 + logradouro + ", " + numero + " " + complemento + " | "
-                + bairro + " | " + cidade + " | " + uf + " | " + condicaoDoCliente;
+                + bairro + " | " + cidade + " | " + uf + " | " + condicaoDoCliente
+                + " | Data Nascimento: " + dataNascimento + " | Gênero: " + genero
+                + " | CEP: " + cep + " | Endereço de Entrega: " + enderecoEntrega;
     }
 }

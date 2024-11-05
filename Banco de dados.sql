@@ -71,6 +71,7 @@ SELECT * FROM Produto;
 SELECT * FROM Imagem;
 -- Inserção de dados na tabela Usuario
 
+-- Criação da tabela Cliente
 CREATE TABLE Cliente (
     idCliente INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -83,12 +84,16 @@ CREATE TABLE Cliente (
     bairro VARCHAR(100) NOT NULL,
     cidade VARCHAR(100) NOT NULL,
     uf CHAR(2) NOT NULL,
-    condicaoDoCliente BOOLEAN NOT NULL DEFAULT TRUE
+    condicao_Do_Cliente BOOLEAN NOT NULL DEFAULT TRUE,
+    dataNascimento DATE NOT NULL,          -- Novo campo para a data de nascimento
+    genero VARCHAR(10) NOT NULL,           -- Novo campo para gênero
+    cep VARCHAR(10) NOT NULL,              -- Novo campo para CEP
+    enderecoEntrega VARCHAR(255) NOT NULL -- Novo campo para endereço de entrega
 );
 
 -- Inserção de dados na tabela Cliente
-INSERT INTO Cliente (nome, cpf, email, senha, logradouro, numero, complemento, bairro, cidade, uf, condicaoDoCliente) 
+INSERT INTO Cliente (nome, cpf, email, senha, logradouro, numero, complemento, bairro, cidade, uf, condicao_Do_Cliente, dataNascimento, genero, cep, enderecoEntrega) 
 VALUES 
-('João Silva', '12345678909', 'joao.silva@email.com', 'senha123', 'Rua das Flores', '100', 'Apto 202', 'Centro', 'São Paulo', 'SP', TRUE);
+('João Silva', '12345678909', 'joao.silva@email.com', 'senha123', 'Rua das Flores', '100', 'Apto 202', 'Centro', 'São Paulo', 'SP', TRUE, '1985-10-01', 'Masculino', '01010000', 'Rua das Flores, 100');
 
 SELECT * FROM Cliente;

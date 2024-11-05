@@ -24,25 +24,28 @@ public class CadastrarClienteController {
     @GetMapping("/cadastrarCliente")
     public String showCadastroForm(Model model) {
         model.addAttribute("cliente", new Cliente());
-        return "cadastrarCliente"; // Nome da página HTML para o cadastro
+        return "cadastrarCliente";
     }
 
     @GetMapping("/editarCliente/{id}")
     public String showEditForm(@PathVariable int id, Model model) {
         Cliente cliente = clienteService.buscarPorId(id);
+        if (cliente == null) {
+            // Caso o cliente não exista, redireciona para a página de cadastro
+            return "redirect:/cadastrarCliente";
+        }
         model.addAttribute("cliente", cliente);
-        return "cadastrarCliente"; // Nome da página HTML para a edição
+        return "cadastrarCliente";
     }
-
     @PostMapping("/cadastrarCliente")
     public String cadastrarCliente(@ModelAttribute Cliente cliente) {
         if (cliente.getIdCliente() > 0) {
-            // Se o ID é maior que zero, redireciona para o método de edição
+
             return "redirect:/editarCliente/" + cliente.getIdCliente();
         }
 
         clienteService.salvar(cliente);
-        return "redirect:/listarClientes"; // Redireciona para a lista de clientes
+        return "redirect:/login";
     }
 
     @PostMapping("/editarCliente/{id}")
@@ -53,12 +56,12 @@ public class CadastrarClienteController {
             clienteExistente.setNome(cliente.getNome());
             clienteExistente.setCpf(cliente.getCpf());
             clienteExistente.setEmail(cliente.getEmail());
-            // Atualize outros campos conforme necessário
+
 
             clienteService.atualizarCliente(clienteExistente.getIdCliente(), clienteExistente);
-            return "redirect:/listarClientes"; // Redireciona para a lista de clientes
+            return "redirect:/login";
         } else {
-            return "redirect:/error"; // Redireciona para uma página de erro
+            return "redirect:/error";
         }
     }
 
@@ -66,6 +69,6 @@ public class CadastrarClienteController {
     public String listarClientes(Model model) {
         List<Cliente> clientes = clienteService.listarClientes();
         model.addAttribute("clientes", clientes);
-        return "listarClientes"; // Nome da página HTML para a lista de clientes
+        return "login";
     }
 }

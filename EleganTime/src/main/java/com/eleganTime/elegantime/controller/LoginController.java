@@ -1,7 +1,9 @@
 package com.eleganTime.elegantime.controller;
 
 import com.eleganTime.elegantime.model.Usuario;
+import com.eleganTime.elegantime.model.Cliente;
 import com.eleganTime.elegantime.service.UsuarioService;
+import com.eleganTime.elegantime.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +19,9 @@ public class LoginController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -34,6 +39,7 @@ public class LoginController {
         Usuario usuario = usuarioService.autenticarUsuario(email, password);
 
         if (usuario != null) {
+
             HttpSession session = request.getSession();
             session.setAttribute("usuarioId", usuario.getIdUsuario());
 
@@ -45,7 +51,15 @@ public class LoginController {
                 return "redirect:/login?error";
             }
         } else {
-            return "redirect:/login?error";
+            Cliente cliente = clienteService.autenticarCliente(email, password);
+
+            if (cliente != null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("clienteId", cliente.getIdCliente());
+                return "redirect:/areaUsuario";
+            } else {
+                return "redirect:/login?error";
+            }
         }
     }
 }

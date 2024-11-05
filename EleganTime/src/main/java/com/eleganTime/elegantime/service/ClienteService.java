@@ -1,7 +1,7 @@
 package com.eleganTime.elegantime.service;
 
-import com.eleganTime.elegantime.model.Cliente; // Importe a classe Cliente
-import com.eleganTime.elegantime.repository.ClienteRepository; // Importe o repositório correspondente
+import com.eleganTime.elegantime.model.Cliente;
+import com.eleganTime.elegantime.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class ClienteService {
     protected ClienteRepository clienteRepository; // Usando o repositório de Cliente
 
     public Cliente salvar(Cliente cliente) {
-        if (cliente.getIdCliente() != 0) { // Presumindo que você tenha um método getIdCliente()
+        if (cliente.getIdCliente() != 0) {
             Cliente clienteExistente = buscarPorId(cliente.getIdCliente());
             if (clienteExistente != null) {
                 return atualizarCliente(cliente.getIdCliente(), cliente);
@@ -25,6 +25,12 @@ public class ClienteService {
             // Criação de um novo cliente
             return clienteRepository.save(cliente);
         }
+    }
+
+    public Cliente autenticarCliente(String email, String senha) {
+
+        Cliente cliente = clienteRepository.findByEmailAndSenha(email, senha);
+        return cliente;
     }
 
     public Cliente atualizarCliente(int id, Cliente cliente) {

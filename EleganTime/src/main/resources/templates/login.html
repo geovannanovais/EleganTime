@@ -13,8 +13,8 @@
     <h2>Login</h2>
     <form th:action="@{/login}" method="post">
         <div class="input-group">
-            <label for="username">Usuário</label>
-            <input type="text" id="username" name="email" required>
+            <label for="email">E-mail</label> <!-- Alterei de 'username' para 'email' -->
+            <input type="email" id="email" name="email" required> <!-- 'email' no 'name' para manter a consistência -->
         </div>
         <div class="input-group">
             <label for="password">Senha</label>
@@ -22,6 +22,9 @@
         </div>
         <button type="submit">Entrar</button>
     </form>
+
+    <a th:href="@{/cadastrarCliente}" class="btn-cadastrar">Cadastrar novo usuário</a>
 </div>
+
 </body>
 </html>

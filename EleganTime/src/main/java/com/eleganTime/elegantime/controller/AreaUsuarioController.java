@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AreaUsuarioController {
     @GetMapping("/areaUsuario")
     public String areaUsuario() {
-        return "areaEstoquista";
+        return "areaUsuario";
     }
 }
