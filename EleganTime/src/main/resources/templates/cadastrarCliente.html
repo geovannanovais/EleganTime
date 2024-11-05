@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${usuario.idUsuario != 0 ? 'Editar Usuário' : 'Cadastrar Usuário'}"></title>
+    <link rel="stylesheet" th:href="@{/css/cadastroCliente.css}">
+    <link rel="stylesheet" href="../static/css/cadastroCliente.css">
+    <script src="../static/js/cadastrarCliente.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <a th:href="@{/index}">
+                    <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+                </a>
+            </div>
+            <div class="menu-icons">
+                <a>Perfil</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 th:text="${usuario.idUsuario != 0 ? 'Editar Usuário' : 'Cadastrar Usuário'}"></h2>
+
+            <form id="userForm"
+                th:action="${usuario.idUsuario != 0 ? '/editarUsuario/' + usuario.idUsuario : '/cadastrarUsuario'}"
+                method="post">
+                <input type="hidden" th:name="id" th:value="${usuario.idUsuario}" />
+
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" placeholder="Nome Completo" th:value="${usuario.nome}" required
+                    pattern="^(?=.*\s)(?=.*[A-Za-z])[A-Za-z\s]{6,}$"
+                    title="O nome deve ter pelo menos 2 palavras, com mínimo de 3 letras em cada palavra.">
+
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" placeholder="CPF" th:value="${usuario.cpf}" required
+                    pattern="^\d{11}$" title="O CPF deve conter 11 dígitos.">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Email" th:value="${usuario.email}" required>
+
+                <label for="dataNascimento">Data de Nascimento:</label>
+                <input type="date" id="dataNascimento" name="dataNascimento" th:value="${usuario.dataNascimento}"
+                    required>
+
+                <label for="genero">Gênero:</label>
+                <select id="genero" name="genero" required>
+                    <option value="" disabled selected>Selecione seu gênero</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                    <option value="Outro">Outro</option>
+                </select>
+
+                <h3>Endereço de Faturamento</h3>
+                <label for="cep">CEP:</label>
+                <input type="text" id="cep" name="cep" placeholder="CEP" required pattern="^\d{5}-?\d{3}$"
+                    title="O CEP deve estar no formato 00000-000.">
+
+                <label for="logradouro">Logradouro:</label>
+                <input type="text" id="logradouro" name="logradouro" placeholder="Logradouro" required>
+
+                <label for="numero">Número:</label>
+                <input type="text" id="numero" name="numero" placeholder="Número" required>
+
+                <label for="complemento">Complemento:</label>
+                <input type="text" id="complemento" name="complemento" placeholder="Complemento">
+
+                <label for="bairro">Bairro:</label>
+                <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
+
+                <label for="cidade">Cidade:</label>
+                <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
+
+                <label for="uf">UF:</label>
+                <input type="text" id="uf" name="uf" placeholder="UF" required pattern="^[A-Z]{2}$"
+                    title="A UF deve ter 2 letras maiúsculas.">
+
+                <h3>Endereço de Entrega</h3>
+                <label for="enderecoEntrega">Endereço de Entrega:</label>
+                <input type="text" id="enderecoEntrega" name="enderecoEntrega" placeholder="Endereço de Entrega"
+                    required>
+
+                <button type="submit" class="btn" id="submitButton"
+                    th:text="${usuario.idUsuario != 0 ? 'Salvar Alterações' : 'Cadastrar Usuário'}">Cadastrar-se</button>
+                <button type="button" class="btn cancel"
+                    onclick="window.location.href='@{/listarUsuarios}'">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

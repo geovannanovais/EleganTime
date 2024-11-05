@@ -71,4 +71,24 @@ SELECT * FROM Produto;
 SELECT * FROM Imagem;
 -- Inserção de dados na tabela Usuario
 
+CREATE TABLE Cliente (
+    idCliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(22) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(100) NOT NULL,
+    logradouro VARCHAR(255) NOT NULL,
+    numero VARCHAR(20) NOT NULL,
+    complemento VARCHAR(255),
+    bairro VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    condicaoDoCliente BOOLEAN NOT NULL DEFAULT TRUE
+);
 
+-- Inserção de dados na tabela Cliente
+INSERT INTO Cliente (nome, cpf, email, senha, logradouro, numero, complemento, bairro, cidade, uf, condicaoDoCliente) 
+VALUES 
+('João Silva', '12345678909', 'joao.silva@email.com', 'senha123', 'Rua das Flores', '100', 'Apto 202', 'Centro', 'São Paulo', 'SP', TRUE);
+
+SELECT * FROM Cliente;
