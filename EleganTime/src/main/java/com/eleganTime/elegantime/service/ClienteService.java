@@ -3,34 +3,99 @@ package com.eleganTime.elegantime.service;
 import com.eleganTime.elegantime.model.Cliente;
 import com.eleganTime.elegantime.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 @Service
 public class ClienteService {
 
     @Autowired
-    protected ClienteRepository clienteRepository; // Usando o repositório de Cliente
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    private final Pattern nomePattern = Pattern.compile("^[A-Za-z]{3,}\\s[A-Za-z]{3,}$");
 
     public Cliente salvar(Cliente cliente) {
-        if (cliente.getIdCliente() != 0) {
-            Cliente clienteExistente = buscarPorId(cliente.getIdCliente());
-            if (clienteExistente != null) {
-                return atualizarCliente(cliente.getIdCliente(), cliente);
-            } else {
-                throw new RuntimeException("Cliente não encontrado para atualização");
-            }
-        } else {
-            // Criação de um novo cliente
-            return clienteRepository.save(cliente);
+        validarCliente(cliente);
+        cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
+        return clienteRepository.save(cliente);
+    }
+
+    private void validarCliente(Cliente cliente) {
+        // Verifica se o email já existe
+        if (clienteRepository.findByEmail(cliente.getEmail()) != null) {
+            throw new RuntimeException("Email já cadastrado.");
+        }
+
+        // Verifica se o CPF já existe
+        if (clienteRepository.findByCpf(cliente.getCpf()) != null) {
+            throw new RuntimeException("CPF já cadastrado.");
+        }
+
+        // Valida o CPF
+        if (!isValidCPF(cliente.getCpf())) {
+            throw new RuntimeException("CPF inválido.");
+        }
+
+        // Valida o nome completo
+        if (!nomePattern.matcher(cliente.getNome()).matches()) {
+            throw new RuntimeException("O nome deve ter pelo menos duas palavras, com mínimo de 3 letras em cada.");
+        }
+
+        // Valida o endereço de faturamento
+        if (!validarEndereco(cliente)) {
+            throw new RuntimeException("Endereço de faturamento incompleto.");
+        }
+
+        // Valida o CEP
+        if (!validarCep(cliente.getCep())) {
+            throw new RuntimeException("CEP inválido.");
+        }
+    }
+
+    private boolean isValidCPF(String cpf) {
+        // Implemente sua lógica de validação de CPF aqui
+        return true; // Retornar true ou false conforme o CPF seja válido
+    }
+
+    private boolean validarEndereco(Cliente cliente) {
+        return cliente.getLogradouro() != null && cliente.getNumero() != null &&
+                cliente.getBairro() != null && cliente.getCidade() != null &&
+                cliente.getUf() != null;
+    }
+
+    private boolean validarCep(String cep) {
+        String url = "https://viacep.com.br/ws/" + cep + "/json/";
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            Map<String, String> response = restTemplate.getForObject(url, Map.class);
+            return response != null && response.get("erro") == null;
+        } catch (Exception e) {
+            return false;
         }
     }
 
     public Cliente autenticarCliente(String email, String senha) {
-
-        Cliente cliente = clienteRepository.findByEmailAndSenha(email, senha);
+        Cliente cliente = clienteRepository.findByEmail(email);
+        if (cliente == null || !passwordEncoder.matches(senha, cliente.getSenha())) {
+            throw new RuntimeException("Usuário e/ou senha inválidos.");
+        }
         return cliente;
+    }
+
+    public Cliente buscarPorId(int id) {
+        return clienteRepository.findById(id).orElse(null);
+    }
+
+    public List<Cliente> listarClientes() {
+        return clienteRepository.findAll();
     }
 
     public Cliente atualizarCliente(int id, Cliente cliente) {
@@ -39,24 +104,13 @@ public class ClienteService {
             clienteExistente.setNome(cliente.getNome());
             clienteExistente.setCpf(cliente.getCpf());
             clienteExistente.setEmail(cliente.getEmail());
-            // Adicione outros campos que você tenha na classe Cliente
-
             return clienteRepository.save(clienteExistente);
         } else {
             throw new RuntimeException("Cliente não encontrado para atualização");
         }
     }
 
-    public List<Cliente> listarClientes() {
-        return clienteRepository.findAll();
-    }
-
     public void deletarCliente(int id) {
         clienteRepository.deleteById(id);
     }
-
-    public Cliente buscarPorId(int id) {
-        return clienteRepository.findById(id).orElse(null);
-    }
-
 }

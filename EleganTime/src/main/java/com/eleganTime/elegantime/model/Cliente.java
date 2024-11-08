@@ -10,8 +10,13 @@ public class Cliente {
     private int idCliente;
 
     private String nome;
+
+    @Column(unique = true)
     private String cpf;
+
+    @Column(unique = true)
     private String email;
+
     private String senha;
     private String logradouro;
     private String numero;
@@ -19,19 +24,14 @@ public class Cliente {
     private String bairro;
     private String cidade;
     private String uf;
-
-    @Column(name = "condicao_do_cliente")
     private boolean condicaoDoCliente;
-
     private String dataNascimento;
     private String genero;
     private String cep;
     private String enderecoEntrega;
 
-    // Construtor vazio
     public Cliente() {}
 
-    // Construtor com parâmetros
     public Cliente(String nome, String cpf, String email, String senha,
                    String logradouro, String numero, String complemento,
                    String bairro, String cidade, String uf,
@@ -55,6 +55,7 @@ public class Cliente {
     }
 
     // Getters e Setters
+
     public int getIdCliente() {
         return idCliente;
     }
