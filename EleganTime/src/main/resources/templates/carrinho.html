@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Carrinho</title>
+
+    <link rel="stylesheet" th:href="@{/css/carrinho.css}">
+
+
+</head>
+
+<body>
+    <h1>Seu Carrinho</h1>
+    <div th:each="item : ${carrinho.itens}">
+        <h3 th:text="${item.produto.nome}">Nome do Produto</h3>
+        <p>Quantidade: <span th:text="${item.quantidade}"></span></p>
+        <p>Preço: R$ <span th:text="${item.produto.preco}"></span></p>
+        <input type="number" name="quantidade" value="1" min="1"> <!-- Quantidade -->
+        <form th:action="@{/carrinho/remover/{produtoId}(produtoId=${item.produto.id_Produto})}" method="post">
+            <button type="submit">Remover</button>
+        </form>
+    </div>
+    <h2>Total: R$ <span th:text="${total}">0,00</span></h2>
+    <button onclick="location.href='/checkout'">Finalizar Compra</button>
+
+    <button onclick="location.href='/home'">Voltar para Home</button>
+
+</body>
+
+</html>

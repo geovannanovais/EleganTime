@@ -52,7 +52,11 @@
             <h3 th:text="${product.nome}">Nome do Produto</h3>
             <p th:text="${product.preco}">R$ 0,00</p>
             <p th:text="'Em estoque: ' + ${product.quantidadeEmEstoque}">Em estoque: 0</p>
-            <button th:onclick="'comprar(' + ${product.id_Produto} + ')'">Comprar</button>
+            <!-- Formulário de adição ao carrinho -->
+            <form th:action="@{/carrinho/adicionar/{produtoId}(produtoId=${product.id_Produto})}" method="post">
+                <input type="number" name="quantidade" value="1" min="1" max="${product.quantidadeEmEstoque}" />
+                <button type="submit">Comprar</button>
+            </form>
         </div>
     </section>
 

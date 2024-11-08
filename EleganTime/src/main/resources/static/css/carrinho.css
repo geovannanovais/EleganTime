@@ -1,0 +1,90 @@
+/* Estilos gerais do corpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título da página */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Container para os itens do carrinho */
+div {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+}
+
+/* Nome do produto */
+h3 {
+    font-size: 1.2em;
+    color: #333;
+}
+
+/* Informações sobre o produto */
+p {
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Estilo para o campo de quantidade */
+input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Botão de remover */
+form button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+/* Botão de remover: hover */
+form button:hover {
+    background-color: #d32f2f;
+}
+
+/* Estilo para o total */
+h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 20px;
+}
+
+/* Botão de finalizar compra */
+button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-top: 20px;
+}
+
+/* Botão de finalizar compra: hover */
+button:hover {
+    background-color: #388e3c;
+}
