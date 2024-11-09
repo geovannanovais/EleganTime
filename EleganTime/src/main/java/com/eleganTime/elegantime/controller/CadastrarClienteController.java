@@ -1,7 +1,7 @@
 package com.eleganTime.elegantime.controller;
 
-import com.eleganTime.elegantime.model.Cliente;
-import com.eleganTime.elegantime.service.ClienteService;
+import com.eleganTime.elegantime.model.*;
+import com.eleganTime.elegantime.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +14,9 @@ public class CadastrarClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @Autowired
+    private CarrinhoService carrinhoService;
+
     @GetMapping("/cadastrarCliente")
     public String showCadastroForm(Model model) {
         model.addAttribute("cliente", new Cliente());
@@ -23,13 +26,23 @@ public class CadastrarClienteController {
     @PostMapping("/cadastrarCliente")
     public String cadastrarCliente(@ModelAttribute Cliente cliente, Model model) {
         try {
-            clienteService.salvar(cliente);
-            return "redirect:/login";
+            // Salva o cliente
+            clienteService.salvar(cliente);  // Tenta salvar o cliente
+
+            // Cria e salva o carrinho associado ao cliente
+            Carrinho carrinho = new Carrinho();
+            carrinho.setCliente(cliente);  // Assume que Carrinho tem um campo 'cliente'
+            carrinhoService.salvarCarrinho(carrinho);  // Método que cria e salva o carrinho
+
+            model.addAttribute("errorMessage", null);  // Limpa a mensagem de erro em caso de sucesso
+            return "redirect:/login";  // Redireciona para a página de login
         } catch (RuntimeException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "cadastrarCliente";
+            // Caso haja erro, mostra a mensagem de erro
+            model.addAttribute("errorMessage", "Erro: " + e.getMessage());
+            return "cadastrarCliente";  // Retorna para a página de cadastro com a mensagem de erro
         }
     }
+
 
     @GetMapping("/editarCliente/{id}")
     public String showEditForm(@PathVariable int id, Model model) {
@@ -42,18 +55,24 @@ public class CadastrarClienteController {
     }
 
     @PostMapping("/editarCliente/{id}")
-    public String editarCliente(@PathVariable int id, @ModelAttribute Cliente cliente) {
-        Cliente clienteExistente = clienteService.buscarPorId(id);
+    public String editarCliente(@PathVariable int id, @ModelAttribute Cliente cliente, Model model) {
+        try {
+            Cliente clienteExistente = clienteService.buscarPorId(id);
 
-        if (clienteExistente != null) {
-            clienteExistente.setNome(cliente.getNome());
-            clienteExistente.setCpf(cliente.getCpf());
-            clienteExistente.setEmail(cliente.getEmail());
-
-            clienteService.atualizarCliente(clienteExistente.getIdCliente(), clienteExistente);
-            return "redirect:/login";
-        } else {
-            return "redirect:/error";
+            if (clienteExistente != null) {
+                clienteExistente.setNome(cliente.getNome());
+                clienteExistente.setCpf(cliente.getCpf());
+                clienteExistente.setEmail(cliente.getEmail());
+                clienteService.atualizarCliente(clienteExistente.getIdCliente(), clienteExistente);
+                model.addAttribute("errorMessage", null);  // Limpa a mensagem de erro após sucesso
+                return "redirect:/login";  // Redireciona para a página de login
+            } else {
+                model.addAttribute("errorMessage", "Cliente não encontrado.");
+                return "cadastrarCliente";  // Retorna para a página de cadastro com a mensagem de erro
+            }
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", "Erro: " + e.getMessage());
+            return "cadastrarCliente";  // Retorna para a página de cadastro com a mensagem de erro
         }
     }
 

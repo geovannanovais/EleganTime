@@ -1,60 +1,68 @@
 package com.eleganTime.elegantime.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
-/**
- * A classe ItemCarrinho representa um item em um carrinho de compras,
- * contendo informações sobre o produto e sua quantidade.
- */
+@Entity
+@Table(name = "item_carrinho")
 public class ItemCarrinho {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_ItemCarrinho")
     private int idItemCarrinho;
 
     @ManyToOne
     @JoinColumn(name = "id_produto")
-    private Produto produto; // Relacionamento com Produto (FK)
+    private Produto produto;
 
     @ManyToOne
     @JoinColumn(name = "id_carrinho")
-    private Carrinho carrinho; // Relacionamento com Carrinho (FK)
+    private Carrinho carrinho;
 
+    @Column(name = "quantidade")
     private int quantidade;
+
+    public ItemCarrinho() {}
 
     public ItemCarrinho(Produto produto, int quantidade) {
         this.produto = produto;
         this.quantidade = quantidade;
     }
 
-    /**
-     * Retorna o produto no item do carrinho.
-     *
-     * @return o produto no item do carrinho
-     */
+    public int getIdItemCarrinho() {
+        return idItemCarrinho;
+    }
+
+    public void setIdItemCarrinho(int idItemCarrinho) {
+        this.idItemCarrinho = idItemCarrinho;
+    }
+
     public Produto getProduto() {
         return produto;
     }
 
-    /**
-     * Retorna a quantidade do produto no item do carrinho.
-     *
-     * @return a quantidade do produto no item do carrinho
-     */
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Carrinho getCarrinho() {
+        return carrinho;
+    }
+
+    public void setCarrinho(Carrinho carrinho) {
+        this.carrinho = carrinho;
+    }
+
     public int getQuantidade() {
         return quantidade;
     }
 
-    /**
-     * Define a quantidade do produto no item do carrinho.
-     *
-     * @param quantidade a nova quantidade do produto no item do carrinho
-     */
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    @Override
+    public String toString() {
+        return idItemCarrinho + " | " + produto.getNome() + " | " + quantidade;
     }
 }

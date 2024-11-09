@@ -44,7 +44,19 @@ header {
     border-radius: 5px;
 }
 
-.menu-icons a {
+.menu-icons a  {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.menu-icons button  {
+    background-color: #fff;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.menu-icons form  {
     color: white;
     margin-left: 15px;
     text-decoration: none;

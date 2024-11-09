@@ -1,32 +1,42 @@
-<!doctype html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Carrinho</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/carrinho.css}">
-
-
+    <script th:src="@{/js/carrinho.js}" defer></script>
+    <title>Carrinho</title>
 </head>
-
 <body>
-    <h1>Seu Carrinho</h1>
-    <div th:each="item : ${carrinho.itens}">
-        <h3 th:text="${item.produto.nome}">Nome do Produto</h3>
-        <p>Quantidade: <span th:text="${item.quantidade}"></span></p>
-        <p>Preço: R$ <span th:text="${item.produto.preco}"></span></p>
-        <input type="number" name="quantidade" value="1" min="1"> <!-- Quantidade -->
-        <form th:action="@{/carrinho/remover/{produtoId}(produtoId=${item.produto.id_Produto})}" method="post">
-            <button type="submit">Remover</button>
-        </form>
-    </div>
-    <h2>Total: R$ <span th:text="${total}">0,00</span></h2>
-    <button onclick="location.href='/checkout'">Finalizar Compra</button>
+<h1>Seu Carrinho</h1>
+<div th:each="item : ${carrinho.itens}">
+    <h3 th:text="${item.produto.nome}">Nome do Produto</h3>
+    <p>Quantidade: <span th:text="${item.quantidade}"></span></p>
+    <p>Preço: R$ <span th:text="${item.produto.preco}"></span></p>
 
-    <button onclick="location.href='/home'">Voltar para Home</button>
+    <form th:action="@{/carrinho/remover/{produtoId}(produtoId=${item.produto.id_Produto})}" method="get">
+        <input type="hidden" name="clienteId" th:value="${clienteId}">
+        <button type="submit">Remover 1</button>
+    </form>
+
+</div>
+
+<h2>Total: R$ <span th:text="${total}">0,00</span></h2>
+
+    <div class = "botao">
+    <!-- Formulário para Finalizar Compra -->
+        <form th:action="@{/enderecos/{clienteId}(clienteId=${clienteId})}" method="get">
+            <input type="hidden" name="clienteId" th:value="${clienteId}">
+            <button class="botao" type="submit">Finalizar</button>
+        </form>
+
+        <!-- Formulário para Voltar para Home -->
+    <form th:action="@{/home}" method="get">
+        <input type="hidden" name="clienteId" th:value="${clienteId}">
+        <button class="botao" type="submit">Voltar para Home</button>
+    </form>
+
+    </div>
 
 </body>
-
 </html>

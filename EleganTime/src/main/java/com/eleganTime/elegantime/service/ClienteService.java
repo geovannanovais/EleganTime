@@ -2,6 +2,7 @@ package com.eleganTime.elegantime.service;
 
 import com.eleganTime.elegantime.model.Cliente;
 import com.eleganTime.elegantime.repository.ClienteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,11 @@ public class ClienteService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    private final Pattern nomePattern = Pattern.compile("^[A-Za-z]{3,}\\s[A-Za-z]{3,}$");
+    private final Pattern nomePattern = Pattern.compile("^[A-Za-zÁ-ÿà-ÿ]+(?:\\s[A-Za-zÁ-ÿà-ÿ]+)+$");
+
 
     public Cliente salvar(Cliente cliente) {
         validarCliente(cliente);
-        cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
         return clienteRepository.save(cliente);
     }
 
@@ -84,9 +85,7 @@ public class ClienteService {
 
     public Cliente autenticarCliente(String email, String senha) {
         Cliente cliente = clienteRepository.findByEmail(email);
-        if (cliente == null || !passwordEncoder.matches(senha, cliente.getSenha())) {
-            throw new RuntimeException("Usuário e/ou senha inválidos.");
-        }
+
         return cliente;
     }
 

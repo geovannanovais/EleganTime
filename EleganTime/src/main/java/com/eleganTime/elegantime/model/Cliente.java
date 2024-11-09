@@ -7,7 +7,8 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idCliente;
+    @Column(name = "id")
+    private int id;
 
     private String nome;
 
@@ -56,12 +57,16 @@ public class Cliente {
 
     // Getters e Setters
 
+    public int getId() {
+        return id;
+    }
+
     public int getIdCliente() {
-        return idCliente;
+        return id;
     }
 
     public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+        this.id = idCliente;
     }
 
     public String getNome() {
@@ -186,7 +191,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return idCliente + " | " + nome + " | " + cpf + " | " + email + " | "
+        return id + " | " + nome + " | " + cpf + " | " + email + " | "
                 + logradouro + ", " + numero + " " + complemento + " | "
                 + bairro + " | " + cidade + " | " + uf + " | " + condicaoDoCliente
                 + " | Data Nascimento: " + dataNascimento + " | Gênero: " + genero

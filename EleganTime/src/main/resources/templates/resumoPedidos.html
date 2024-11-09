@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,11 +23,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="produto : ${produtos}">
-            <td th:text="${produto.nome}"></td>
-            <td th:text="${produto.valorUnitario}"></td>
-            <td th:text="${produto.quantidade}"></td>
-            <td th:text="${produto.total}"></td>
+        <tr th:each="item : ${itens}">
+            <td th:text="${item.produto.nome}"></td>
+            <td th:text="${item.produto.preco}"></td>
+            <td th:text="${item.quantidade}"></td>
+            <td th:text="${item.produto.preco * item.quantidade}"></td>
         </tr>
         </tbody>
     </table>
@@ -47,7 +48,7 @@
 <!-- Forma de Pagamento -->
 <div class="section">
     <h2>Forma de Pagamento</h2>
-    <p th:text="${formaPagamento}"></p>
+    <p th:text="${formaPagamento.nome}"></p> <!-- Aqui você pode ajustar para exibir os detalhes da forma de pagamento -->
 </div>
 
 <!-- Botões -->

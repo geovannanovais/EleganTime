@@ -28,7 +28,12 @@
     <div class="form-container">
         <h2 th:text="${cliente.idCliente != 0 ? 'Editar Cliente' : 'Cadastrar Cliente'}"></h2>
 
-        <!-- Alteração de usuario para cliente -->
+        <!-- Exibindo a mensagem de erro, se houver -->
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- Formulário de Cadastro -->
         <form id="clienteForm"
               th:action="${cliente.idCliente != 0 ? '/editarCliente/' + cliente.idCliente : '/cadastrarCliente'}"
               method="post">
@@ -49,8 +54,7 @@
             <input type="email" id="email" name="email" placeholder="Email" th:value="${cliente.email}" required>
 
             <label for="dataNascimento">Data de Nascimento:</label>
-            <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}"
-                   required>
+            <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}" required>
 
             <label for="genero">Gênero:</label>
             <select id="genero" name="genero" required>
@@ -91,7 +95,6 @@
 
             <label for="senha">Senha:</label>
             <input type="password" id="senha" name="senha" placeholder="Senha" required>
-
 
             <button type="submit" class="btn" id="submitButton"
                     th:text="${cliente.idCliente != 0 ? 'Salvar Alterações' : 'Cadastrar Cliente'}">Cadastrar-se</button>

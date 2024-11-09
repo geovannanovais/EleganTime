@@ -49,7 +49,7 @@ input[type="number"] {
 }
 
 /* Botão de remover */
-form button {
+.botaored {
     background-color: #f44336;
     color: #fff;
     border: none;
@@ -61,7 +61,7 @@ form button {
 }
 
 /* Botão de remover: hover */
-form button:hover {
+.botaored:hover {
     background-color: #d32f2f;
 }
 
@@ -84,7 +84,17 @@ button {
     margin-top: 20px;
 }
 
-/* Botão de finalizar compra: hover */
-button:hover {
-    background-color: #388e3c;
+.botao {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-top: 20px;
 }
+
+
+
+

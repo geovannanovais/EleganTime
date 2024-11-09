@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+
 @Controller
 public class LoginController {
 
@@ -36,30 +37,29 @@ public class LoginController {
                         @RequestParam("password") String password,
                         HttpServletRequest request) {
 
+        // Tenta autenticar como usuário (admin/estoquista)
         Usuario usuario = usuarioService.autenticarUsuario(email, password);
 
+        // Caso o usuário seja autenticado
         if (usuario != null) {
-
             HttpSession session = request.getSession();
-            session.setAttribute("usuarioId", usuario.getIdUsuario());
-
+            session.setAttribute("userId", usuario.getIdUsuario()); // Armazena como userId
             if ("administrador".equalsIgnoreCase(usuario.getGrupo())) {
-                return "redirect:/areaAdmin";
+                return "redirect:/areaAdmin";  // Redireciona para área de admin
             } else if ("estoquista".equalsIgnoreCase(usuario.getGrupo())) {
-                return "redirect:/areaEstoquista";
-            } else {
-                return "redirect:/login?error";
-            }
-        } else {
-            Cliente cliente = clienteService.autenticarCliente(email, password);
-
-            if (cliente != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute("clienteId", cliente.getIdCliente());
-                return "redirect:/areaUsuario";
-            } else {
-                return "redirect:/login?error";
+                return "redirect:/areaEstoquista";  // Redireciona para área de estoquista
             }
         }
+
+        // Caso o usuário não seja encontrado, tenta autenticar como cliente
+        Cliente cliente = clienteService.autenticarCliente(email, password);
+
+        if (cliente != null) {
+            // Passa o clienteId na URL
+            return "redirect:/home?clienteId=" + cliente.getIdCliente();  // Redireciona para a home com clienteId na URL
+        }
+
+        // Se nenhum dos dois for autenticado, retorna para a página de login com erro
+        return "redirect:/login?error";
     }
 }
