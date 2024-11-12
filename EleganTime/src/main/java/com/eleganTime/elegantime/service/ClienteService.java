@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -17,9 +18,6 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
     private final Pattern nomePattern = Pattern.compile("^[A-Za-zÁ-ÿà-ÿ]+(?:\\s[A-Za-zÁ-ÿà-ÿ]+)+$");
 
@@ -83,11 +81,6 @@ public class ClienteService {
         }
     }
 
-    public Cliente autenticarCliente(String email, String senha) {
-        Cliente cliente = clienteRepository.findByEmail(email);
-
-        return cliente;
-    }
 
     public Cliente buscarPorId(int id) {
         return clienteRepository.findById(id).orElse(null);
@@ -112,4 +105,9 @@ public class ClienteService {
     public void deletarCliente(int id) {
         clienteRepository.deleteById(id);
     }
+
+    public Optional<Cliente> buscarPorEmail(String email) {
+        return clienteRepository.findByEmail(email);
+    }
+
 }

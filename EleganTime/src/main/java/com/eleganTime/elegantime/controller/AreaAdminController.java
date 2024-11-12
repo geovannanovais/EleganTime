@@ -2,13 +2,14 @@ package com.eleganTime.elegantime.controller;
 
 import com.eleganTime.elegantime.model.Usuario;
 import com.eleganTime.elegantime.service.UsuarioService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import jakarta.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Controller
 public class AreaAdminController {
@@ -17,16 +18,35 @@ public class AreaAdminController {
     private UsuarioService usuarioService;
 
     @GetMapping("/areaAdmin")
-    public String areaAdmin(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        Integer usuarioId = (Integer) session.getAttribute("usuarioId");
+    public String areaAdmin(Model model) {
+        // Obtém o Authentication do SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (usuarioId == null) {
+        // Recupera o email do usuário (nome de usuário no caso de Spring Security)
+        String email = authentication.getName();  // O nome de usuário no Spring Security é o email
+
+        // Verifica se o email está presente
+        if (email == null) {
+            // Caso o email não esteja presente, redireciona para a página de login
             return "redirect:/login";
         }
 
-        Usuario usuario = usuarioService.buscarPorId(usuarioId);
+        // Busca o usuário completo utilizando o email
+        Optional<Usuario> optionalUsuario = usuarioService.buscarPorEmail(email);
+
+        // Verifica se o usuário foi encontrado
+        if (optionalUsuario.isEmpty()) {
+            // Caso o usuário não exista no banco de dados, redireciona para a página de login
+            return "redirect:/login";
+        }
+
+        // Se o usuário existe, obtém o objeto Usuario
+        Usuario usuario = optionalUsuario.get();
+
+        // Adiciona o usuário completo ao modelo para exibição na página
         model.addAttribute("usuario", usuario);
+
+        // Retorna a página da área administrativa
         return "areaAdmin";
     }
 }

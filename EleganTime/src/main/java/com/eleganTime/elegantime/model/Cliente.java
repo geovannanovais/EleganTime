@@ -1,9 +1,15 @@
 package com.eleganTime.elegantime.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
-public class Cliente {
+public class Cliente implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,18 +61,12 @@ public class Cliente {
         this.enderecoEntrega = enderecoEntrega;
     }
 
-    // Getters e Setters
-
-    public int getId() {
-        return id;
-    }
-
     public int getIdCliente() {
         return id;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.id = idCliente;
+    public void setIdCliente(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -188,6 +188,45 @@ public class Cliente {
     public void setEnderecoEntrega(String enderecoEntrega) {
         this.enderecoEntrega = enderecoEntrega;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Neste caso, se você tiver um campo "grupo" ou "role", você pode atribuir a ele.
+        // Exemplo: "ROLE_CLIENTE"
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;  // Aqui, normalmente usamos o e-mail ou outro identificador único
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;  // Podemos adicionar lógica personalizada se for o caso (ex: data de expiração da conta)
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;  // Caso tenha uma flag para bloquear a conta (ex: status de ativação)
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;  // Se você tiver algo que defina expiração de credenciais (ex: senha expirada), implemente aqui
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return condicaoDoCliente;  // Aqui podemos usar a condição do cliente como um indicativo se ele está ativo
+    }
+
+    // Métodos de getter e setter...
 
     @Override
     public String toString() {

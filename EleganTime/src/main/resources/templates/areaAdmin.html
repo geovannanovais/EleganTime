@@ -26,10 +26,10 @@
 
   <!-- Dados do Usuário -->
   <div class="user-info">
-    <p th:text="'Usuário: ' + ${usuario.nome}"></p>
-    <p th:text="'Email: ' + ${usuario.email}"></p>
-    <p th:text="'Grupo: ' + ${usuario.grupo}"></p>
-    <p th:text="'CPF: ' + ${usuario.cpf}"></p>
+    <p th:text="'Usuário: ' + ${usuario.nome}"></p> <!-- Exibe o nome do usuário -->
+    <p th:text="'Email: ' + ${usuario.email}"></p>   <!-- Exibe o email do usuário -->
+    <p th:text="'Grupo: ' + ${usuario.grupo}"></p> <!-- Exibe as permissões/grupos do usuário -->
+    <p th:text="'CPF: ' + ${usuario.cpf}"></p>      <!-- Aqui você pode personalizar a propriedade -->
   </div>
 
   <div class="button-container">

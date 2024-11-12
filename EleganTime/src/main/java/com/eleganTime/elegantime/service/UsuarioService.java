@@ -64,16 +64,20 @@ public class UsuarioService {
     }
 
     public Usuario autenticarUsuario(String email, String password) {
-        Usuario usuario = usuarioRepository.findByEmail(email);
-        if (usuario != null) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);  // Agora retorna Optional<Usuario>
 
+        // Verificando se o usuário existe e validando a senha
+        if (usuarioOptional.isPresent()) {  // Usando isPresent() para verificar se o usuário foi encontrado
+            Usuario usuario = usuarioOptional.get();  // Obtendo o usuário
             System.out.println("Senha armazenada: " + usuario.getSenha());
             System.out.println("Senha fornecida: " + password);
+
+            // Verificando se as senhas coincidem
             if (usuario.getSenha().equals(password)) {
                 return usuario;
             }
         }
-        return null;
+        return null;  // Retorna null se o usuário não for encontrado ou as senhas não coincidirem
     }
 
     public boolean isAdmin(int usuarioId) {
@@ -92,5 +96,12 @@ public class UsuarioService {
             throw new RuntimeException("Usuário não encontrado");
         }
     }
+
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email);  // Retorna diretamente o Optional<Usuario>
+    }
+    
+
+
 
 }
