@@ -24,6 +24,15 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
+    public Produto obterProdutoPorId(Integer produtoId) {
+        Optional<Produto> produto = produtoRepository.findById(produtoId);
+        return produto.orElse(null);
+    }
+
+    public void salvarProduto(Produto produto) {
+        produtoRepository.save(produto);
+    }
+
     public Produto atualizarProduto(int id, Produto produto) {
 
         Optional<Produto> produtoExistenteOpt = produtoRepository.findById(id);
@@ -40,7 +49,6 @@ public class ProdutoService {
 
             return produtoRepository.save(produtoExistente);
         } else {
-
             return null;
         }
     }
@@ -51,6 +59,10 @@ public class ProdutoService {
 
     public Optional<Produto> buscarProdutoPorId(Integer idProduto) {
         return produtoRepository.findById(idProduto);
+    }
+
+    public List<Produto> listarProdutosAtivos() {
+        return produtoRepository.findByCondicaoDoProduto(true);
     }
 }
 
