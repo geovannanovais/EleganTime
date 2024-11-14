@@ -1,20 +1,33 @@
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Corpo */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Cabeçalho */
 header {
-    background-color: #181818ee;
-    padding: 10px;
-    color: white;
+    background-color: rgba(24, 24, 24, 0.9);
+    padding: 10px 20px;
+    color: #ffffff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
 }
 
 .logo img {
@@ -23,30 +36,26 @@ header {
     margin-left: 30px;
 }
 
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f4f8;
-    height: 100vh;
-}
-
+/* Contêiner Principal */
 .container {
     background-color: #ffffff;
-    padding: 20px;
+    padding: 30px 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     max-width: 500px;
     width: 100%;
+    text-align: center;
 }
 
+/* Formulário */
 .form-container {
     padding: 20px;
 }
 
 h2 {
-    text-align: center;
     color: #38b6ff;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 label {
@@ -58,32 +67,44 @@ label {
 
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
 }
 
+input:focus, select:focus {
+    border-color: #38b6ff;
+    outline: none;
+}
+
+/* Botões */
 .btn {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-top: 10px;
     background-color: #ffaa00;
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn:hover {
     background-color: #ff9100;
+    transform: translateY(-2px);
 }
 
 .cancel {
     background-color: #ff6767;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .cancel:hover {
-    background-color: #e55959;
+    background-color: #e55959;
+    transform: translateY(-2px);
 }

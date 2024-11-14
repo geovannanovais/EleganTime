@@ -7,6 +7,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #333;
 }
 
 /* Título da página */
@@ -14,16 +15,18 @@ h1 {
     text-align: center;
     margin-top: 20px;
     color: #333;
+    font-size: 2em;
+    font-weight: bold;
 }
 
 /* Container para os itens do carrinho */
-div {
+.container {
     background-color: #fff;
     padding: 20px;
     margin: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
     max-width: 600px;
 }
 
@@ -31,6 +34,8 @@ div {
 h3 {
     font-size: 1.2em;
     color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 /* Informações sobre o produto */
@@ -46,6 +51,8 @@ input[type="number"] {
     margin-top: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    text-align: center;
+    font-size: 1em;
 }
 
 /* Botão de remover */
@@ -58,11 +65,12 @@ input[type="number"] {
     cursor: pointer;
     margin-top: 10px;
     font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Botão de remover: hover */
 .botaored:hover {
     background-color: #d32f2f;
+    transform: scale(1.05);
 }
 
 /* Estilo para o total */
@@ -70,10 +78,11 @@ h2 {
     font-size: 1.5em;
     color: #333;
     margin-top: 20px;
+    text-align: center;
 }
 
 /* Botão de finalizar compra */
-button {
+button, .botao {
     background-color: #4CAF50;
     color: #fff;
     border: none;
@@ -82,19 +91,12 @@ button {
     cursor: pointer;
     font-size: 1.2em;
     margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.botao {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.2em;
-    margin-top: 20px;
+button:hover, .botao:hover {
+    background-color: #43a047;
+    transform: translateY(-2px);
 }
-
-
-
-

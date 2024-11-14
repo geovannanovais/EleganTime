@@ -1,18 +1,23 @@
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Corpo */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    color: #333;
 }
 
+/* Cabeçalho */
 header {
-    background-color: #181818ee;
-    padding: 10px;
+    background-color: rgba(24, 24, 24, 0.9);
+    padding: 10px 20px;
     color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .top-bar {
@@ -24,32 +29,51 @@ header {
 
 .logo img {
     height: 75px;
-    font-weight: bold;
     margin-left: 30px;
 }
 
+/* Barra de Pesquisa */
 .search-bar input {
-    padding: 5px;
-    width: 300px;
+    padding: 8px;
+    width: 250px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+    border-color: #ffaa00;
 }
 
 .search-bar button {
-    padding: 5px 10px;
+    padding: 8px 15px;
     background-color: #ffaa00;
     border: none;
     color: white;
     cursor: pointer;
     border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
+.search-bar button:hover {
+    background-color: #fd9c0b;
+}
+
+/* Ícones do Menu */
 .menu-icons a {
     color: white;
     margin-left: 15px;
     text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
+.menu-icons a:hover {
+    color: #ffaa00;
+}
+
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -61,33 +85,31 @@ header {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* Conteúdo do modal */
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 10% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border-radius: 10px;
     width: 80%;
     max-width: 500px;
-    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Botão de fechar (x) */
+/* Botão de Fechar Modal */
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
+.close:hover {
+    color: #555;
+}
 
+/* Navegação */
 nav {
     background-color: #333;
 }
@@ -106,10 +128,18 @@ nav ul li {
 nav ul li a {
     color: white;
     text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
+nav ul li a:hover {
+    color: #ffaa00;
+}
+
+/* Produtos */
 .products {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     margin: 20px;
 }
@@ -121,31 +151,50 @@ nav ul li a {
     border: 1px solid #ddd;
     border-radius: 5px;
     width: 23%;
+    margin: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.product:hover {
+    transform: scale(1.03);
 }
 
 .product img {
     max-width: 100%;
     height: auto;
+    border-radius: 5px;
 }
 
 .product h3 {
     margin: 15px 0;
     font-size: 18px;
-}
-
-.product p {
     color: #333;
 }
 
+.product p {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Botão do Produto */
 .product button {
     padding: 10px 20px;
     background-color: #ffaa00;
     color: white;
     border: none;
     cursor: pointer;
-    margin-top: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.product button:hover {
+    background-color: #fd9c0b;
+    transform: translateY(-2px);
+}
+
+/* Rodapé */
 footer {
     background-color: #2b2b2b;
     color: white;
@@ -154,4 +203,5 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
 }

@@ -1,18 +1,24 @@
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Corpo */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
 }
 
+/* Cabeçalho */
 header {
     background-color: #2b2b2b;
-    padding: 10px;
-    color: white;
+    color: #ffffff;
+    padding: 10px 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .top-bar {
@@ -24,36 +30,41 @@ header {
 
 .logo img {
     height: 75px;
-    font-weight: bold;
     margin-left: 30px;
 }
 
 .menu-icons a {
-    color: white;
+    color: #ffffff;
     margin-left: 15px;
     text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
+.menu-icons a:hover {
+    color: #ffaa00;
+}
+
+/* Navegação */
 nav {
     background-color: #333;
 }
 
-h2 {
+/* Títulos */
+h1, h2 {
+    color: #333333;
+    font-family: 'Playfair Display', serif;
     margin-bottom: 20px;
-    color: #333;
 }
 
+/* Área Administrativa */
 .admin-area {
     text-align: center;
-    background-color: #fff;
+    background-color: #ffffff;
     padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    margin-bottom: 20px;
-    color: #333;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
 }
 
 .button-container {
@@ -62,25 +73,42 @@ h1 {
     gap: 20px;
 }
 
+/* Botão Administrativo */
 .admin-button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     text-decoration: none;
     background-color: #ffaa00;
-    color: white;
+    color: #ffffff;
+    font-weight: bold;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .admin-button:hover {
     background-color: #ff9100;
+    transform: translateY(-2px);
 }
 
+/* Rodapé */
 footer {
     background-color: #2b2b2b;
-    color: white;
+    color: #ffffff;
     text-align: center;
     padding: 20px 0;
     position: fixed;
     bottom: 0;
     width: 100%;
+    box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+footer a {
+    color: #ffaa00;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #ff9100;
 }

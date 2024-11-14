@@ -1,9 +1,11 @@
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Corpo */
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
@@ -11,54 +13,75 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-}
-
-.login-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
     color: #333;
 }
 
+/* Contêiner de Login */
+.login-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+/* Título */
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Grupo de Input */
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 5px;
     color: #555;
+    font-size: 14px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.input-group input:focus {
+    border-color: #ffaa00;
+    box-shadow: 0 0 5px rgba(255, 170, 0, 0.4);
+}
+
+/* Botão de Login */
 button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: #ffaa00;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: #ff9100;
+    transform: translateY(-2px);
 }
 
+/* Link para Voltar */
 .back-to-home {
     position: absolute;
     top: 20px;
@@ -67,9 +90,10 @@ button:hover {
     color: #ffaa00;
     text-decoration: none;
     font-weight: bold;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 .back-to-home:hover {
-    text-decoration:solid;
     color: #ff9100;
+    text-decoration: underline;
 }
