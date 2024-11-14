@@ -7,23 +7,29 @@
 
 /* Corpo */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     color: #333;
     display: flex;
-    align-items: center;
     justify-content: center;
-    height: 100vh;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 /* Cabeçalho */
 header {
-    background-color: rgba(24, 24, 24, 0.9);
+    background-color: #2b2b2b;
     padding: 10px 20px;
-    color: #ffffff;
+    color: white;
+    width: 100%;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
 }
 
+/* Logo e ícones */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -32,79 +38,112 @@ header {
 
 .logo img {
     height: 75px;
+}
+
+.menu-icons a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
     font-weight: bold;
-    margin-left: 30px;
 }
 
-/* Contêiner Principal */
+/* Contêiner principal */
 .container {
-    background-color: #ffffff;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
     width: 100%;
-    text-align: center;
+    margin-top: 100px; /* Espaçamento superior para afastar do cabeçalho fixo */
 }
 
-/* Formulário */
-.form-container {
-    padding: 20px;
+/* Formulário e campos */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 h2 {
-    color: #38b6ff;
-    margin-bottom: 20px;
-    font-weight: bold;
+    color: #555;
+    font-size: 18px;
+    margin-top: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
 }
 
-label {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 5px;
-    display: block;
-}
-
-input, select {
-    width: 100%;
-    padding: 12px;
+/* Grupos de entrada */
+.input-group {
     margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    color: #555;
     font-size: 14px;
+    margin-top: 10px;
+}
+
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
     transition: border-color 0.3s ease;
 }
 
-input:focus, select:focus {
-    border-color: #38b6ff;
-    outline: none;
+/* Estilos específicos para organizar campos lado a lado */
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.row .input-group {
+    flex: 1;
+}
+
+.input-group input:focus, .input-group select:focus {
+    border-color: #ffaa00;
 }
 
 /* Botões */
-.btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background-color: #ffaa00;
-    color: #ffffff;
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group .btn {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
 }
 
-.btn:hover {
+.button-group .btn.submit {
+    background-color: #ffaa00;
+}
+
+.button-group .btn.submit:hover {
     background-color: #ff9100;
-    transform: translateY(-2px);
 }
 
-.cancel {
+.button-group .btn.cancel {
     background-color: #ff6767;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.cancel:hover {
-    background-color: #e55959;
-    transform: translateY(-2px);
+.button-group .btn.cancel:hover {
+    background-color: #e55a5a;
 }

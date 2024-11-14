@@ -1,14 +1,14 @@
 // Captura o formulário
 const formulario = document.querySelector("form");
 
-const iNome = document.querySelector("#nome"); //
-const iCpf = document.querySelector("#cpf"); //
-const iEmail = document.querySelector("#email"); //
-const idataNascimento = document.querySelector("#dataNascimento");//
-const iGenero = document.querySelector("#genero");//
-const iCep = document.querySelector("#cep"); //
-const iLogradouro = document.querySelector("#logradouro"); //
-const iNumero = document.querySelector("#numero"); //
+const iNome = document.querySelector("#nome");
+const iCpf = document.querySelector("#cpf");
+const iEmail = document.querySelector("#email");
+const idataNascimento = document.querySelector("#dataNascimento");
+const iGenero = document.querySelector("#genero");
+const iCep = document.querySelector("#cep");
+const iLogradouro = document.querySelector("#logradouro");
+const iNumero = document.querySelector("#numero");
 const iComplemento = document.querySelector("#complemento");
 const iBairro = document.querySelector("#bairro");
 const iCidade = document.querySelector("#cidade");
@@ -40,17 +40,17 @@ function consultarCep() {
 
 // Método para enviar os dados em JSON que vai acessar a API
 function cadastrar() {
-    fetch('http://localhost:8080/cadastrarCliente', {
+    fetch('/cadastrarCliente', { // Ajuste para endpoint relativo
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            nome: iNome.value,//
-            cpf: iCpf.value,//
-            email: iEmail.value,//
-            dataNascimento: idataNascimento.value,//
-            genero: iGenero.value,//
+            nome: iNome.value,
+            cpf: iCpf.value,
+            email: iEmail.value,
+            dataNascimento: idataNascimento.value,
+            genero: iGenero.value,
             cep: iCep.value,
             enderecoFaturamento: {
                 cep: iCep.value,
@@ -75,12 +75,13 @@ function cadastrar() {
         .catch(error => console.error('Erro ao cadastrar:', error));
 }
 
+// Função para limpar o formulário
 function limpar() {
     iNome.value = "";
     iCpf.value = "";
     iEmail.value = "";
-    iGrupo.value = "";
-    iSenha.value = "";
+    idataNascimento.value = "";
+    iGenero.value = "";
     iCep.value = "";
     iLogradouro.value = "";
     iNumero.value = "";
@@ -94,10 +95,8 @@ function limpar() {
 // Adiciona um evento para o campo de CEP para consultar a API ao perder o foco
 iCep.addEventListener('blur', consultarCep);
 
+// Adiciona um evento para o envio do formulário
 formulario.addEventListener('submit', function (event) {
     event.preventDefault();
-
     cadastrar();
-    // Não limpar aqui, limpar apenas se o cadastro for bem-sucedido.
 });
-
