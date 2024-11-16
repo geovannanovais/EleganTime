@@ -110,8 +110,9 @@
                     const nomeInput = container.querySelector('input[name="imagensNome"]');
                     const caminhoInput = container.querySelector('input[name="imagensCaminho"]');
 
+                    // Atribui o nome do arquivo e o caminho correto
                     nomeInput.value = file.name;
-                    caminhoInput.value = file.webkitRelativePath || file.name;
+                    caminhoInput.value = "/img/" + file.name;
                 }
             });
         });
