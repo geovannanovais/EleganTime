@@ -42,9 +42,9 @@ public class CadastrarProdutoController {
 
     @PostMapping("/cadastrarProduto")
     public String cadastrarProduto(@ModelAttribute Produto produto,
-                                   @RequestParam("imagensNome") String[] imagensNome,
-                                   @RequestParam("imagensCaminho") String[] imagensCaminho,
-                                   @RequestParam(value = "imagensPrincipal", required = false) boolean[] imagensPrincipal) {
+            @RequestParam("imagensNome") String[] imagensNome,
+            @RequestParam("imagensCaminho") String[] imagensCaminho,
+            @RequestParam(value = "imagensPrincipal", required = false) boolean[] imagensPrincipal) {
 
         produtoService.salvar(produto);
 
@@ -64,9 +64,9 @@ public class CadastrarProdutoController {
 
     @PostMapping("/editarProduto/{id}")
     public String editarProdutoPost(@PathVariable int id, @ModelAttribute Produto produto,
-                                    @RequestParam("imagensNome") String[] imagensNome,
-                                    @RequestParam("imagensCaminho") String[] imagensCaminho,
-                                    @RequestParam(value = "imagensPrincipal", required = false) boolean[] imagensPrincipal) {
+            @RequestParam("imagensNome") String[] imagensNome,
+            @RequestParam("imagensCaminho") String[] imagensCaminho,
+            @RequestParam(value = "imagensPrincipal", required = false) boolean[] imagensPrincipal) {
 
         Produto produtoExistente = produtoService.buscarProdutoPorId(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado com id: " + id));
@@ -78,9 +78,7 @@ public class CadastrarProdutoController {
         produtoExistente.setQuantidadeEmEstoque(produto.getQuantidadeEmEstoque());
         produtoExistente.setCondicaoDoProduto(produto.isCondicaoDoProduto());
 
-
         produtoService.salvar(produtoExistente);
-
 
         List<Imagem> novasImagens = new ArrayList<>();
         for (int i = 0; i < imagensNome.length; i++) {
