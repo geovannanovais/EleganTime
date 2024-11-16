@@ -10,103 +10,101 @@
 </head>
 
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="logo">
-                <a th:href="@{/home}">
-                    <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
-                </a>
-            </div>
-            <div class="menu-icons">
-                <a>Perfil</a>
-            </div>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/home}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+            </a>
         </div>
-    </header>
-
-    <div class="user-list-container">
-        <a th:href="@{/login}" class="back">← Voltar</a>
-        <h2>Produtos</h2>
-        <div class="new-user">
-            <a th:href="@{/cadastrarProduto}" class="add-user">+ Novo Produto</a>
-            <div class="search-container">
-                <form th:action="@{/listaProduto}" method="get">
-                    <input type="text" name="search" placeholder="Pesquisar" class="search" th:value="${search}">
-                    <button type="submit" class="search-button">Procurar</button>
-                </form>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th>Quantidade</th>
-                        <th>Valor</th>
-                        <th>Status</th>
-                        <th>Opções</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="produto : ${produtos}">
-                        <td th:text="${produto.id_Produto}"></td>
-                        <td th:text="${produto.nome}"></td>
-                        <td th:text="${produto.quantidadeEmEstoque}"></td>
-                        <td th:text="${#numbers.formatDecimal(produto.preco, 1, 2)}"></td>
-                        <td th:text="${produto.condicaoDoProduto ? 'Ativo' : 'Inativo'}"></td>
-                        <td>
-                            <a th:href="@{'/editarProduto/' + ${produto.id_Produto}}" class="alterar">Alterar</a>
-                            <a th:href="@{'/visualizarProduto/' + ${produto.id_Produto}}"
-                                class="visualizar">Visualizar</a>
-                            <!-- Botão para habilitar/inabilitar o produto -->
-                            <button th:onclick="'confirmToggle(' + ${produto.id_Produto} + ')'"
-                                th:text="${produto.condicaoDoProduto ? 'Inabilitar' : 'Habilitar'}">
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="menu-icons">
+            <a>Perfil</a>
         </div>
+    </div>
+</header>
 
-        <footer>
-            <p>Entrega em até 48h - Frete Grátis!</p>
-            <p>Política de Privacidade</p>
-        </footer>
+<a th:href="@{/login}" class="back">← Voltar</a>
+<h2>Produtos</h2>
 
-        <!-- JavaScript para alternar o status do produto com confirmação -->
-        <script>
-            function confirmToggle(produtoId) {
-                if (confirm("Tem certeza de que deseja alterar o status do produto?")) {
-                    const csrfMetaTag = document.querySelector('meta[name="_csrf"]');
-                    if (!csrfMetaTag) {
-                        alert("Erro: token CSRF não encontrado.");
-                        return;
-                    }
+<div class="action-container">
+    <a th:href="@{/cadastrarProduto}" class="add-user">+ Novo Produto</a>
+    <div class="search-container">
+        <form th:action="@{/listaProduto}" method="get">
+            <input type="text" name="search" placeholder="Pesquisar" class="search" th:value="${search}">
+            <button type="submit" class="search-button">Procurar</button>
+        </form>
+    </div>
+</div>
 
-                    const csrfToken = csrfMetaTag.getAttribute("content");
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Opções</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="produto : ${produtos}">
+            <td th:text="${produto.id_Produto}"></td>
+            <td th:text="${produto.nome}"></td>
+            <td th:text="${produto.quantidadeEmEstoque}"></td>
+            <td th:text="${#numbers.formatDecimal(produto.preco, 1, 2)}"></td>
+            <td th:text="${produto.condicaoDoProduto ? 'Ativo' : 'Inativo'}"></td>
+            <td>
+                <a th:href="@{'/editarProduto/' + ${produto.id_Produto}}" class="alterar">Alterar</a> |
+                <a th:href="@{'/visualizarProduto/' + ${produto.id_Produto}}" class="visualizar">Visualizar</a>
+                <button th:onclick="'confirmToggle(' + ${produto.id_Produto} + ')'"
+                        th:text="${produto.condicaoDoProduto ? 'Inabilitar' : 'Habilitar'}">
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-                    fetch(`/produto/${produtoId}/toggleStatus`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                alert("Status do produto atualizado com sucesso!");
-                                location.reload();
-                            } else {
-                                alert("Erro ao atualizar o status do produto. Verifique o console para mais detalhes.");
-                                console.error('Erro na resposta:', response);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erro de conexão:', error);
-                            alert("Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
-                        });
-                }
+<footer>
+    <p>Entrega em até 48h - Frete Grátis!</p>
+    <p>Política de Privacidade</p>
+</footer>
+
+<script>
+    function confirmToggle(produtoId) {
+        if (confirm("Tem certeza de que deseja alterar o status do produto?")) {
+            const csrfMetaTag = document.querySelector('meta[name="_csrf"]');
+            if (!csrfMetaTag) {
+                alert("Erro: token CSRF não encontrado.");
+                return;
             }
-        </script>
 
+            const csrfToken = csrfMetaTag.getAttribute("content");
+
+            fetch(`/produto/${produtoId}/toggleStatus`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Status do produto atualizado com sucesso!");
+                        location.reload();
+                    } else {
+                        alert("Erro ao atualizar o status do produto. Verifique o console para mais detalhes.");
+                        console.error('Erro na resposta:', response);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro de conexão:', error);
+                    alert("Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
+                });
+        }
+    }
+</script>
 </body>
 
 </html>

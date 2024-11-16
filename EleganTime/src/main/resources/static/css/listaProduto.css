@@ -10,12 +10,13 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     color: #333;
+    padding-bottom: 80px; /* Espaço para o rodapé fixo */
 }
 
 /* Cabeçalho */
 header {
     background-color: #2b2b2b;
-    padding: 10px 20px;
+    padding: 15px 20px;
     color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -24,15 +25,12 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
 }
 
 .logo img {
-    height: 75px;
-    margin-left: 30px;
+    height: 50px;
 }
 
-/* Ícones do Menu */
 .menu-icons a {
     color: white;
     margin-left: 15px;
@@ -52,14 +50,12 @@ header {
     color: #ffaa00;
     text-decoration: none;
     font-weight: bold;
-    position: relative;
-    top: 10px;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .back:hover {
-    text-decoration: underline;
     color: #ff9100;
+    text-decoration: underline;
 }
 
 /* Título */
@@ -67,28 +63,34 @@ h2 {
     text-align: center;
     margin: 20px 0;
     color: #333;
+    font-size: 24px;
 }
 
-/* Novo Usuário e Pesquisa */
-.new-user {
+/* Container Principal para Novo Produto e Pesquisa */
+.action-container {
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 15px;
     margin: 20px 0;
 }
 
-/* Botão Adicionar Produto */
+.add-user, .search-container {
+    display: flex;
+    align-items: center;
+}
+
 .add-user {
     background-color: #ffaa00;
     border: none;
     color: white;
-    padding: 12px 25px;
+    padding: 10px 20px;
     border-radius: 5px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    height: 38px;
 }
 
 .add-user:hover {
@@ -96,15 +98,15 @@ h2 {
     transform: translateY(-2px);
 }
 
-/* Container de Pesquisa */
 .search-container {
     display: flex;
     gap: 10px;
 }
 
 .search {
-    padding: 12px;
-    width: 250px;
+    padding: 10px;
+    width: 100%;
+    max-width: 250px;
     border-radius: 5px;
     border: 1px solid #ccc;
     outline: none;
@@ -118,24 +120,34 @@ h2 {
 .search-button {
     background-color: #ffaa00;
     border: none;
-    padding: 12px 20px;
+    padding: 10px 15px;
     color: white;
     border-radius: 5px;
-    cursor: pointer;
     font-weight: bold;
+    cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 250px;
+    margin-top: 10px;
 }
 
 .search-button:hover {
     background-color: #ff9100;
 }
 
-/* Tabela */
+/* Container da Tabela */
+.table-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 table th, table td {
@@ -167,6 +179,7 @@ table td button {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -184,5 +197,25 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+    font-size: 14px;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .action-container {
+        flex-direction: column;
+    }
+
+    .search {
+        max-width: 100%;
+    }
+
+    .add-user, .search-button {
+        width: 100%;
+    }
+
+    .table-container {
+        width: 95%;
+    }
 }
