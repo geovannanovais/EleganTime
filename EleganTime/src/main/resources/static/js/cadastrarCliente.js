@@ -100,3 +100,23 @@ formulario.addEventListener('submit', function (event) {
     event.preventDefault();
     cadastrar();
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const cpfInput = document.getElementById('cpf');
+
+    cpfInput.addEventListener('input', function (event) {
+        let cpf = event.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+        if (cpf.length > 11) cpf = cpf.slice(0, 11); // Limita a 11 dígitos
+
+        if (cpf.length > 9) {
+            event.target.value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        } else if (cpf.length > 6) {
+            event.target.value = cpf.replace(/(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+        } else if (cpf.length > 3) {
+            event.target.value = cpf.replace(/(\d{3})(\d{0,3})/, "$1.$2");
+        } else {
+            event.target.value = cpf;
+        }
+    });
+});

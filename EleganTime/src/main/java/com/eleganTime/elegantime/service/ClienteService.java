@@ -21,7 +21,6 @@ public class ClienteService {
 
     private final Pattern nomePattern = Pattern.compile("^[A-Za-zÁ-ÿà-ÿ]+(?:\\s[A-Za-zÁ-ÿà-ÿ]+)+$");
 
-
     public Cliente salvar(Cliente cliente) {
         validarCliente(cliente);
         return clienteRepository.save(cliente);
@@ -60,8 +59,33 @@ public class ClienteService {
     }
 
     private boolean isValidCPF(String cpf) {
-        // Implemente sua lógica de validação de CPF aqui
-        return true; // Retornar true ou false conforme o CPF seja válido
+        if (cpf == null || !cpf.matches("\\d{11}")) {
+            return false;
+        }
+
+        // CPF inválido se todos os dígitos são iguais (exemplo: 11111111111)
+        if (cpf.chars().distinct().count() == 1) {
+            return false;
+        }
+
+        // Valida os dois dígitos verificadores
+        int[] peso1 = {10, 9, 8, 7, 6, 5, 4, 3, 2};
+        int[] peso2 = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+        int primeiroDigito = calcularDigito(cpf.substring(0, 9), peso1);
+        int segundoDigito = calcularDigito(cpf.substring(0, 9) + primeiroDigito, peso2);
+
+        // Compara com os dígitos verificadores informados
+        return cpf.equals(cpf.substring(0, 9) + primeiroDigito + segundoDigito);
+    }
+
+    private int calcularDigito(String str, int[] peso) {
+        int soma = 0;
+        for (int i = 0; i < str.length(); i++) {
+            int digito = Character.getNumericValue(str.charAt(i));
+            soma += digito * peso[i];
+        }
+        int resto = 11 - (soma % 11);
+        return (resto > 9) ? 0 : resto;
     }
 
     private boolean validarEndereco(Cliente cliente) {
@@ -80,7 +104,6 @@ public class ClienteService {
             return false;
         }
     }
-
 
     public Cliente buscarPorId(int id) {
         return clienteRepository.findById(id).orElse(null);
