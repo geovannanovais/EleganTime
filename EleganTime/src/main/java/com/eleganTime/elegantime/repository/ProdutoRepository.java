@@ -5,8 +5,9 @@ import org.springframework.stereotype.Repository;
 import com.eleganTime.elegantime.model.Produto;
 import java.util.List;
 
-
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findByCondicaoDoProduto(boolean condicaoDoProduto);
+
+    List<Produto> findByNomeContainingIgnoreCase(String nome); // buscar os produtos pelo nome
 }

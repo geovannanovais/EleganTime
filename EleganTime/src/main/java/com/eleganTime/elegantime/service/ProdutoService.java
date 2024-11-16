@@ -24,6 +24,11 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
+    // Busca pelo o nome
+    public List<Produto> buscarProdutosPorNome(String nome) {
+        return produtoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
     public Produto obterProdutoPorId(Integer produtoId) {
         Optional<Produto> produto = produtoRepository.findById(produtoId);
         return produto.orElse(null);
@@ -38,7 +43,6 @@ public class ProdutoService {
         Optional<Produto> produtoExistenteOpt = produtoRepository.findById(id);
         if (produtoExistenteOpt.isPresent()) {
             Produto produtoExistente = produtoExistenteOpt.get();
-
 
             produtoExistente.setNome(produto.getNome());
             produtoExistente.setPreco(produto.getPreco());
@@ -65,4 +69,3 @@ public class ProdutoService {
         return produtoRepository.findByCondicaoDoProduto(true);
     }
 }
-

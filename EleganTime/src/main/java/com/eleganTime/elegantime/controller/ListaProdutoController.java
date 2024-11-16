@@ -17,10 +17,18 @@ public class ListaProdutoController {
     private ProdutoService produtoService;
 
     @GetMapping("/listaProduto")
-    public String listaProdutos(Model model) {
-        List<Produto> produtos = produtoService.listarProdutos();
+    public String listaProdutos(@RequestParam(value = "search", required = false) String search, Model model) {
+        List<Produto> produtos;
+
+        if (search != null && !search.isEmpty()) {
+            produtos = produtoService.buscarProdutosPorNome(search);
+        } else {
+            produtos = produtoService.listarProdutos();
+        }
+
         model.addAttribute("produtos", produtos);
-        return "listaProduto"; // Nome da sua view
+        model.addAttribute("search", search); // Para preencher o campo de busca
+        return "listaProduto";
     }
 
     @PostMapping("/produto/{produtoId}/toggleStatus")
