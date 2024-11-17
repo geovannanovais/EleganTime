@@ -42,9 +42,10 @@ public class CadastrarProdutoController {
 
     @PostMapping("/cadastrarProduto")
     public String cadastrarProduto(@ModelAttribute Produto produto,
-            @RequestParam("imagensNome") String[] imagensNome,
-            @RequestParam("imagensCaminho") String[] imagensCaminho,
-            @RequestParam(value = "imagensPrincipal", required = false) boolean[] imagensPrincipal) {
+            @RequestParam("imagensNome") String[] imagensNome, // pega o nome
+            @RequestParam("imagensCaminho") String[] imagensCaminho, // pega o caminho
+            @RequestParam(value = "imagensPrincipal", required = false) boolean[] imagensPrincipal) { // pega se é
+                                                                                                      // principal
 
         produtoService.salvar(produto);
 
@@ -80,6 +81,8 @@ public class CadastrarProdutoController {
 
         produtoService.salvar(produtoExistente);
 
+        System.out.println("--------------- Imagem:" + produtoExistente.getImagens());
+
         List<Imagem> novasImagens = new ArrayList<>();
         for (int i = 0; i < imagensNome.length; i++) {
             if (!imagensNome[i].isEmpty() && !imagensCaminho[i].isEmpty()) {
@@ -88,6 +91,8 @@ public class CadastrarProdutoController {
                 novasImagens.add(img);
             }
         }
+
+        System.out.println("--------------- Imagem:" + produtoExistente.getImagens());
 
         produtoExistente.setImagens(novasImagens);
 

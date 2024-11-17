@@ -11,4 +11,7 @@ import java.util.List;
 public interface ImagemRepository extends JpaRepository<Imagem, Integer> {
 
     List<Imagem> findByProduto(Produto produto);
+
+    // Busca a imagem principal de um produto específico
+    Imagem findByProdutoAndPrincipalTrue(Produto produto);
 }

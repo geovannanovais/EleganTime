@@ -16,15 +16,16 @@ public class Produto {
     private String descricao;
     private double preco;
     private int quantidadeEmEstoque;
-    private boolean condicaoDoProduto;
+    private boolean condicaoDoProduto = true;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagem> imagens = new ArrayList<>();
 
+    public Produto() {
+    }
 
-    public Produto() {}
-
-    public Produto(String nome, double avaliacao, String descricao, double preco, int quantidadeEmEstoque, boolean condicaoDoProduto, List<Imagem> imagens) {
+    public Produto(String nome, double avaliacao, String descricao, double preco, int quantidadeEmEstoque,
+            boolean condicaoDoProduto, List<Imagem> imagens) {
         this.nome = nome;
         this.avaliacao = avaliacao;
         this.descricao = descricao;
@@ -33,7 +34,6 @@ public class Produto {
         this.condicaoDoProduto = condicaoDoProduto;
         this.imagens = imagens != null ? imagens : new ArrayList<>(); // Garantindo uma lista não nula
     }
-
 
     public int getId_Produto() {
         return id_Produto;
