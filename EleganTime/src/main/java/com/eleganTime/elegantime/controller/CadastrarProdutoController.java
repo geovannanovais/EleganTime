@@ -98,4 +98,15 @@ public class CadastrarProdutoController {
 
         return "redirect:/listaProduto";
     }
+
+    public Produto buscarProdutoComImagens(int produtoId) {
+        // Produto produto = produtoRepository.findById(produtoId).orElseThrow(() -> new
+        // RuntimeException("Produto não encontrado"));
+        Produto produto = produtoService.obterProdutoPorId(produtoId);
+
+        // Ordenando as imagens para que a principal fique em primeiro
+        produto.getImagens().sort((img1, img2) -> Boolean.compare(img2.isPrincipal(), img1.isPrincipal()));
+
+        return produto;
+    }
 }
