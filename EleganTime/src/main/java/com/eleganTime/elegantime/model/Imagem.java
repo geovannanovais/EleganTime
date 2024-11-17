@@ -19,11 +19,11 @@ public class Imagem {
 
     @ManyToOne
     @JoinColumn(name = "idProduto")
+    // @JoinColumn(name = "produto_id")
     private Produto produto;
 
-
-    public Imagem() {}
-
+    public Imagem() {
+    }
 
     public Imagem(String nome, String caminho, boolean principal, Produto produto) {
         this.nome = nome;
@@ -31,7 +31,6 @@ public class Imagem {
         this.principal = principal;
         this.produto = produto;
     }
-
 
     public int getId() {
         return id;

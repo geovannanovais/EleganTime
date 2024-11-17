@@ -210,6 +210,27 @@ nav ul li a:hover {
     transform: translateY(-2px);
 }
 
+/* Mudando a cor do ícone de controle "Next" */
+.carousel-control-next-icon {
+    background-color: transparent;
+    /* Remover o fundo original */
+    border: 2px solid transparent;
+    /* Manter a área do ícone */
+    filter: invert(42%) sepia(79%) saturate(375%) hue-rotate(2deg) brightness(91%) contrast(95%);
+    /* O filtro altera a cor. Você pode ajustar esses valores para atingir a cor que deseja */
+}
+
+/* Mudando a cor do ícone de controle "Previous" */
+.carousel-control-prev-icon {
+    background-color: transparent;
+    /* Remover o fundo original */
+    border: 2px solid transparent;
+    /* Manter a área do ícone */
+    filter: invert(42%) sepia(79%) saturate(375%) hue-rotate(2deg) brightness(91%) contrast(95%);
+    /* Ajuste os valores para personalizar a cor do ícone */
+}
+
+
 /* Rodapé */
 footer {
     background-color: #2b2b2b;
