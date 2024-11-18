@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${cliente.idCliente != 0 ? 'Editar Cliente' : 'Cadastrar Cliente'}"></title>
     <link rel="stylesheet" th:href="@{/css/cadastroCliente.css}">
-    <script th:src="@{/js/cadastrarCliente.js}" defer></script>
+    <link rel="stylesheet" href="../static/css/cadastroCliente.css">
+    <script src="../static/js/cadastrarCliente.js" defer></script>
 </head>
 
 <body>
@@ -18,7 +19,7 @@
             </a>
         </div>
         <div class="menu-icons">
-            <span>Perfil</span>
+            <a>Perfil</a>
         </div>
     </div>
 </header>
@@ -32,109 +33,101 @@
             <p th:text="${errorMessage}"></p>
         </div>
 
-        <form id="clienteForm" th:action="@{/cadastrarCliente}" method="post">
-            <!-- Campos do formulário -->
+        <!-- Formulário de Cadastro -->
+        <form id="clienteForm"
+              th:action="${cliente.idCliente != 0 ? '/editarCliente/' + cliente.idCliente : '/cadastrarCliente'}"
+              method="post">
 
+            <!-- Alteração de idUsuario para idCliente -->
             <input type="hidden" th:name="idCliente" th:value="${cliente.idCliente}" />
 
-            <div class="input-group">
-                <label for="nome">Nome Completo:</label>
-                <input type="text" id="nome" name="nome" placeholder="Nome Completo" th:value="${cliente.nome}" required
-                       pattern="^(?=.*\s)(?=.*[A-Za-z])[A-Za-z\s]{6,}$"
-                       title="O nome deve ter pelo menos 2 palavras, com mínimo de 3 letras em cada palavra.">
-            </div>
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome Completo" th:value="${cliente.nome}" required
+                   pattern="^(?=.*\s)(?=.*[A-Za-z])[A-Za-z\s]{6,}$"
+                   title="O nome deve ter pelo menos 2 palavras, com mínimo de 3 letras em cada palavra.">
 
-            <div class="row">
-                <div class="input-group">
-                    <label for="cpf">CPF:</label>
-                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" th:value="${cliente.cpf}"
-                           required pattern="^\d{3}\.\d{3}\.\d{3}-\d{2}$" maxlength="14"
-                           title="O CPF deve estar no formato 000.000.000-00">
-                </div>
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" placeholder="CPF" th:value="${cliente.cpf}" required
+                   pattern="^\d{11}$" title="O CPF deve conter 11 dígitos.">
 
-                <div class="input-group">
-                    <label for="dataNascimento">Data de Nascimento:</label>
-                    <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}" required>
-                </div>
-            </div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Email" th:value="${cliente.email}" required>
 
-            <div class="input-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Email" th:value="${cliente.email}" required>
-            </div>
+            <label for="dataNascimento">Data de Nascimento:</label>
+            <input type="date" id="dataNascimento" name="dataNascimento" th:value="${cliente.dataNascimento}" required>
 
-            <div class="input-group">
-                <label for="genero">Gênero:</label>
-                <select id="genero" name="genero" required>
-                    <option value="" disabled selected>Selecione seu gênero</option>
-                    <option value="Masculino" th:selected="${cliente.genero == 'Masculino'}">Masculino</option>
-                    <option value="Feminino" th:selected="${cliente.genero == 'Feminino'}">Feminino</option>
-                    <option value="Outro" th:selected="${cliente.genero == 'Outro'}">Outro</option>
-                </select>
-            </div>
+            <label for="genero">Gênero:</label>
+            <select id="genero" name="genero" required>
+                <option value="" disabled selected>Selecione seu gênero</option>
+                <option value="Masculino" th:selected="${cliente.genero == 'Masculino'}">Masculino</option>
+                <option value="Feminino" th:selected="${cliente.genero == 'Feminino'}">Feminino</option>
+                <option value="Outro" th:selected="${cliente.genero == 'Outro'}">Outro</option>
+            </select>
 
             <h3>Endereço de Faturamento</h3>
-            <div class="input-group">
-                <label for="cep">CEP:</label>
-                <input type="text" id="cep" name="cep" placeholder="CEP" required pattern="^\d{5}-?\d{3}$"
-                       title="O CEP deve estar no formato 00000-000.">
-            </div>
+            <label for="cep">CEP:</label>
+            <input type="text" id="cep" name="cep" placeholder="CEP" required pattern="^\d{5}-?\d{3}$"
+                   title="O CEP deve estar no formato 00000-000."
+                   oninput="buscarEndereco()"> <!-- Chama a função ao digitar o CEP -->
 
-            <div class="input-group">
-                <label for="logradouro">Logradouro:</label>
-                <input type="text" id="logradouro" name="logradouro" placeholder="Logradouro" required>
-            </div>
+            <label for="logradouro">Logradouro:</label>
+            <input type="text" id="logradouro" name="logradouro" placeholder="Logradouro" required>
 
-            <div class="row">
-                <div class="input-group">
-                    <label for="numero">Número:</label>
-                    <input type="text" id="numero" name="numero" placeholder="Número" required>
-                </div>
+            <label for="numero">Número:</label>
+            <input type="text" id="numero" name="numero" placeholder="Número" required>
 
-                <div class="input-group">
-                    <label for="complemento">Complemento:</label>
-                    <input type="text" id="complemento" name="complemento" placeholder="Complemento">
-                </div>
-            </div>
+            <label for="complemento">Complemento:</label>
+            <input type="text" id="complemento" name="complemento" placeholder="Complemento">
 
-            <div class="row">
-                <div class="input-group">
-                    <label for="bairro">Bairro:</label>
-                    <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
-                </div>
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
 
-                <div class="input-group">
-                    <label for="cidade">Cidade:</label>
-                    <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
-                </div>
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
 
-                <div class="input-group">
-                    <label for="uf">UF:</label>
-                    <input type="text" id="uf" name="uf" placeholder="UF" required pattern="^[A-Z]{2}$"
-                           title="A UF deve ter 2 letras maiúsculas.">
-                </div>
-            </div>
+            <label for="uf">UF:</label>
+            <input type="text" id="uf" name="uf" placeholder="UF" required pattern="^[A-Z]{2}$"
+                   title="A UF deve ter 2 letras maiúsculas.">
 
             <h3>Endereço de Entrega</h3>
-            <div class="input-group">
-                <label for="enderecoEntrega">Endereço de Entrega:</label>
-                <input type="text" id="enderecoEntrega" name="enderecoEntrega" placeholder="Endereço de Entrega"
-                       required>
-            </div>
+            <label for="enderecoEntrega">Endereço de Entrega:</label>
+            <input type="text" id="enderecoEntrega" name="enderecoEntrega" placeholder="Endereço de Entrega"
+                   required>
 
-            <div class="input-group">
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" placeholder="Senha" required>
-            </div>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" placeholder="Senha" required>
 
-            <!-- Botões de Ação -->
-            <div class="button-group">
-                <button type="submit" class="btn submit" th:text="${cliente.idCliente != 0 ? 'Salvar Alterações' : 'Cadastrar Cliente'}"></button>
-                <button type="button" class="btn cancel" onclick="window.location.href='@{/listarClientes}'">Cancelar</button>
-            </div>
+            <button type="submit" class="btn" id="submitButton"
+                    th:text="${cliente.idCliente != 0 ? 'Salvar Alterações' : 'Cadastrar Cliente'}">Cadastrar-se</button>
+            <button type="button" class="btn cancel"
+                    onclick="window.location.href='@{/listarClientes}'">Cancelar</button>
         </form>
     </div>
 </div>
 
+<script>
+    function buscarEndereco() {
+        var cep = document.getElementById('cep').value;
+
+        // Verifica se o CEP tem 8 caracteres (considerando que pode ser inserido o hífen)
+        if (cep.length === 8 || cep.length === 9) {  // 8 sem hífen ou 9 com hífen
+            fetch('https://viacep.com.br/ws/' + cep.replace("-", "") + '/json/')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        document.getElementById('logradouro').value = data.logradouro;
+                        document.getElementById('bairro').value = data.bairro;
+                        document.getElementById('cidade').value = data.localidade;
+                        document.getElementById('uf').value = data.uf;
+                    } else {
+                        alert('CEP não encontrado!');
+                    }
+                })
+                .catch(error => alert('Erro ao buscar o endereço.'));
+        }
+    }
+</script>
+
 </body>
+
 </html>

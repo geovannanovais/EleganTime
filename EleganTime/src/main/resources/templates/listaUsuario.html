@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Usuários</title>
     <link rel="stylesheet" th:href="@{/css/listaUsuario.css}">
+    <script>
+        function filtrarUsuarios() {
+            var input = document.querySelector('.search');  // Pega o campo de pesquisa
+            var filter = input.value.toUpperCase();  // Converte para maiúsculas para tornar a busca insensível a maiúsculas/minúsculas
+            var table = document.querySelector('table');  // Pega a tabela
+            var rows = table.querySelectorAll('tbody tr');  // Pega todas as linhas da tabela
+
+            // Loop por todas as linhas da tabela
+            rows.forEach(function(row) {
+                var nomeCell = row.querySelector('td');  // A primeira célula é o nome
+                var nome = nomeCell ? nomeCell.textContent || nomeCell.innerText : '';  // Pega o nome da célula
+
+                // Verifica se o nome contém o termo da pesquisa
+                if (nome.toUpperCase().indexOf(filter) > -1) {
+                    row.style.display = '';  // Exibe a linha
+                } else {
+                    row.style.display = 'none';  // Oculta a linha
+                }
+            });
+        }
+    </script>
 </head>
 
 <body>
@@ -27,7 +48,8 @@
     <div class="new-user">
         <a th:href="@{/cadastrarUsuario}" class="add-user">+ Novo Usuário</a>
         <div class="search-container">
-            <input type="text" placeholder="Pesquisar" class="search">
+            <!-- Adicionamos o evento "input" para chamar a função filtrarUsuarios -->
+            <input type="text" placeholder="Pesquisar por nome" class="search" oninput="filtrarUsuarios()">
             <button class="search-button">Procurar</button>
         </div>
     </div>
@@ -45,6 +67,7 @@
         </tr>
         </thead>
         <tbody>
+        <!-- A tabela será preenchida dinamicamente com os dados dos usuários -->
         <tr th:each="usuario : ${usuarios}">
             <td th:text="${usuario.nome}"></td>
             <td th:text="${usuario.cpf}"></td>
@@ -53,14 +76,12 @@
             <td th:text="${usuario.isCondicaoDoUsuario() ? 'Ativo' : 'Desativado'}"></td>
             <td>
                 <a th:href="@{/editarUsuario/{id}(id=${usuario.idUsuario})}">Alterar</a>
-
             </td>
             <td>
                 <form th:action="@{/alterarStatusUsuario(id=${usuario.idUsuario})}" method="post">
                     <button type="submit" th:text="${usuario.isCondicaoDoUsuario() ? 'Inabilitar' : 'Habilitar'}"></button>
                 </form>
             </td>
-
         </tr>
         </tbody>
     </table>

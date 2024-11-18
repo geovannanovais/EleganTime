@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumo do Pedido</title>
-    <link rel="stylesheet" href="/css/resumoPedido.css">
+    <title>Detalhes do Pedido</title>
+    <link rel="stylesheet" th:href="@{/css/resumoPedido.css}">
 </head>
 <body>
-<h1>Resumo do Pedido</h1>
+<h1>Detalhes do Pedido</h1>
 
 <!-- Lista de Produtos -->
 <div class="section">
@@ -23,11 +22,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${itens}">
+        <tr th:each="item : ${carrinho.itens}">
             <td th:text="${item.produto.nome}"></td>
             <td th:text="${item.produto.preco}"></td>
             <td th:text="${item.quantidade}"></td>
-            <td th:text="${item.produto.preco * item.quantidade}"></td>
+            <td th:text="${item.produto.preco * item.quantidade}"></td> <!-- Valor Total do Item -->
         </tr>
         </tbody>
     </table>
@@ -36,25 +35,33 @@
 <!-- Valores Totais -->
 <div class="summary">
     <p>Frete: <span th:text="${frete}"></span></p>
-    <p class="total">Total Geral: <span th:text="${totalGeral}"></span></p>
+    <p class="total">Total Geral: <span th:text="${totalGeral}"></span></p> <!-- Total Geral do Pedido -->
 </div>
 
 <!-- Endereço de Entrega -->
 <div class="section">
     <h2>Endereço de Entrega</h2>
-    <p th:text="${enderecoEntrega}"></p>
+    <p th:text="${enderecoEntrega}"></p> <!-- Endereço de entrega do cliente -->
 </div>
 
 <!-- Forma de Pagamento -->
 <div class="section">
     <h2>Forma de Pagamento</h2>
-    <p th:text="${formaPagamento.nome}"></p> <!-- Aqui você pode ajustar para exibir os detalhes da forma de pagamento -->
+    <p th:text="${formaPagamento}"></p> <!-- Forma de pagamento escolhida -->
 </div>
 
-<!-- Botões -->
-<div class="button-group">
-    <button class="back" onclick="window.location.href='/escolhaPagamento'">Voltar</button>
-    <button onclick="window.location.href='/concluirCompra'">Concluir Compra</button>
+<!-- Finalizar pedido -->
+<div class="section">
+    <form action="#" th:action="@{/finalizarPedido}" method="post">
+        <!-- Campos ocultos para enviar os valores -->
+        <input type="hidden" name="idPagamento" th:value="${formaPagamento.idPagamento}" /> <!-- ID da forma de pagamento -->
+        <input type="hidden" name="total" th:value="${totalGeral}" /> <!-- Total geral do pedido -->
+        <input type="hidden" name="frete" th:value="${frete}" /> <!-- Valor do frete -->
+        <input type="hidden" name="enderecoEntrega" th:value="${enderecoEntrega}" /> <!-- Endereço de entrega -->
+
+        <button type="submit">Finalizar Pedido</button>
+    </form>
 </div>
+
 </body>
 </html>

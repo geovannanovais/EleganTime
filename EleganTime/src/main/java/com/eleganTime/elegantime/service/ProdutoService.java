@@ -57,7 +57,7 @@ public class ProdutoService {
         }
     }
 
-    public void deletarProduto(Integer idProduto) {
+    public void deletarProduto(int idProduto) {
         produtoRepository.deleteById(idProduto);
     }
 
@@ -69,3 +69,4 @@ public class ProdutoService {
         return produtoRepository.findByCondicaoDoProduto(true);
     }
 }
+

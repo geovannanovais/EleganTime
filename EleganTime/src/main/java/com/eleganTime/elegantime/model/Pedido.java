@@ -1,54 +1,66 @@
 package com.eleganTime.elegantime.model;
 
+import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
 public class Pedido {
 
-    private List<Produto> produtos;
-    private double frete;
-    private double totalGeral;
-    private String enderecoEntrega;
-    private String formaPagamento;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Geração automática do ID no banco
+    private int id;
+
+    @Column(name = "id_Cliente", nullable = false)
+    private int idCliente;  // Apenas o ID do Cliente
+
+    @Column(name = "id_Carrinho", nullable = false)
+    private int idCarrinho;  // Apenas o ID do Carrinho
+
+    @Column(name = "id_Pagamento")
+    private Integer idPagamento;  // ID do Pagamento (opcional)
+
+    @Column(nullable = false)
+    private String status = "Pendente";  // Status padrão
 
     // Getters e Setters
 
-    public List<Produto> getProdutos() {
-        return produtos;
+    public int getId() {
+        return id;
     }
 
-    public void setProdutos(List<Produto> produtos) {
-        this.produtos = produtos;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public double getFrete() {
-        return frete;
+    public int getIdCliente() {
+        return idCliente;
     }
 
-    public void setFrete(double frete) {
-        this.frete = frete;
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
-    public double getTotalGeral() {
-        return totalGeral;
+    public int getIdCarrinho() {
+        return idCarrinho;
     }
 
-    public void setTotalGeral(double totalGeral) {
-        this.totalGeral = totalGeral;
+    public void setIdCarrinho(int idCarrinho) {
+        this.idCarrinho = idCarrinho;
     }
 
-    public String getEnderecoEntrega() {
-        return enderecoEntrega;
+    public Integer getIdPagamento() {
+        return idPagamento;
     }
 
-    public void setEnderecoEntrega(String enderecoEntrega) {
-        this.enderecoEntrega = enderecoEntrega;
+    public void setIdPagamento(Integer idPagamento) {
+        this.idPagamento = idPagamento;
     }
 
-    public String getFormaPagamento() {
-        return formaPagamento;
+    public String getStatus() {
+        return status;
     }
 
-    public void setFormaPagamento(String formaPagamento) {
-        this.formaPagamento = formaPagamento;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

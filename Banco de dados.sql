@@ -1,4 +1,4 @@
--- Deleta o banco de dados se existir
+
 DROP DATABASE IF EXISTS elegantime;
 
 -- Cria o banco de dados
@@ -53,7 +53,7 @@ CREATE TABLE Cliente (
     cidade VARCHAR(100) NOT NULL,
     uf CHAR(2) NOT NULL,
     condicao_Do_Cliente BOOLEAN NOT NULL DEFAULT TRUE,
-    data_Nascimento DATE NOT NULL,          -- Novo campo para a data de nascimento
+    data_Nascimento VARCHAR(100) NOT NULL,          -- Novo campo para a data de nascimento
     genero VARCHAR(10) NOT NULL,           -- Novo campo para gênero
     cep VARCHAR(10) NOT NULL,              -- Novo campo para CEP
     endereco_Entrega VARCHAR(255) NOT NULL -- Novo campo para endereço de entrega
@@ -63,8 +63,11 @@ CREATE TABLE Cliente (
 CREATE TABLE Carrinho (
     id_Carrinho INT AUTO_INCREMENT PRIMARY KEY,
     id_Cliente INT NOT NULL,
+    valor_frete DOUBLE(10,2) DEFAULT 0.00,   -- Campo para o valor do frete
+    total DOUBLE(10,2) DEFAULT 0.00,   -- Campo para o valor total (produto + frete)
     FOREIGN KEY (id_Cliente) REFERENCES Cliente(id)
 );
+
 
 -- Criação da tabela ItemCarrinho
 CREATE TABLE Item_Carrinho (
@@ -75,6 +78,37 @@ CREATE TABLE Item_Carrinho (
     FOREIGN KEY (id_carrinho) REFERENCES Carrinho(id_Carrinho),
     FOREIGN KEY (id_Produto) REFERENCES Produto(id_Produto)
 );
+
+-- Criação da tabela Pagamento com os campos que podem ser nulos dependendo do tipo de pagamento
+-- Criação da tabela Pagamento com campos que aceitam nulos dependendo do tipo de pagamento
+CREATE TABLE Pagamento (
+    id_Pagamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_Cliente INT NOT NULL,                       -- ID do Cliente, chave estrangeira
+    tipo_Pagamento VARCHAR(20) NOT NULL,             -- Tipo de pagamento (cartão ou boleto)
+    numero_Cartao VARCHAR(16) DEFAULT NULL,         -- Número do cartão de crédito (16 dígitos), pode ser nulo
+    codigoCVV VARCHAR(3) DEFAULT NULL,             -- Código CVV do cartão (3 dígitos), pode ser nulo
+    nome_Cartao VARCHAR(100) DEFAULT NULL,          -- Nome do titular do cartão, pode ser nulo
+    data_Vencimento VARCHAR(50) DEFAULT NULL,        -- Data de vencimento do cartão (MM/AA), pode ser nulo
+    parcelas INT DEFAULT NULL,                     -- Quantidade de parcelas, pode ser nulo (para boleto será nulo)
+    valor DOUBLE(10,2) NOT NULL,                   -- Valor do pagamento
+    condicao_Do_Pagamento BOOLEAN NOT NULL DEFAULT TRUE,  -- Status do pagamento (ex: pago ou não pago)
+    FOREIGN KEY (id_Cliente) REFERENCES Cliente(id) -- Relacionamento com o Cliente
+);
+
+CREATE TABLE Pedido (
+    id_Pedido INT AUTO_INCREMENT PRIMARY KEY,         -- Identificador único do pedido
+    id_Cliente INT NOT NULL,                           -- ID do Cliente (chave estrangeira)
+    id_Carrinho INT NOT NULL,                          -- ID do Carrinho (chave estrangeira)
+    id_Pagamento INT,                                  -- ID do Pagamento (opcional, pode ser nulo)
+    status VARCHAR(20) DEFAULT 'Pendente',             -- Status do pedido (Pendente, Processado, Enviado, etc)
+    
+    FOREIGN KEY (id_Cliente) REFERENCES Cliente(id),   -- Relacionamento com Cliente
+    FOREIGN KEY (id_Carrinho) REFERENCES Carrinho(id_Carrinho), -- Relacionamento com Carrinho
+    FOREIGN KEY (id_Pagamento) REFERENCES Pagamento(id_Pagamento) -- Relacionamento com Pagamento (opcional)
+);
+
+
+
 
 -- Inserção de dados na tabela Usuario
 INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicao_Do_Usuario) 
@@ -109,3 +143,5 @@ SELECT * FROM Imagem;
 SELECT * FROM Cliente;
 SELECT * FROM Carrinho;
 SELECT * FROM Item_Carrinho;
+SELECT * FROM Pagamento;
+SELECT * FROM Pedido;

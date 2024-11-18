@@ -26,31 +26,23 @@ public class CadastrarClienteController {
     @PostMapping("/cadastrarCliente")
     public String cadastrarCliente(@ModelAttribute Cliente cliente, Model model) {
         try {
-            // Verifica se o cliente já existe (por email ou CPF, por exemplo)
-            if (clienteService.buscarPorEmail(cliente.getEmail()) != null) {
-                model.addAttribute("errorMessage", "Cliente já cadastrado com este e-mail.");
-                return "cadastrarCliente";
-            }
-
             // Salva o cliente
-            cliente = clienteService.salvar(cliente);  // Salva o cliente no banco
+            clienteService.salvar(cliente);  // Tenta salvar o cliente
 
-            // Cria um novo carrinho e associa ao cliente
+            // Cria e salva o carrinho associado ao cliente
             Carrinho carrinho = new Carrinho();
-            carrinho.setCliente(cliente);  // Associa o carrinho ao cliente
+            carrinho.setCliente(cliente);  // Assume que Carrinho tem um campo 'cliente'
+            carrinhoService.salvarCarrinho(carrinho);  // Método que cria e salva o carrinho
 
-            // Salva o carrinho no banco de dados
-            carrinhoService.salvarCarrinho(carrinho);  // Método para salvar o carrinho no banco
-
-            // Limpa qualquer mensagem de erro e redireciona para login
-            model.addAttribute("errorMessage", null);
+            model.addAttribute("errorMessage", null);  // Limpa a mensagem de erro em caso de sucesso
             return "redirect:/login";  // Redireciona para a página de login
-        } catch (Exception e) {
-            // Exibe a mensagem de erro
-            model.addAttribute("errorMessage", "Erro ao cadastrar cliente: " + e.getMessage());
-            return "cadastrarCliente";  // Retorna ao formulário de cadastro com mensagem de erro
+        } catch (RuntimeException e) {
+            // Caso haja erro, mostra a mensagem de erro
+            model.addAttribute("errorMessage", "Erro: " + e.getMessage());
+            return "cadastrarCliente";  // Retorna para a página de cadastro com a mensagem de erro
         }
     }
+
 
     @GetMapping("/editarCliente/{id}")
     public String showEditForm(@PathVariable int id, Model model) {

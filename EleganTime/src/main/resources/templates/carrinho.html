@@ -9,34 +9,92 @@
 </head>
 <body>
 <h1>Seu Carrinho</h1>
+
+<!-- Exibição dos itens do carrinho -->
 <div th:each="item : ${carrinho.itens}">
     <h3 th:text="${item.produto.nome}">Nome do Produto</h3>
     <p>Quantidade: <span th:text="${item.quantidade}"></span></p>
     <p>Preço: R$ <span th:text="${item.produto.preco}"></span></p>
 
+    <!-- Formulário para remover item -->
     <form th:action="@{/carrinho/remover/{produtoId}(produtoId=${item.produto.id_Produto})}" method="get">
-        <input type="hidden" name="clienteId" th:value="${clienteId}">
         <button type="submit">Remover 1</button>
     </form>
-
 </div>
 
-<h2>Total: R$ <span th:text="${total}">0,00</span></h2>
+<!-- Exibição do total com frete -->
+<h2>Total: R$ <span id="total" th:text="${total}">0,00</span></h2>
 
-    <div class = "botao">
-    <!-- Formulário para Finalizar Compra -->
-        <form th:action="@{/enderecos/{clienteId}(clienteId=${clienteId})}" method="get">
-            <input type="hidden" name="clienteId" th:value="${clienteId}">
-            <button class="botao" type="submit">Finalizar</button>
-        </form>
+<!-- Seção de frete -->
+<div class="frete">
+    <h3>Escolha o Frete:</h3>
 
-        <!-- Formulário para Voltar para Home -->
-    <form th:action="@{/home}" method="get">
-        <input type="hidden" name="clienteId" th:value="${clienteId}">
-        <button class="botao" type="submit">Voltar para Home</button>
-    </form>
-
+    <!-- Opções de frete com valores fixos -->
+    <div>
+        <input type="radio" id="freteSedex" name="frete" value="Sedex" th:checked="${frete == 'Sedex'}" onclick="atualizarFrete('Sedex')" />
+        <label for="freteSedex">Sedex (R$ 10,00)</label>
     </div>
+
+    <div>
+        <input type="radio" id="fretePAC" name="frete" value="PAC" th:checked="${frete == 'PAC'}" onclick="atualizarFrete('PAC')" />
+        <label for="fretePAC">PAC (R$ 5,00)</label>
+    </div>
+
+    <div>
+        <input type="radio" id="freteMotoboy" name="frete" value="Motoboy" th:checked="${frete == 'Motoboy'}" onclick="atualizarFrete('Motoboy')" />
+        <label for="freteMotoboy">Motoboy (R$ 15,00)</label>
+    </div>
+</div>
+
+<!-- Formulário para finalizar compra -->
+<form th:action="@{/finalizar}" method="get" id="finalizarCompraForm">
+    <input type="hidden" name="frete" id="inputFrete" />
+    <input type="hidden" name="total" id="inputTotal" />
+    <button type="submit">Finalizar Compra</button>
+</form>
+
+<!-- Formulário para voltar para a home -->
+<div class="botao">
+    <form th:action="@{/home}" method="get">
+        <button type="submit">Voltar para Home</button>
+    </form>
+</div>
+
+<script>
+    // Função para atualizar o valor do frete e o total
+function atualizarFrete(freteEscolhido) {
+    let valorItens = parseFloat(document.getElementById('total').textContent); // Obtém o valor dos itens
+
+    // Definir o valor do frete conforme a escolha
+    let valorFrete = 0;
+    if (freteEscolhido === 'Sedex') {
+        valorFrete = 10.00;
+    } else if (freteEscolhido === 'PAC') {
+        valorFrete = 5.00;
+    } else if (freteEscolhido === 'Motoboy') {
+        valorFrete = 15.00;
+    }
+
+    // Atualiza o total com o valor do frete (não soma, apenas substitui o valor de frete)
+    const totalComFrete = valorItens + valorFrete;
+
+    // Atualiza o valor do total na página
+    document.getElementById('total').textContent = totalComFrete.toFixed(2);
+
+    // Atualiza os campos ocultos para enviar os dados na finalização da compra
+    document.getElementById('inputFrete').value = valorFrete;  // Passa o valor do frete selecionado
+    document.getElementById('inputTotal').value = totalComFrete.toFixed(2);  // Atualiza o total final com o frete
+}
+
+// Chama a função de atualizar automaticamente na primeira carga da página
+window.onload = function() {
+    let freteSelecionado = document.querySelector('input[name="frete"]:checked');
+    if (freteSelecionado) {
+        atualizarFrete(freteSelecionado.value); // Atualiza com o valor do frete selecionado
+    }
+};
+
+</script>
 
 </body>
 </html>

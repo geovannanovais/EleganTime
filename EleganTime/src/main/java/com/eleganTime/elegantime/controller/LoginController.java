@@ -1,16 +1,27 @@
 package com.eleganTime.elegantime.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.eleganTime.elegantime.model.Carrinho;
+import com.eleganTime.elegantime.model.Cliente;
+import com.eleganTime.elegantime.service.CarrinhoService;
+import com.eleganTime.elegantime.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class LoginController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    @Autowired
+    private CarrinhoService carrinhoService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     // Página de login
     @GetMapping("/login")
@@ -25,5 +36,22 @@ public class LoginController {
     @GetMapping("/accessDenied")
     public String accessDenied() {
         return "accessDenied";  // A página de acesso negado (accessDenied.html)
+    }
+
+    // Método para associar o carrinho à sessão do usuário logado
+    @GetMapping("/login/success")
+    public String loginSuccess(HttpSession session, Authentication authentication) {
+        String email = authentication.getName();
+        // Recupera o carrinho da sessão
+        Carrinho carrinhoSessao = (Carrinho) session.getAttribute("carrinho");
+        ClienteService clienteService = new ClienteService();
+        if (carrinhoSessao != null) {
+            // Se o carrinho existir na sessão, associamos ao usuário logado
+            carrinhoSessao.setCliente(clienteService.buscarPorEmail(email)); // Aqui você associaria o cliente corretamente
+            carrinhoService.salvarCarrinho(carrinhoSessao); // Salva o carrinho no banco de dados
+            session.removeAttribute("carrinho"); // Remove o carrinho da sessão após salvar
+        }
+
+        return "redirect:/home";  // Redireciona para a página inicial
     }
 }

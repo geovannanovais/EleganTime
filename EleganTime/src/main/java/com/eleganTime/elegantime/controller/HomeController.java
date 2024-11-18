@@ -4,9 +4,9 @@ import com.eleganTime.elegantime.model.Carrinho;
 import com.eleganTime.elegantime.model.Produto;
 import com.eleganTime.elegantime.service.CarrinhoService;
 import com.eleganTime.elegantime.service.ProdutoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class HomeController {
@@ -26,43 +25,38 @@ public class HomeController {
     @Autowired
     private CarrinhoService carrinhoService;
 
+    // Método para exibir a página inicial
     @GetMapping("/home")
-    public String home(Model model) {
+    public String home(Model model, HttpSession session, Authentication authentication) {
+        // Lista de produtos ativos
         List<Produto> produtosAtivos = produtoService.listarProdutosAtivos();
         model.addAttribute("products", produtosAtivos);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String emailCliente = authentication != null ? authentication.getName() : null;  // O 'name' é o email do cliente
-
-        Carrinho carrinho;
-        if (emailCliente != null) {
-            Optional<Carrinho> carrinhoOpt = carrinhoService.obterCarrinhoPorCliente(emailCliente);
-            carrinho = carrinhoOpt.orElseGet(Carrinho::new);
-            model.addAttribute("quantidadeCarrinho", carrinho.getItens().size());
-        } else {
-            carrinho = carrinhoService.getCarrinhoEmMemoria(emailCliente);
-            model.addAttribute("quantidadeCarrinho", carrinho.getItens().size());
-        }
-
-        return "home";
-    }
-
-    @PostMapping("/home/adicionar/{produtoId}")
-    public String adicionarAoCarrinho(@PathVariable int produtoId,
-                                      @RequestParam int quantidade) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Verifica se o usuário está logado
         String emailCliente = authentication != null ? authentication.getName() : null;
 
-        Carrinho carrinho;
-        if (emailCliente != null) {
-            Optional<Carrinho> carrinhoOpt = carrinhoService.obterCarrinhoPorCliente(emailCliente);
-            carrinho = carrinhoOpt.orElseGet(Carrinho::new);
-        } else {
-            carrinho = carrinhoService.getCarrinhoEmMemoria(emailCliente);
-        }
+        // Recupera o carrinho (caso não exista, será criado automaticamente)
+        Carrinho carrinho = carrinhoService.obterCarrinho(emailCliente, session);
 
-        carrinhoService.adicionarItem(produtoId, quantidade, emailCliente);
+        // Passa a quantidade de itens no carrinho para o frontend
+        model.addAttribute("quantidadeCarrinho", carrinho.getItens().size());
 
-        return "redirect:/home";  // Redireciona de volta à página inicial ou carrinho
+        return "home";  // Retorna a view home
+    }
+
+    // Método para adicionar item ao carrinho
+    @PostMapping("/home/adicionar/{produtoId}")
+    public String adicionarAoCarrinho(@PathVariable int produtoId,
+                                      @RequestParam int quantidade,
+                                      HttpSession session, Authentication authentication) {
+
+        // Recupera o email do cliente logado, se houver
+        String emailCliente = authentication != null ? authentication.getName() : null;
+
+        // Adiciona o item ao carrinho
+        carrinhoService.adicionarItem(produtoId, quantidade, emailCliente, session);
+
+        // Redireciona para a página inicial após adicionar o item
+        return "redirect:/home";  // Redireciona para a página inicial
     }
 }

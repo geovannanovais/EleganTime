@@ -26,10 +26,11 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login", "/signup", "/public/**", "/css/**", "/js/**", "/img/**", "/img-site/**", "/home", "/cadastrarCliente", "/carrinho/**")
-                                .permitAll()  // Permite acesso para todos, inclusive clientes
+                                // Permite acesso a rotas específicas sem autenticação
+                                .requestMatchers("/login", "/signup", "/public/**", "/css/**", "/js/**", "/img/**", "/img-site/**", "/home", "/cadastrarCliente", "/carrinho/**", "/produto/**", "/adicionar/**")  // Adicionando '/adicionar/**' para permitir adicionar ao carrinho
+                                .permitAll()  // Permite acesso para todos sem autenticação
 
-                                // Restringe o acesso a áreas específicas
+                                // Restringe o acesso para rotas administrativas
                                 .requestMatchers("/areaAdmin", "/listarUsuarios")
                                 .hasRole("ADMINISTRADOR")
 
@@ -37,6 +38,7 @@ public class SecurityConfig {
                                 .requestMatchers("/areaEstoquista")
                                 .hasRole("ESTOQUISTA")
 
+                                // Exige autenticação para outras rotas
                                 .anyRequest().authenticated()  // Qualquer outra página exige autenticação
                 )
                 .formLogin(formLogin ->
@@ -48,27 +50,25 @@ public class SecurityConfig {
                                     authentication.getAuthorities().forEach(authority ->
                                             System.out.println("Authority: " + authority.getAuthority()));
 
-                                    // Verifica se o usuário tem a role de Admin ou Estoquista
+                                    // Redireciona dependendo da role do usuário
                                     boolean isAdmin = authentication.getAuthorities().stream()
                                             .anyMatch(role -> role.getAuthority().equalsIgnoreCase("ROLE_ADMINISTRADOR"));
                                     boolean isEstoquista = authentication.getAuthorities().stream()
                                             .anyMatch(role -> role.getAuthority().equalsIgnoreCase("ROLE_ESTOQUISTA"));
 
-                                    // Redireciona para a página correta dependendo da role
                                     if (isAdmin) {
-                                        response.sendRedirect("/areaAdmin");  // Redireciona para a área Admin
+                                        response.sendRedirect("/areaAdmin");
                                     } else if (isEstoquista) {
-                                        response.sendRedirect("/areaEstoquista");  // Redireciona para a área Estoquista
+                                        response.sendRedirect("/areaEstoquista");
                                     } else {
-                                        response.sendRedirect("/home");  // Redireciona para o home
+                                        response.sendRedirect("/home");
                                     }
                                 })
                 )
-                .logout(logout -> logout.permitAll());  // Permite que qualquer usuário faça logout
+                .logout(logout -> logout.permitAll());  // Permite logout para todos
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -78,7 +78,7 @@ public class SecurityConfig {
         // Usando o customUserDetailsService e NoOpPasswordEncoder para comparação de senhas sem encriptação
         authenticationManagerBuilder
                 .userDetailsService(customUserDetailsService)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance());  // Configura o NoOpPasswordEncoder
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());  // Configura o NoOpPasswordEncoder para teste sem criptografia
 
         return authenticationManagerBuilder.build();
     }

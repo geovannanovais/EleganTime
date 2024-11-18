@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,113 +11,93 @@
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="logo">
-                <a th:href="@{/index}">
-                    <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
-                </a>
-            </div>
-            <div class="menu-icons">
-                <a>Perfil</a>
-            </div>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/index}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+            </a>
         </div>
-    </header>
+        <div class="menu-icons">
+            <a>Perfil</a>
+        </div>
+    </div>
+</header>
 
-    <div class="container">
-        <div class="form-container">
-            <h2 th:text="${produto.id_Produto != 0 ? 'Editar Produto' : 'Cadastrar Produto'}"></h2>
+<div class="container">
+    <div class="form-container">
+        <h2 th:text="${produto.id_Produto != 0 ? 'Editar Produto' : 'Cadastrar Produto'}"></h2>
 
-            <form id="productForm"
-                th:action="${produto.id_Produto != 0 ? '/editarProduto/' + produto.id_Produto : '/cadastrarProduto'}"
-                method="post">
-                <input type="hidden" name="id" th:value="${produto.id_Produto}" />
-                <input type="text" name="nome" placeholder="Nome do Produto" required th:value="${produto.nome}" />
-                <input type="number" name="preco" placeholder="Preço" required th:value="${produto.preco}" />
-                <input type="number" name="quantidadeEmEstoque" placeholder="Quantidade em Estoque" required
-                    th:value="${produto.quantidadeEmEstoque}" />
-                <textarea name="descricao" placeholder="Descrição do Produto" required
-                    th:text="${produto.descricao}"></textarea>
-                <input type="number" name="avaliacao" placeholder="Avaliação (1 a 5)" min="1" max="5" required
-                    th:value="${produto.avaliacao}" />
+        <form id="productForm" th:action="${produto.id_Produto != 0 ? '/editarProduto/' + produto.id_Produto : '/cadastrarProduto'}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${produto.id_Produto}" />
+            <input type="text" name="nome" placeholder="Nome do Produto" required th:value="${produto.nome}" />
+            <input type="number" name="preco" placeholder="Preço" required th:value="${produto.preco}" />
+            <input type="number" name="quantidadeEmEstoque" placeholder="Quantidade em Estoque" required th:value="${produto.quantidadeEmEstoque}" />
+            <textarea name="descricao" placeholder="Descrição do Produto" required th:text="${produto.descricao}"></textarea>
+            <input type="number" name="avaliacao" placeholder="Avaliação (1 a 5)" min="1" max="5" required th:value="${produto.avaliacao}" />
 
-                <h3>Imagens do Produto:</h3>
-                <div class="imagem-container" id="imagemContainer">
-                    <div class="nova-imagem-container">
-                        <input type="file" name="imagemUpload" accept="image/*" required />
-                        <input type="hidden" name="imagensNome" />
-                        <input type="hidden" name="imagensCaminho" />
+            <h3>Imagens do Produto:</h3>
+            <div class="imagem-container" id="imagemContainer">
+                <!-- Exibe as imagens existentes do produto -->
+                <div th:each="imagem : ${imagens}">
+                    <div class="imagem-container">
+                        <img th:src="@{${imagem.caminho}}" alt="Imagem Produto" width="100">
                         <label>
-                            <input type="checkbox" name="imagensPrincipal" value="true" class="principalCheckbox" />
-                            Imagem Principal
+                            <input type="checkbox" name="imagensPrincipal[__${iterStat.index}__]" th:value="true" th:checked="${imagem.principal}" /> Imagem Principal
                         </label>
                     </div>
                 </div>
 
-                <button type="button" id="addImageButton" class="btn">Adicionar Outra Imagem</button>
-                <button type="submit" class="btn"
-                    th:text="${produto.id_Produto != 0 ? 'Salvar Produto' : 'Cadastrar Produto'}"></button>
-            </form>
-
-            <div id="debug-info">
-                <p>Debug Info:</p>
-                <p>ID do Produto: <span th:text="${produto.id_Produto}"></span></p>
-                <p>Nome: <span th:text="${produto.nome}"></span></p>
+                <!-- Permite adicionar novas imagens -->
+                <div class="nova-imagem-container">
+                    <input type="file" name="imagensUpload" accept="image/*" />
+                    <label>
+                        <input type="checkbox" name="imagensPrincipal[__NEW__]" value="true" /> Imagem Principal
+                    </label>
+                </div>
             </div>
+
+            <button type="button" id="addImageButton" class="btn">Adicionar Outra Imagem</button>
+            <button type="submit" class="btn" th:text="${produto.id_Produto != 0 ? 'Salvar Produto' : 'Cadastrar Produto'}"></button>
+        </form>
+
+        <div id="debug-info">
+            <p>Debug Info:</p>
+            <p>ID do Produto: <span th:text="${produto.id_Produto}"></span></p>
+            <p>Nome: <span th:text="${produto.nome}"></span></p>
         </div>
     </div>
+</div>
 
-    <script>
-        const addImageButton = document.getElementById('addImageButton');
-        const imagemContainer = document.getElementById('imagemContainer');
+<script>
+    const addImageButton = document.getElementById('addImageButton');
+    const imagemContainer = document.getElementById('imagemContainer');
 
-        addImageButton.addEventListener('click', function () {
-            const novaImagem = document.createElement('div');
-            novaImagem.className = 'nova-imagem-container';
-            novaImagem.innerHTML = `
-            <input type="text" name="imagensNome" placeholder="Nome da Imagem" required/>
-            <input type="text" name="imagensCaminho" placeholder="Caminho da Imagem" required/>
+    addImageButton.addEventListener('click', function () {
+        const novaImagem = document.createElement('div');
+        novaImagem.className = 'nova-imagem-container';
+        novaImagem.innerHTML = `
+            <input type="file" name="imagensUpload" accept="image/*" required />
             <label>
-                <input type="checkbox" name="imagensPrincipal" value="true" class="principalCheckbox"/> Imagem Principal
+                <input type="checkbox" name="imagensPrincipal[__NEW__]" value="true" class="principalCheckbox" /> Imagem Principal
             </label>
         `;
-            imagemContainer.appendChild(novaImagem);
+        imagemContainer.appendChild(novaImagem);
 
-            // Adiciona o listener para controlar o checkbox de imagem principal
-            const checkbox = novaImagem.querySelector('.principalCheckbox');
-            checkbox.addEventListener('change', function () {
-                const allCheckboxes = document.querySelectorAll('.principalCheckbox');
-                if (this.checked) {
-                    allCheckboxes.forEach(cb => {
-                        if (cb !== this) {
-                            cb.checked = false; // Desmarca outros checkboxes
-                        }
-                    });
-                }
-            });
+        // Adiciona o listener para controlar o checkbox de imagem principal
+        const checkbox = novaImagem.querySelector('.principalCheckbox');
+        checkbox.addEventListener('change', function () {
+            const allCheckboxes = document.querySelectorAll('.principalCheckbox');
+            if (this.checked) {
+                allCheckboxes.forEach(cb => {
+                    if (cb !== this) {
+                        cb.checked = false; // Desmarca outros checkboxes
+                    }
+                });
+            }
         });
-    </script>
-
-    <script>
-        document.querySelectorAll('input[type="file"]').forEach(inputFile => {
-            inputFile.addEventListener('change', function () {
-                const file = this.files[0];
-                if (file) {
-                    const container = this.closest('.nova-imagem-container');
-                    const nomeInput = container.querySelector('input[name="imagensNome"]');
-                    const caminhoInput = container.querySelector('input[name="imagensCaminho"]');
-
-                    // Atribui o nome do arquivo e o caminho correto
-                    nomeInput.value = file.name;
-                    caminhoInput.value = "/img/" + file.name;
-                }
-            });
-        });
-    </script>
-
-
+    });
+</script>
 </body>
-
 </html>

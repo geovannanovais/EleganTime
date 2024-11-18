@@ -10,4 +10,10 @@ import java.util.Optional;
 public interface CarrinhoRepository extends JpaRepository<Carrinho, Integer> {
 
     Optional<Carrinho> findByClienteId(int clienteId);
+
+    Optional<Carrinho> findByCliente_Email(String email);
+
+    Optional<Carrinho> findById(int id);
+
+
 }

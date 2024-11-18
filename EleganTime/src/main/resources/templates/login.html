@@ -38,6 +38,11 @@
         <p style="color: red;">Usuário ou senha incorretos!</p>
     </div>
 
+    <!-- Botão de logout -->
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Deslogar</button>
+    </form>
+
 </div>
 </body>
 </html>

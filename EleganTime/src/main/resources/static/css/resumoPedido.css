@@ -84,39 +84,5 @@ tbody tr:nth-child(even) {
 
 .section p {
     margin: 5px 0;
-    font-size: 15px;
-}
-
-/* Estilos dos botões */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.button-group button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.button-group button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-}
-
-.button-group button.back {
-    background-color: #888;
-    transition: background-color 0.3s ease;
-}
-
-.button-group button.back:hover {
-    background-color: #666;
-    transform: translateY(-2px);
+    font-size: 15px;
 }

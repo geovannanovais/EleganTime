@@ -13,6 +13,10 @@ public class Carrinho {
     @Column(name = "id_Carrinho")
     private int idCarrinho;
 
+    private double total;
+    private double valorFrete;
+
+
     @ManyToOne
     @JoinColumn(name = "id_Cliente")
     private Cliente cliente;
@@ -34,11 +38,6 @@ public class Carrinho {
         itens.removeIf(item -> item.getProduto().getId_Produto() == produtoId);
     }
 
-    public double calcularTotal() {
-        return itens.stream()
-                .mapToDouble(item -> item.getProduto().getPreco() * item.getQuantidade())
-                .sum();
-    }
 
     public int getIdCarrinho() {
         return idCarrinho;
@@ -62,6 +61,22 @@ public class Carrinho {
 
     public void setItens(List<ItemCarrinho> itens) {
         this.itens = itens;
+    }
+
+    public double getValorTotal() {
+        return total;
+    }
+
+    public void setValorTotal(double total) {
+        this.total = total;
+    }
+
+    public double getValorFrete() {
+        return valorFrete;
+    }
+
+    public void setValorFrete(double valorFrete) {
+        this.valorFrete = valorFrete;
     }
 
     @Override
