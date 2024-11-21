@@ -35,11 +35,25 @@ public class HomeController {
         // Verifica se o usuário está logado
         String emailCliente = authentication != null ? authentication.getName() : null;
 
-        // Recupera o carrinho (caso não exista, será criado automaticamente)
-        Carrinho carrinho = carrinhoService.obterCarrinho(emailCliente, session);
+        // Verifica se o usuário tem a role "ADMINISTRADOR" ou "ESTOQUISTA"
+        boolean isAdminOrEstoquista = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMINISTRADOR") ||
+                        grantedAuthority.getAuthority().equals("ROLE_ESTOQUISTA"));
 
-        // Passa a quantidade de itens no carrinho para o frontend
-        model.addAttribute("quantidadeCarrinho", carrinho.getItens().size());
+        // Se não for ADMIN ou ESTOQUISTA, cria o carrinho (se for cliente)
+        if (!isAdminOrEstoquista) {
+            // Se o email for null (não está logado), cria um carrinho para o cliente anônimo
+            Carrinho carrinho = carrinhoService.obterCarrinho(emailCliente, session);
+
+            // Passa a quantidade de itens no carrinho para o frontend
+            model.addAttribute("quantidadeCarrinho", carrinho.getItens().size());
+        } else {
+            // Se for ADMIN ou ESTOQUISTA, o carrinho não é necessário
+            model.addAttribute("quantidadeCarrinho", 0);
+        }
+
+        // Passa a informação de se o usuário é ADMINISTRADOR ou ESTOQUISTA
+        model.addAttribute("isAdminOrEstoquista", isAdminOrEstoquista);
 
         return "home";  // Retorna a view home
     }

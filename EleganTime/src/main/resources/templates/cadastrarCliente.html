@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${cliente.idCliente != 0 ? 'Editar Cliente' : 'Cadastrar Cliente'}"></title>
     <link rel="stylesheet" th:href="@{/css/cadastroCliente.css}">
-    <link rel="stylesheet" href="../static/css/cadastroCliente.css">
     <script src="../static/js/cadastrarCliente.js" defer></script>
 </head>
-
 <body>
 <header>
     <div class="top-bar">
@@ -28,23 +25,20 @@
     <div class="form-container">
         <h2 th:text="${cliente.idCliente != 0 ? 'Editar Cliente' : 'Cadastrar Cliente'}"></h2>
 
-        <!-- Exibindo a mensagem de erro, se houver -->
         <div th:if="${errorMessage}" class="error-message">
             <p th:text="${errorMessage}"></p>
         </div>
 
-        <!-- Formulário de Cadastro -->
         <form id="clienteForm"
               th:action="${cliente.idCliente != 0 ? '/editarCliente/' + cliente.idCliente : '/cadastrarCliente'}"
               method="post">
 
-            <!-- Alteração de idUsuario para idCliente -->
             <input type="hidden" th:name="idCliente" th:value="${cliente.idCliente}" />
 
+            <!-- Campos principais -->
             <label for="nome">Nome Completo:</label>
             <input type="text" id="nome" name="nome" placeholder="Nome Completo" th:value="${cliente.nome}" required
-                   pattern="^(?=.*\s)(?=.*[A-Za-z])[A-Za-z\s]{6,}$"
-                   title="O nome deve ter pelo menos 2 palavras, com mínimo de 3 letras em cada palavra.">
+                   pattern="^(?=.*\s)(?=.*[A-Za-zÀ-ÿ])[A-Za-zÀ-ÿ\s]{6,}$" title="O nome deve ter pelo menos 2 palavras, com mínimo de 3 letras em cada palavra.">
 
             <label for="cpf">CPF:</label>
             <input type="text" id="cpf" name="cpf" placeholder="CPF" th:value="${cliente.cpf}" required
@@ -64,38 +58,54 @@
                 <option value="Outro" th:selected="${cliente.genero == 'Outro'}">Outro</option>
             </select>
 
-            <h3>Endereço de Faturamento</h3>
-            <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" placeholder="CEP" required pattern="^\d{5}-?\d{3}$"
-                   title="O CEP deve estar no formato 00000-000."
-                   oninput="buscarEndereco()"> <!-- Chama a função ao digitar o CEP -->
+            <h3>Endereços</h3>
+            <div id="enderecosContainer">
+                <div class="endereco" id="endereco0">
+                    <h4>Endereço 1</h4>
 
-            <label for="logradouro">Logradouro:</label>
-            <input type="text" id="logradouro" name="logradouro" placeholder="Logradouro" required>
+                    <!-- Campo CEP -->
+                    <label for="cep0">CEP:</label>
+                    <input type="text" id="cep0" name="cep[]" placeholder="CEP" required oninput="buscarEndereco(0)"
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].cep : ''}">
 
-            <label for="numero">Número:</label>
-            <input type="text" id="numero" name="numero" placeholder="Número" required>
+                    <!-- Campo Logradouro -->
+                    <label for="logradouro0">Logradouro:</label>
+                    <input type="text" id="logradouro0" name="logradouro[]" placeholder="Logradouro" required
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].logradouro : ''}">
 
-            <label for="complemento">Complemento:</label>
-            <input type="text" id="complemento" name="complemento" placeholder="Complemento">
+                    <!-- Campo Número -->
+                    <label for="numero0">Número:</label>
+                    <input type="text" id="numero0" name="numero[]" placeholder="Número" required
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].numero : ''}">
 
-            <label for="bairro">Bairro:</label>
-            <input type="text" id="bairro" name="bairro" placeholder="Bairro" required>
+                    <!-- Campo Complemento -->
+                    <label for="complemento0">Complemento:</label>
+                    <input type="text" id="complemento0" name="complemento[]" placeholder="Complemento"
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].complemento : ''}">
 
-            <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" name="cidade" placeholder="Cidade" required>
+                    <!-- Campo Bairro -->
+                    <label for="bairro0">Bairro:</label>
+                    <input type="text" id="bairro0" name="bairro[]" placeholder="Bairro" required
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].bairro : ''}">
 
-            <label for="uf">UF:</label>
-            <input type="text" id="uf" name="uf" placeholder="UF" required pattern="^[A-Z]{2}$"
-                   title="A UF deve ter 2 letras maiúsculas.">
+                    <!-- Campo Cidade -->
+                    <label for="cidade0">Cidade:</label>
+                    <input type="text" id="cidade0" name="cidade[]" placeholder="Cidade" required
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].cidade : ''}">
 
-            <h3>Endereço de Entrega</h3>
-            <label for="enderecoEntrega">Endereço de Entrega:</label>
-            <input type="text" id="enderecoEntrega" name="enderecoEntrega" placeholder="Endereço de Entrega"
-                   required>
+                    <!-- Campo UF -->
+                    <label for="uf0">UF:</label>
+                    <input type="text" id="uf0" name="uf[]" placeholder="UF" required pattern="^[A-Z]{2}$" title="A UF deve ter 2 letras maiúsculas."
+                           th:value="${#lists.size(cliente.enderecos) > 0 ? cliente.enderecos[0].uf : ''}">
+
+                    <button type="button" onclick="removerEndereco(0)">Remover este endereço</button>
+                </div>
+            </div>
+
+            <button type="button" onclick="adicionarEndereco()">Adicionar outro endereço</button>
 
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" placeholder="Senha" required>
+            <input type="password" id="senha" name="senha" placeholder="Senha" th:value="${cliente.senha}" required>
 
             <button type="submit" class="btn" id="submitButton"
                     th:text="${cliente.idCliente != 0 ? 'Salvar Alterações' : 'Cadastrar Cliente'}">Cadastrar-se</button>
@@ -106,28 +116,63 @@
 </div>
 
 <script>
-    function buscarEndereco() {
-        var cep = document.getElementById('cep').value;
+    let enderecoCount = 1;
 
-        // Verifica se o CEP tem 8 caracteres (considerando que pode ser inserido o hífen)
-        if (cep.length === 8 || cep.length === 9) {  // 8 sem hífen ou 9 com hífen
-            fetch('https://viacep.com.br/ws/' + cep.replace("-", "") + '/json/')
+    // Função para adicionar um novo endereço
+    function adicionarEndereco() {
+        let container = document.getElementById('enderecosContainer');
+        let novoEndereco = document.createElement('div');
+        novoEndereco.classList.add('endereco');
+        novoEndereco.id = 'endereco' + enderecoCount;
+
+        novoEndereco.innerHTML = `
+            <h4>Endereço ${enderecoCount + 1}</h4>
+            <label for="cep${enderecoCount}">CEP:</label>
+            <input type="text" id="cep${enderecoCount}" name="cep[]" placeholder="CEP" required oninput="buscarEndereco(${enderecoCount})">
+            <label for="logradouro${enderecoCount}">Logradouro:</label>
+            <input type="text" id="logradouro${enderecoCount}" name="logradouro[]" placeholder="Logradouro" required>
+            <label for="numero${enderecoCount}">Número:</label>
+            <input type="text" id="numero${enderecoCount}" name="numero[]" placeholder="Número" required>
+            <label for="complemento${enderecoCount}">Complemento:</label>
+            <input type="text" id="complemento${enderecoCount}" name="complemento[]" placeholder="Complemento">
+            <label for="bairro${enderecoCount}">Bairro:</label>
+            <input type="text" id="bairro${enderecoCount}" name="bairro[]" placeholder="Bairro" required>
+            <label for="cidade${enderecoCount}">Cidade:</label>
+            <input type="text" id="cidade${enderecoCount}" name="cidade[]" placeholder="Cidade" required>
+            <label for="uf${enderecoCount}">UF:</label>
+            <input type="text" id="uf${enderecoCount}" name="uf[]" placeholder="UF" required pattern="^[A-Z]{2}$" title="A UF deve ter 2 letras maiúsculas.">
+            <button type="button" onclick="removerEndereco(${enderecoCount})">Remover este endereço</button>
+        `;
+
+        container.appendChild(novoEndereco);
+        enderecoCount++;
+    }
+
+    // Função para remover um endereço
+    function removerEndereco(index) {
+        let endereco = document.getElementById('endereco' + index);
+        endereco.remove();
+
+        enderecoCount--;
+    }
+
+    // Função para buscar o endereço baseado no CEP
+    function buscarEndereco(index) {
+        var cep = document.getElementById('cep' + index).value.replace('-', '').trim();
+
+        if (cep.length == 8) {
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
                 .then(response => response.json())
                 .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('logradouro').value = data.logradouro;
-                        document.getElementById('bairro').value = data.bairro;
-                        document.getElementById('cidade').value = data.localidade;
-                        document.getElementById('uf').value = data.uf;
-                    } else {
-                        alert('CEP não encontrado!');
+                    if (data && !data.erro) {
+                        document.getElementById('logradouro' + index).value = data.logradouro;
+                        document.getElementById('bairro' + index).value = data.bairro;
+                        document.getElementById('cidade' + index).value = data.localidade;
+                        document.getElementById('uf' + index).value = data.uf;
                     }
-                })
-                .catch(error => alert('Erro ao buscar o endereço.'));
+                });
         }
     }
 </script>
-
 </body>
-
 </html>

@@ -64,6 +64,6 @@ public class PagamentoController {
         // 4. Salva o pagamento no banco de dados
         pagamentoRepository.save(pagamento);
 
-        return "redirect:/finalizarPedido";
+        return "redirect:/detalhesPedido";
     }
 }

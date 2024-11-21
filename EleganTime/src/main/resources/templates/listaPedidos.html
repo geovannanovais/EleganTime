@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-springsecurity6">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Pedidos</title>
+  <link rel="stylesheet" th:href="@{/css/listaPedidos.css}">
+  <style>
+    .btn-aplicar-alteracao {
+      margin-top: 10px;
+      padding: 5px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-aplicar-alteracao:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Menu de navegação -->
+<div class="menu">
+  <a href="#" th:href="@{/orders}">Visualizar Todos os Pedidos</a>
+</div>
+
+<!-- Container para exibir a lista de pedidos -->
+<div class="container">
+  <h2>Lista de Pedidos</h2>
+  <form th:action="@{/alterarStatusPedido}" method="post">
+    <table>
+      <thead>
+      <tr>
+        <th>Número do Pedido</th>
+        <th>Data</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="pedido : ${pedidos}">
+        <td th:text="${pedido.numeroPedido}">12345</td>
+        <td th:text="${#dates.format(pedido.dataCriacao, 'dd/MM/yyyy')}">01/11/2024</td>
+        <td th:text="${pedido.total}">R$ 250,00</td>
+        <td>
+          <label th:text="'Status: ' + ${pedido.status}"></label>
+
+          <div sec:authorize="hasRole('ROLE_ADMINISTRADOR') or hasRole('ROLE_ESTOQUISTA')">
+            <form th:action="@{/alterarStatusPedido}" method="post">
+              <select th:id="'statusSelect_' + ${pedido.id}" th:name="'status_' + ${pedido.id}" th:value="${pedido.status}">
+                <option value="AguardandoPagamento" th:selected="${pedido.status == 'Aguardando Pagamento'}">Aguardando Pagamento</option>
+                <option value="PagamentoRejeitado" th:selected="${pedido.status == 'Pagamento Rejeitado'}">Pagamento Rejeitado</option>
+                <option value="PagamentoComSucesso" th:selected="${pedido.status == 'Pagamento com Sucesso'}">Pagamento com Sucesso</option>
+                <option value="AguardandoRetirada" th:selected="${pedido.status == 'Aguardando Retirada'}">Aguardando Retirada</option>
+                <option value="EmTransito" th:selected="${pedido.status == 'Em Trânsito'}">Em Trânsito</option>
+                <option value="Entregue" th:selected="${pedido.status == 'Entregue'}">Entregue</option>
+                <option value="Cancelado" th:selected="${pedido.status == 'Cancelado'}">Cancelado</option>
+              </select>
+              <button type="submit" class="btn-aplicar-alteracao" th:name="'aplicar_' + ${pedido.id}">Aplicar Alteração</button>
+            </form>
+          </div>
+        </td>
+        <td>
+          <!-- Exibe 'Mais Detalhes' para todos os usuários -->
+          <a href="#" th:href="@{/detalhesPedido/{id}(id=${pedido.id})}" class="btn-details">Mais Detalhes</a>
+        </td>
+        <!-- Exibe os produtos e quantidades -->
+        <td>
+          <table>
+            <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Quantidade</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${pedido.itens}">
+              <td th:text="${item.produto.nome}">Produto Nome</td>
+              <td th:text="${item.quantidade}">1</td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      </tbody>
+
+
+
+    </table>
+  </form>
+</div>
+
+</body>
+</html>

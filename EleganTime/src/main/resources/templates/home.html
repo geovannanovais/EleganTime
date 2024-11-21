@@ -26,11 +26,12 @@
         <div class="menu-icons">
             <a th:href="@{/login}">Entrar ou Cadastrar</a>
 
-            <form th:action="@{/carrinho}" method="get" class="menu-icons">
+            <!-- Formulário para o carrinho -->
+            <!-- O botão 'Ir para Carrinho' só será mostrado se o usuário não for ADMIN ou ESTOQUISTA -->
+            <form th:action="@{/carrinho}" method="get" class="menu-icons" th:unless="${isAdminOrEstoquista}">
                 <input type="hidden" name="clienteId" th:value="${clienteId}">
                 <button type="submit" class="menu-icons">Ir para Carrinho</button>
             </form>
-            <!-- Link para o carrinho -->
         </div>
     </div>
 </header>
@@ -63,8 +64,9 @@
         <h3 th:text="${product.nome}">Nome do Produto</h3>
         <p th:text="${product.preco}">R$ 0,00</p>
 
-        <!-- Formulário de adição ao carrinho -->
-        <form th:action="@{/adicionar/{produtoId}(produtoId=${product.id_Produto})}" method="post">
+        <!-- Adicionar ao Carrinho - Escondido para ADMIN ou ESTOQUISTA -->
+        <form th:action="@{/adicionar/{produtoId}(produtoId=${product.id_Produto})}" method="post"
+              th:unless="${isAdminOrEstoquista}">
             <input type="number" name="quantidade" value="1" min="1" />
             <input type="hidden" name="clienteId" th:value="${clienteId}" />
             <!-- CSRF Token -->

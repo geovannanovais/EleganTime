@@ -78,21 +78,31 @@ public class CarrinhoController {
         // Recupera o carrinho atual
         Carrinho carrinho = carrinhoService.obterCarrinho(email, session);
 
-        // Define o valor do frete
-        carrinho.setValorFrete(frete);
+        if(carrinho.getValorFrete() != 0 ) {
 
-        // Calcula o total novamente após adicionar o frete
-        carrinhoService.calcularTotal(carrinho);
+            carrinho.setValorTotal(carrinho.getValorTotal()- carrinho.getValorFrete());
+            carrinhoService.calcularTotal(carrinho);
 
-        // Salvar o carrinho no banco se o usuário estiver logado
+
+        }else {
+
+            carrinho.setValorFrete(frete);
+
+            // Calcula o total novamente após adicionar o frete
+            carrinhoService.calcularTotal(carrinho);
+
+        }
+
+        // Salvar o carrinho no banco de dados se o usuário estiver logado
         if (email != null) {
-            carrinhoService.salvarCarrinho(carrinho);
+            carrinhoService.salvarCarrinho(carrinho);  // Salva o carrinho com o valor total e frete
         } else {
             // Para usuários não logados, salva o carrinho na sessão
             session.setAttribute("carrinho", carrinho);
         }
 
         // Redireciona para a página de endereços
-        return "redirect:/enderecos";  // Ajuste para o redirecionamento para página de endereços
+        return "redirect:/enderecos";  // Redirecionamento para a página de endereços
     }
+
 }

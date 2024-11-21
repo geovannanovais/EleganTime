@@ -1,7 +1,8 @@
 package com.eleganTime.elegantime.controller;
 
 import com.eleganTime.elegantime.model.Cliente;
-import com.eleganTime.elegantime.repository.ClienteRepository;
+import com.eleganTime.elegantime.service.ClienteService;
+import com.eleganTime.elegantime.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,61 +15,39 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EnderecoController {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ClienteService clienteService;
 
-    /**
-     * Exibe o formulário de endereço de entrega para o cliente logado.
-     *
-     * @param model Modelo que será utilizado no Thymeleaf
-     * @param authentication Objeto Authentication que contém os dados do usuário logado
-     * @return a página do formulário de endereço
-     */
+    @Autowired
+    private EnderecoService enderecoService;
+
+
+
+    // Exibe a lista de endereços para o cadastro ou carrinho
     @GetMapping("/enderecos")
-    public String exibirFormularioEndereco(Model model, Authentication authentication) {
-        // Obtém o email do cliente logado
+    public String exibirListaEnderecos2(Model model, Authentication authentication, @RequestParam(required = false) String origem) {
         String email = authentication != null ? authentication.getName() : null;
-
-        // Busca o cliente no banco de dados pelo email
-        Cliente cliente = clienteRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-
-        // Passa o objeto Cliente para o Thymeleaf, incluindo os dados do endereço
-        model.addAttribute("cliente", cliente);
-        model.addAttribute("cep", cliente.getCep());  // Passa o CEP do cliente para o formulário
-        model.addAttribute("enderecoEntrega", cliente.getEnderecoEntrega());  // Passa o endereço de entrega
-        model.addAttribute("logradouro", cliente.getLogradouro());  // Passa o logradouro
-        model.addAttribute("numero", cliente.getNumero());  // Passa o número
-        model.addAttribute("complemento", cliente.getComplemento());  // Passa o complemento
-        model.addAttribute("bairro", cliente.getBairro());  // Passa o bairro
-        model.addAttribute("cidade", cliente.getCidade());  // Passa a cidade
-        model.addAttribute("uf", cliente.getUf());  // Passa a UF
-
-        return "formEndereco";  // Página Thymeleaf que irá exibir o formulário
+        Cliente cliente = clienteService.buscarPorEmail(email);  // Buscando o cliente pelo e-mail
+        var enderecos = enderecoService.buscarEnderecosPorCliente(cliente.getIdCliente());  // Buscando os endereços do cliente
+        model.addAttribute("enderecos", enderecos);  // Adicionando os endereços no modelo
+        model.addAttribute("origem", origem); // Adicionando a origem no modelo
+        return "formEndereco";  // Retorna o nome da view para o Thymeleaf (formEndereco.html)
     }
 
-    @PostMapping("/enderecos")
-    public String salvarEndereco(@RequestParam("clienteId") int clienteId, Cliente cliente, Authentication authentication) {
-        // Obtém o email do cliente logado
+    // Seleciona o endereço e marca-o como principal
+    @PostMapping("/selecionarEndereco")
+    public String selecionarEndereco2(@RequestParam("enderecoId") int enderecoId,
+                                      @RequestParam(required = false) String origem,
+                                      Authentication authentication) {
         String email = authentication != null ? authentication.getName() : null;
+        Cliente cliente = clienteService.buscarPorEmail(email);  // Buscando cliente por email
+        enderecoService.marcarEnderecoComoPrincipal(enderecoId, cliente.getIdCliente());  // Marcando o endereço como principal
 
-        // Busca o cliente no banco de dados pelo email
-        Cliente clienteExistente = clienteRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-
-        // Atualiza os dados de endereço com os novos valores do formulário
-        clienteExistente.setLogradouro(cliente.getLogradouro());
-        clienteExistente.setNumero(cliente.getNumero());
-        clienteExistente.setComplemento(cliente.getComplemento());
-        clienteExistente.setBairro(cliente.getBairro());
-        clienteExistente.setCidade(cliente.getCidade());
-        clienteExistente.setUf(cliente.getUf());
-        clienteExistente.setCep(cliente.getCep());
-        clienteExistente.setEnderecoEntrega(cliente.getEnderecoEntrega());  // Atualiza o endereço de entrega
-
-        // Salva as alterações no banco de dados
-        clienteRepository.save(clienteExistente);
-
-        // Redireciona para a página de pagamento ou sucesso
-        return "redirect:/formaPagamento";  // Redireciona para a página de pagamento ou outro destino
+        if ("cadastro".equals(origem)) {
+            return "redirect:/login";
+        } else {
+            return "redirect:/formaPagamento";
+        }
     }
+
+
 }

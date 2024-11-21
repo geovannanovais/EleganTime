@@ -52,6 +52,6 @@ public class LoginController {
             session.removeAttribute("carrinho"); // Remove o carrinho da sessão após salvar
         }
 
-        return "redirect:/home";  // Redireciona para a página inicial
+        return "redirect:/areaCliente";
     }
 }

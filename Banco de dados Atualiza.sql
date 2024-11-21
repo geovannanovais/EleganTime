@@ -46,17 +46,10 @@ CREATE TABLE Cliente (
     cpf VARCHAR(22) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL,
-    logradouro VARCHAR(255) NOT NULL,
-    numero VARCHAR(20) NOT NULL,
-    complemento VARCHAR(255),
-    bairro VARCHAR(100) NOT NULL,
-    cidade VARCHAR(100) NOT NULL,
-    uf CHAR(2) NOT NULL,
     condicao_Do_Cliente BOOLEAN NOT NULL DEFAULT TRUE,
     data_Nascimento VARCHAR(100) NOT NULL,          -- Novo campo para a data de nascimento
-    genero VARCHAR(10) NOT NULL,           -- Novo campo para gênero
-    cep VARCHAR(10) NOT NULL,              -- Novo campo para CEP
-    endereco_Entrega VARCHAR(255) NOT NULL -- Novo campo para endereço de entrega
+    genero VARCHAR(10) NOT NULL           -- Novo campo para gênero
+   
 );
 
 -- Criação da tabela Carrinho
@@ -96,20 +89,47 @@ CREATE TABLE Pagamento (
 );
 
 CREATE TABLE Pedido (
-    id_Pedido INT AUTO_INCREMENT PRIMARY KEY,         -- Identificador único do pedido
-    id_Cliente INT NOT NULL,                           -- ID do Cliente (chave estrangeira)
-    id_Carrinho INT NOT NULL,                          -- ID do Carrinho (chave estrangeira)
-    id_Pagamento INT,                                  -- ID do Pagamento (opcional, pode ser nulo)
-    status VARCHAR(20) DEFAULT 'Pendente',             -- Status do pedido (Pendente, Processado, Enviado, etc)
+    id INT AUTO_INCREMENT PRIMARY KEY,            -- Identificador único do pedido
+    id_Cliente INT NOT NULL,                              -- ID do Cliente (chave estrangeira)
+    id_Carrinho INT NOT NULL,                             -- ID do Carrinho (chave estrangeira)
+    id_Pagamento INT,                                    -- ID do Pagamento (opcional, pode ser nulo)
+    endereco_Entrega VARCHAR(255) NOT NULL,               -- Endereço de entrega
+    valor_frete DOUBLE(10,2) DEFAULT 0.00,                -- Valor do frete
+    total DOUBLE(10,2) DEFAULT 0.00,                      -- Valor total (produtos + frete)
+    status VARCHAR(20) DEFAULT 'Aguardando Pagamento',    -- Status do pedido (Aguardando Pagamento, Processado, Enviado, etc)
+    numero_Pedido INT NOT NULL,                           -- Número do pedido (sequencial)
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Data de criação do pedido (agora)
     
-    FOREIGN KEY (id_Cliente) REFERENCES Cliente(id),   -- Relacionamento com Cliente
-    FOREIGN KEY (id_Carrinho) REFERENCES Carrinho(id_Carrinho), -- Relacionamento com Carrinho
+    FOREIGN KEY (id_Cliente) REFERENCES Cliente(id),          -- Relacionamento com Cliente
+    FOREIGN KEY (id_Carrinho) REFERENCES Carrinho(id_Carrinho),  -- Relacionamento com Carrinho
     FOREIGN KEY (id_Pagamento) REFERENCES Pagamento(id_Pagamento) -- Relacionamento com Pagamento (opcional)
 );
 
+CREATE TABLE Item_Pedido (
+    id_Item_Pedido INT AUTO_INCREMENT PRIMARY KEY,       -- Identificador único do item do pedido
+    id_Pedido INT NOT NULL,                              -- ID do Pedido (chave estrangeira)
+    id_Produto INT NOT NULL,                             -- ID do Produto (chave estrangeira)
+    quantidade INT NOT NULL,                             -- Quantidade do produto no pedido
+    valor_unitario DOUBLE(10,2) NOT NULL,                -- Valor unitário do produto no momento do pedido
+    valor_total DOUBLE(10,2) NOT NULL,                   -- Valor total (quantidade * valor unitário)
+    
+    FOREIGN KEY (id_Pedido) REFERENCES Pedido(id), -- Relacionamento com Pedido
+    FOREIGN KEY (id_Produto) REFERENCES Produto(id_Produto) -- Relacionamento com Produto
+);
 
-
-
+CREATE TABLE endereco (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    logradouro VARCHAR(255),
+    numero VARCHAR(50),
+    complemento VARCHAR(255),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    uf VARCHAR(2),
+    cep VARCHAR(10),
+    cliente_id INT,
+    principal BOOLEAN NOT NULL DEFAULT FALSE,  -- Campo que indica o endereço principal
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+);
 -- Inserção de dados na tabela Usuario
 INSERT INTO Usuario (nome, cpf, email, grupo, senha, condicao_Do_Usuario) 
 VALUES 
@@ -132,9 +152,15 @@ VALUES
 ('img/img4.jpg', 'imagem4.jpg', 3, TRUE);
 
 -- Inserção de dados na tabela Cliente
-INSERT INTO Cliente (nome, cpf, email, senha, logradouro, numero, complemento, bairro, cidade, uf, condicao_Do_Cliente, data_Nascimento, genero, cep, endereco_Entrega) 
+INSERT INTO Cliente (nome, cpf, email, senha, condicao_Do_Cliente, data_Nascimento, genero)
 VALUES 
-('João Silva', '12345678909', 'joao.silva@email.com', 'senha123', 'Rua das Flores', '100', 'Apto 202', 'Centro', 'São Paulo', 'SP', TRUE, '1985-10-01', 'Masculino', '01010000', 'Rua das Flores, 100');
+('João Silva', '12345678909', 'joao.silva@email.com', 'senha123', TRUE, '1985-10-01', 'Masculino');
+
+-- Inserção de dados na tabela endereco
+INSERT INTO endereco (logradouro, numero, complemento, bairro, cidade, uf, cep, cliente_id, principal) 
+VALUES 
+('Rua das Flores', '123', 'Apto 301', 'Centro', 'São Paulo', 'SP', '01010-100', 1, TRUE);  -- 'cliente_id' 1 se for o João Silva
+
 
 -- Consulta todos os registros das tabelas
 SELECT * FROM Usuario;
@@ -145,3 +171,5 @@ SELECT * FROM Carrinho;
 SELECT * FROM Item_Carrinho;
 SELECT * FROM Pagamento;
 SELECT * FROM Pedido;
+SELECT * FROM Item_Pedido;
+SELECT * FROM endereco;

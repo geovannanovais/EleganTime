@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${endereco.idEndereco != 0 ? 'Editar Endereço' : 'Cadastrar Endereço'}"></title>
+  <link rel="stylesheet" th:href="@{/css/cadastroEndereco.css}">
+  <link rel="stylesheet" href="../static/css/cadastrarEndereco.css.css">
+</head>
+
+<body>
+<header>
+  <div class="top-bar">
+    <div class="logo">
+      <a th:href="@{/index}">
+        <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
+      </a>
+    </div>
+    <div class="menu-icons">
+      <a>Perfil</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="form-container">
+    <h2 th:text="${endereco.idEndereco != 0 ? 'Editar Endereço' : 'Cadastrar Endereço'}"></h2>
+
+    <!-- Exibindo a mensagem de erro, se houver -->
+    <div th:if="${errorMessage}" class="error-message">
+      <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Formulário de Cadastro -->
+    <form id="enderecoForm"
+          th:action="${endereco.idEndereco != 0 ? '/editarEndereco/' + endereco.idEndereco : '/cadastrarEndereco'}"
+          method="post">
+
+      <!-- Alteração de idCliente para idEndereco -->
+      <input type="hidden" th:name="idEndereco" th:value="${endereco.idEndereco}" />
+
+      <label for="cep">CEP:</label>
+      <input type="text" id="cep" name="cep" placeholder="CEP" th:value="${endereco.cep}" required pattern="^\d{5}-?\d{3}$"
+             title="O CEP deve estar no formato 00000-000." oninput="buscarEndereco()">
+
+      <label for="logradouro">Logradouro:</label>
+      <input type="text" id="logradouro" name="logradouro" placeholder="Logradouro" th:value="${endereco.logradouro}" required>
+
+      <label for="numero">Número:</label>
+      <input type="text" id="numero" name="numero" placeholder="Número" th:value="${endereco.numero}" required>
+
+      <label for="complemento">Complemento:</label>
+      <input type="text" id="complemento" name="complemento" placeholder="Complemento" th:value="${endereco.complemento}">
+
+      <label for="bairro">Bairro:</label>
+      <input type="text" id="bairro" name="bairro" placeholder="Bairro" th:value="${endereco.bairro}" required>
+
+      <label for="cidade">Cidade:</label>
+      <input type="text" id="cidade" name="cidade" placeholder="Cidade" th:value="${endereco.cidade}" required>
+
+      <label for="uf">UF:</label>
+      <input type="text" id="uf" name="uf" placeholder="UF" th:value="${endereco.uf}" required pattern="^[A-Z]{2}$"
+             title="A UF deve ter 2 letras maiúsculas.">
+
+      <label for="principal">Principal:</label>
+      <input type="radio" id="principal" name="principal" value="true" th:checked="${endereco.principal == true}" required>
+      <span>Este é o endereço principal</span>
+
+      <button type="submit" class="btn" id="submitButton"
+              th:text="${endereco.idEndereco != 0 ? 'Salvar Alterações' : 'Cadastrar Endereço'}">Salvar</button>
+      <button type="button" class="btn cancel"
+              onclick="window.location.href='@{/listarEnderecos}'">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Função para buscar o endereço baseado no CEP
+  function buscarEndereco() {
+      var cep = document.getElementById('cep').value;
+
+      if (cep.length === 8 || cep.length === 9) {
+          fetch('https://viacep.com.br/ws/' + cep.replace("-", "") + '/json/')
+              .then(response => response.json())
+              .then(data => {
+                  if (!data.erro) {
+                      document.getElementById('logradouro').value = data.logradouro;
+                      document.getElementById('bairro').value = data.bairro;
+                      document.getElementById('cidade').value = data.localidade;
+                      document.getElementById('uf').value = data.uf;
+                  } else {
+                      alert('CEP não encontrado!');
+                  }
+              })
+              .catch(error => alert('Erro ao buscar o endereço.'));
+      }
+  }
+</script>
+
+</body>
+
+</html>

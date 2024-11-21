@@ -74,6 +74,7 @@ input, select {
     border-radius: 5px;
     font-size: 14px;
     transition: border-color 0.3s ease;
+    display: block;  /* Assegura que os campos de input ocupem toda a largura disponível */
 }
 
 input:focus, select:focus {
@@ -110,4 +111,10 @@ input:focus, select:focus {
 .cancel:hover {
     background-color: #e55959;
     transform: translateY(-2px);
+}
+
+/* Garantir que os campos de senha e confirmação de senha apareçam corretamente */
+input[type="password"] {
+    display: block;
+    margin-bottom: 15px;  /* Garantir espaçamento adequado entre os campos */
 }

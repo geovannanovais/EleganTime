@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class PagamentoService {
@@ -48,20 +49,20 @@ public class PagamentoService {
         return pagamento.orElse(null);  // Retorna null se o pagamento não for encontrado
     }
 
-    // Buscar a última forma de pagamento do cliente (o pagamento com o maior ID)
-    public Pagamento buscarUltimaFormaPagamento(Cliente cliente) {
-        // Consultar a lista de pagamentos do cliente ordenados por idPagamento de forma decrescente
-        Optional<List<Pagamento>> pagamentos = pagamentoRepository.findByClienteOrderByIdPagamentoDesc(cliente);
-        return pagamentos.filter(p -> !p.isEmpty())  // Verifica se a lista não está vazia
-                .map(p -> p.get(0))  // Retorna o primeiro pagamento da lista (mais recente)
-                .orElse(null);  // Retorna null se não houver pagamentos
+
+    public Pagamento buscarPagamentoPorCliente(int idCliente) {
+        // Obtém todos os pagamentos do cliente, ordenados por ID (ou data)
+        List<Pagamento> pagamentos = pagamentoRepository.findByCliente_IdOrderByIdPagamentoDesc(idCliente);
+
+        // Verifica se a lista de pagamentos está vazia
+        if (pagamentos.isEmpty() || pagamentos.get(0).getIdPagamento() == 0) {
+            System.out.println("NAO BUSCOU DIREITO DEU ERRO!");// Retorna null se não houver pagamento ou se for inválido
+            return null;
+        }
+
+        System.out.println("Pagamentos: "+pagamentos.get(0).getIdPagamento());
+        return pagamentos.get(0);
     }
 
-    // Buscar último pagamento por cliente (ou seja, o mais recente)
-    public Pagamento buscarUltimoPagamentoPorCliente(Cliente cliente) {
-        Optional<List<Pagamento>> pagamentos = pagamentoRepository.findByClienteOrderByIdPagamentoDesc(cliente);
-        return pagamentos.filter(p -> !p.isEmpty())
-                .map(p -> p.get(0))
-                .orElse(null);
-    }
+
 }

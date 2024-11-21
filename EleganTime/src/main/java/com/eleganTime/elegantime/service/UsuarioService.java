@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class UsuarioService {
@@ -105,4 +106,17 @@ public class UsuarioService {
     public Optional<Usuario> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
+
+    public boolean isCpfValido(String cpf) {
+        // Expressão regular simples para validar o CPF
+        String regex = "^(\\d{3})\\.(\\d{3})\\.(\\d{3})-(\\d{2})$";
+        return Pattern.matches(regex, cpf);
+    }
+
+    // Verifica se o e-mail já foi cadastrado
+    public boolean emailJaCadastrado(String email) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        return usuario.isPresent();
+    }
+
 }

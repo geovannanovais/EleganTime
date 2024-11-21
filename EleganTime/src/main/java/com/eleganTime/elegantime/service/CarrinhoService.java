@@ -89,7 +89,7 @@ public class CarrinhoService {
         }
 
         // Atualiza o valor total do carrinho
-        carrinho.setValorTotal(total);
+        carrinho.setValorTotal(total);  // Atualiza o total do carrinho
     }
 
     // Método para salvar ou atualizar o carrinho no banco de dados
@@ -130,5 +130,24 @@ public class CarrinhoService {
         return carrinhoRepository.findById(idCarrinho)
                 .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
     }
+
+    public void limparCarrinho(int idCliente) {
+        // Lógica para limpar o carrinho do cliente no banco de dados ou em memória
+        Optional<Carrinho> carrinho = carrinhoRepository.findByClienteId(idCliente);
+
+        // Verifica se o carrinho existe
+        carrinho.ifPresent(c -> {
+            // Limpa os itens do carrinho
+            c.getItens().clear();
+
+            // Zera o valor total e o valor do frete
+            c.setValorTotal(0);
+            c.setValorFrete(0);
+
+            // Salva o carrinho limpo no banco de dados
+            carrinhoRepository.save(c);
+        });
+    }
+
 
 }

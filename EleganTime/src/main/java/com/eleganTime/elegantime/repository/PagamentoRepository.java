@@ -15,4 +15,8 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
     // Buscar pagamentos do cliente ordenados por idPagamento de forma decrescente
     Optional<List<Pagamento>> findByClienteOrderByIdPagamentoDesc(Cliente cliente);
 
+    List<Pagamento> findByCliente_IdOrderByIdPagamentoDesc(int idCliente);
+
+
+
 }

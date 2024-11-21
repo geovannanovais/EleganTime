@@ -1,0 +1,42 @@
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .container {
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn-details {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn-details:hover {
+            text-decoration: underline;
+        }
+

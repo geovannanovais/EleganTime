@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Cliente - Elegantime</title>
+    <!-- Usando Thymeleaf para resolver o caminho do CSS -->
+    <link rel="stylesheet" th:href="@{/css/areaUsuario.css}">
+</head>
+
+<body>
+<header>
+    <div class="top-bar">
+        <div class="logo">
+            <a href="/index.html">
+                <img src="/img/Elegantime.jpg" alt="Logo Elegantime">
+            </a>
+        </div>
+        <div class="menu-icons">
+            <!-- Link dinâmico para a página de perfil -->
+        </div>
+    </div>
+</header>
+
+<div class="user-area">
+    <!-- Exibindo o nome do cliente com Thymeleaf -->
+    <h1>Bem-vindo à sua área, <span th:text="${cliente.nome}">Nome do Cliente</span>!</h1>
+
+    <div class="user-info">
+        <!-- Exibindo as informações do cliente -->
+        <p><strong>Nome:</strong> <span th:text="${cliente.nome}">Nome do Cliente</span></p>
+        <p><strong>Email:</strong> <span th:text="${cliente.email}">Email do Cliente</span></p>
+        <p><strong>CPF:</strong> <span th:text="${cliente.cpf}">CPF do Cliente</span></p>
+        <p><strong>Gênero:</strong> <span th:text="${cliente.genero}">Gênero do Cliente</span></p>
+    </div>
+
+
+    <div class="button-container">
+        <!-- Botões dinâmicos para editar o perfil e sair -->
+        <!-- Botão para editar o perfil -->
+        <a th:href="@{/editarCliente/{id}(id=${cliente.id})}" class="button">Editar Perfil</a>
+        <a th:href="@{/pedidos}">Pedidos</a>
+        <a th:href="@{/sair}" class="button">Sair</a>
+    </div>
+</div>
+
+<footer>
+    <p>Entrega em até 48h - Frete Grátis!</p>
+    <p>Política de Privacidade</p>
+</footer>
+
+</body>
+
+</html>

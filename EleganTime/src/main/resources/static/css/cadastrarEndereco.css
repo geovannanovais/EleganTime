@@ -1,0 +1,164 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+input, select {
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+input[type="radio"] {
+    width: auto;
+}
+
+button {
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button.cancel {
+    background-color: #f44336;
+}
+
+button.cancel:hover {
+    background-color: #e53935;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Estilos específicos para os endereços */
+#enderecos-container {
+    margin-bottom: 20px;
+}
+
+.endereco {
+    padding: 15px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
+
+.endereco h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.endereco label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.endereco input[type="text"],
+.endereco input[type="date"],
+.endereco select {
+    width: calc(100% - 22px);
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.endereco input[type="radio"] {
+    margin-right: 5px;
+}
+
+#addEnderecoButton {
+    padding: 12px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#addEnderecoButton:hover {
+    background-color: #1976D2;
+}
+
+.top-bar {
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar .logo img {
+    height: 50px;
+}
+
+.menu-icons a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .container {
+        margin: 15px;
+    }
+
+    button, #addEnderecoButton {
+        width: 100%;
+    }
+}

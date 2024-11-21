@@ -26,8 +26,8 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                // Permite acesso a rotas específicas sem autenticação
-                                .requestMatchers("/login", "/signup", "/public/**", "/css/**", "/js/**", "/img/**", "/img-site/**", "/home", "/cadastrarCliente", "/carrinho/**", "/produto/**", "/adicionar/**")  // Adicionando '/adicionar/**' para permitir adicionar ao carrinho
+
+                                .requestMatchers("/login","produto/**", "/signup", "/public/**", "/css/**", "/js/**", "/img/**", "/img-site/**", "/home", "/cadastrarCliente", "/carrinho/**","/produto/**", "/adicionar/**")  // Adicionando '/adicionar/**' para permitir adicionar ao carrinho
                                 .permitAll()  // Permite acesso para todos sem autenticação
 
                                 // Restringe o acesso para rotas administrativas
@@ -61,7 +61,7 @@ public class SecurityConfig {
                                     } else if (isEstoquista) {
                                         response.sendRedirect("/areaEstoquista");
                                     } else {
-                                        response.sendRedirect("/home");
+                                        response.sendRedirect("/areaCliente");
                                     }
                                 })
                 )

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Pedido</title>
+    <link rel="stylesheet" th:href="@{/css/resumoPedido.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Detalhes do Pedido</h1>
+
+<!-- Mostrar erros, caso haja -->
+<div th:if="${erro}">
+    <p style="color: red;">Erro: <span th:text="${erro}"></span></p>
+</div>
+
+<div th:if="${sucesso}">
+    <script type="text/javascript">
+        // Mostrar o alerta com as informações do pedido
+        alert('Pedido Nº: ' + [[${numeroPedido}]] + '\n' +
+              'Total: R$ ' + [[${totalGeral}]] + '\n' +
+              'Frete: R$ ' + [[${frete}]] + '\n' +
+              'Total com Frete: R$ ' + ([[${totalGeral}]] + [[${frete}]]));
+    </script>
+</div>
+
+<!-- Lista de Produtos -->
+<div class="section">
+    <h2>Produtos</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Valor Unitário</th>
+            <th>Quantidade</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${itens}">
+            <td th:text="${item.produto.nome}"></td>
+            <td th:text="${item.produto.preco}"></td>
+            <td th:text="${item.quantidade}"></td>
+            <td th:text="${item.produto.preco * item.quantidade}"></td> <!-- Valor total do item -->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Forma de Pagamento -->
+<div class="section">
+    <h2>Forma de Pagamento</h2>
+    <p th:if="${formaPagamento != null}" th:text="${formaPagamento.tipoPagamento}"></p>
+    <p th:if="${formaPagamento == null}">Nenhuma forma de pagamento registrada.</p>
+</div>
+
+<!-- Mostrar Endereço de Entrega -->
+<div class="section">
+    <h2>Endereço de Entrega</h2>
+    <p th:text="${enderecoEntrega}"></p>
+</div>
+
+<!-- Mostrar o resumo do pedido -->
+<div>
+    <p>Total dos Produtos: R$ <span th:text="${totalGeral}"></span></p>
+    <p>Frete: R$ <span th:text="${frete}"></span></p>
+    <p><strong>Total com Frete: R$ <span th:text="${totalGeral + frete}"></span></strong></p>
+</div>
+
+<!-- Verifica se o pedido tem 'id' e se é cliente para mostrar a seção de finalização -->
+<div th:if="${cliente != null}">
+    <!-- Cliente: Se o pedido não foi finalizado, mostra o botão "Finalizar Pedido" -->
+    <div class="section" th:if="${pedido == null}">
+        <form action="#" th:action="@{/finalizarPedido}" method="post">
+            <input type="hidden" name="idPagamento" th:value="${formaPagamento.idPagamento}" />
+            <input type="hidden" name="total" th:value="${totalGeral}" />
+            <input type="hidden" name="frete" th:value="${frete}" />
+            <input type="hidden" name="enderecoString" th:value="${enderecoString}" />
+            <button type="submit">Finalizar Pedido</button>
+        </form>
+    </div>
+</div>
+
+<div class="section" th:if="${pedido == null}">
+     <a href="/formaPagamento"><button>Voltar para pagamento</button></a>
+</div>
+<!-- Botão Voltar para Pedidos -->
+<div class="section" th:if="${pedido != null}">
+    <a href="/pedidos"><button>Voltar para meus pedidos</button></a>
+</div>
+
+
+<script type="text/javascript">
+    /* Verifica se a variável 'sucesso' existe */
+    var sucesso = /*[[${sucesso}]]*/ null;
+    if (sucesso) {
+        var numeroPedido = /*[[${numeroPedido}]]*/ '00000';
+        var totalGeral = /*[[${totalGeral}]]*/ 0;
+        var frete = /*[[${frete}]]*/ 0;
+
+        alert('Pedido Nº: ' + numeroPedido + '\n' +
+              'Total: R$ ' + totalGeral.toFixed(2) + '\n' +
+              'Frete: R$ ' + frete.toFixed(2) + '\n' +
+              'Total com Frete: R$ ' + (totalGeral + frete).toFixed(2));
+    }
+</script>
+
+</body>
+</html>

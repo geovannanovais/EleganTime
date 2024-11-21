@@ -47,7 +47,7 @@
 </div>
 
 <!-- Formulário para finalizar compra -->
-<form th:action="@{/finalizar}" method="get" id="finalizarCompraForm">
+<form th:action="@{/finalizarCarrinho}" method="post" id="finalizarCompraForm" onsubmit="return validarFrete()">
     <input type="hidden" name="frete" id="inputFrete" />
     <input type="hidden" name="total" id="inputTotal" />
     <button type="submit">Finalizar Compra</button>
@@ -61,39 +61,55 @@
 </div>
 
 <script>
+    let valorItens = parseFloat(document.getElementById('total').textContent);  // Obtém o valor total dos itens
+    let valorFreteAnterior = 0;  // Inicia o valor do frete anterior como 0
+
     // Função para atualizar o valor do frete e o total
-function atualizarFrete(freteEscolhido) {
-    let valorItens = parseFloat(document.getElementById('total').textContent); // Obtém o valor dos itens
+    function atualizarFrete(freteEscolhido) {
+        // Definir o valor do frete conforme a escolha
+        let valorFrete = 0;
+        if (freteEscolhido === 'Sedex') {
+            valorFrete = 10.00;
+        } else if (freteEscolhido === 'PAC') {
+            valorFrete = 5.00;
+        } else if (freteEscolhido === 'Motoboy') {
+            valorFrete = 15.00;
+        }
 
-    // Definir o valor do frete conforme a escolha
-    let valorFrete = 0;
-    if (freteEscolhido === 'Sedex') {
-        valorFrete = 10.00;
-    } else if (freteEscolhido === 'PAC') {
-        valorFrete = 5.00;
-    } else if (freteEscolhido === 'Motoboy') {
-        valorFrete = 15.00;
+        // O total com frete será recalculado: soma o valor do frete atual com o valor dos itens.
+        let totalComFrete = valorItens + valorFrete;
+
+        // Atualiza o valor do total na página
+        document.getElementById('total').textContent = totalComFrete.toFixed(2);
+
+        // Atualiza os campos ocultos para enviar os dados na finalização da compra
+        document.getElementById('inputFrete').value = valorFrete;  // Passa o valor do frete selecionado
+        document.getElementById('inputTotal').value = totalComFrete.toFixed(2);  // Atualiza o total final com o frete
+
+        // Atualiza o valor do frete anterior para o próximo cálculo
+        valorFreteAnterior = valorFrete;
     }
 
-    // Atualiza o total com o valor do frete (não soma, apenas substitui o valor de frete)
-    const totalComFrete = valorItens + valorFrete;
+    // Função para validar se o frete foi escolhido antes de finalizar a compra
+    function validarFrete() {
+        // Verifica se algum dos radios de frete foi selecionado
+        let freteSelecionado = document.querySelector('input[name="frete"]:checked');
 
-    // Atualiza o valor do total na página
-    document.getElementById('total').textContent = totalComFrete.toFixed(2);
-
-    // Atualiza os campos ocultos para enviar os dados na finalização da compra
-    document.getElementById('inputFrete').value = valorFrete;  // Passa o valor do frete selecionado
-    document.getElementById('inputTotal').value = totalComFrete.toFixed(2);  // Atualiza o total final com o frete
-}
-
-// Chama a função de atualizar automaticamente na primeira carga da página
-window.onload = function() {
-    let freteSelecionado = document.querySelector('input[name="frete"]:checked');
-    if (freteSelecionado) {
-        atualizarFrete(freteSelecionado.value); // Atualiza com o valor do frete selecionado
+        if (!freteSelecionado) {
+            // Se nenhum frete foi selecionado, exibe um alerta
+            alert("Por favor, escolha um tipo de frete antes de finalizar a compra.");
+            return false; // Impede o envio do formulário
+        }
+        return true; // Permite o envio do formulário
     }
-};
 
+    // Chama a função de atualizar automaticamente na primeira carga da página
+    window.onload = function() {
+        let freteSelecionado = document.querySelector('input[name="frete"]:checked');
+        if (freteSelecionado) {
+            atualizarFrete(freteSelecionado.value); // Atualiza com o valor do frete selecionado
+        }
+    };
 </script>
 
 </body>
