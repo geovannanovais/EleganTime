@@ -72,11 +72,12 @@ h2 {
 .new-user {
     margin: 20px;
     text-align: center;
+
 }
 
 .new-user a {
     text-decoration: none;
-    color: inherit;
+    color: white;
 }
 
 /* Botão Adicionar Usuário */
@@ -88,11 +89,11 @@ h2 {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .add-user:hover {
     background-color: #ff9100;
+    color: white;
     transform: translateY(-2px);
 }
 

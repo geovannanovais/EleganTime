@@ -43,19 +43,20 @@ header {
     color: #ffaa00;
 }
 
-/* Botão Voltar */
 .back {
     margin: 20px;
     font-size: 16px;
     color: #ffaa00;
     text-decoration: none;
     font-weight: bold;
-    transition: color 0.3s ease;
+    position: relative;
+    top: 10px;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 .back:hover {
-    color: #ff9100;
     text-decoration: underline;
+    color: #ff9100;
 }
 
 /* Título */
@@ -68,18 +69,16 @@ h2 {
 
 /* Container Principal para Novo Produto e Pesquisa */
 .action-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px 0;
+    margin: 20px;
+    text-align: center;
 }
 
-.add-user, .search-container {
-    display: flex;
-    align-items: center;
+.action-container a{
+    text-decoration: none;
+    color: white;
 }
 
-.add-user {
+.add-produto {
     background-color: #ffaa00;
     border: none;
     color: white;
@@ -93,45 +92,50 @@ h2 {
     height: 38px;
 }
 
-.add-user:hover {
+.add-produto:hover {
     background-color: #ff9100;
     transform: translateY(-2px);
 }
 
+/* Alinhamento da barra de pesquisa e botão */
 .search-container {
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px; /* Espaçamento entre o input e o botão */
 }
 
+/* Estilo do input de pesquisa */
 .search {
     padding: 10px;
-    width: 100%;
-    max-width: 250px;
-    border-radius: 5px;
+    width: 300px; /* Define largura fixa como na segunda imagem */
     border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
     outline: none;
-    transition: border-color 0.3s ease;
 }
 
 .search:focus {
     border-color: #ffaa00;
 }
 
+/* Estilo do botão de pesquisa */
 .search-button {
     background-color: #ffaa00;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
     color: white;
     border-radius: 5px;
-    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 250px;
-    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .search-button:hover {
     background-color: #ff9100;
+    transform: translateY(-2px);
 }
 
 /* Container da Tabela */

@@ -17,17 +17,14 @@
                 <img th:src="@{/img/Elegantime.jpg}" alt="Elegantime Logo">
             </a>
         </div>
-        <div class="menu-icons">
-            <a>Perfil</a>
-        </div>
     </div>
 </header>
 
-<a th:href="@{/login}" class="back">← Voltar</a>
+<a th:href="@{/areaAdmin}" class="back">← Voltar</a>
 <h2>Produtos</h2>
 
 <div class="action-container">
-    <a th:href="@{/cadastrarProduto}" class="add-user">+ Novo Produto</a>
+    <a th:href="@{/cadastrarProduto}" class="add-produto">+ Novo Produto</a>
     <div class="search-container">
         <form th:action="@{/listaProduto}" method="get">
             <input type="text" name="search" placeholder="Pesquisar" class="search" th:value="${search}">

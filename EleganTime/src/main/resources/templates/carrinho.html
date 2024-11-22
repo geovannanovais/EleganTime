@@ -8,55 +8,62 @@
     <title>Carrinho</title>
 </head>
 <body>
-<h1>Seu Carrinho</h1>
+<h1>Meu Carrinho</h1>
 
-<!-- Exibição dos itens do carrinho -->
-<div th:each="item : ${carrinho.itens}">
-    <h3 th:text="${item.produto.nome}">Nome do Produto</h3>
-    <p>Quantidade: <span th:text="${item.quantidade}"></span></p>
-    <p>Preço: R$ <span th:text="${item.produto.preco}"></span></p>
+<div class="content">
+    <!-- Exibição dos itens do carrinho -->
+    <div th:each="item : ${carrinho.itens}">
+        <h3 th:text="${item.produto.nome}">Nome do Produto</h3>
+        <p>Quantidade: <span th:text="${item.quantidade}"></span></p>
+        <p>Preço: R$ <span th:text="${item.produto.preco}"></span></p>
 
-    <!-- Formulário para remover item -->
-    <form th:action="@{/carrinho/remover/{produtoId}(produtoId=${item.produto.id_Produto})}" method="get">
-        <button type="submit">Remover 1</button>
-    </form>
+        <!-- Formulário para remover item -->
+        <form th:action="@{/carrinho/remover/{produtoId}(produtoId=${item.produto.id_Produto})}" method="get">
+            <button type="submit">Remover</button>
+        </form>
+    </div>
+
+
+
+    <!-- Seção de frete -->
+    <div class="frete">
+
+        <!-- Exibição do total com frete -->
+        <h2>Total: R$ <span id="total" th:text="${total}">0,00</span></h2>
+
+        <h3>Escolha o Frete:</h3>
+
+        <!-- Opções de frete com valores fixos -->
+        <div>
+            <input type="radio" id="freteSedex" name="frete" value="Sedex" th:checked="${frete == 'Sedex'}"
+                   onclick="atualizarFrete('Sedex')"/>
+            <label for="freteSedex">Sedex (R$ 10,00)</label>
+        </div>
+
+        <div>
+            <input type="radio" id="fretePAC" name="frete" value="PAC" th:checked="${frete == 'PAC'}"
+                   onclick="atualizarFrete('PAC')"/>
+            <label for="fretePAC">PAC (R$ 5,00)</label>
+        </div>
+
+        <div>
+            <input type="radio" id="freteMotoboy" name="frete" value="Motoboy" th:checked="${frete == 'Motoboy'}"
+                   onclick="atualizarFrete('Motoboy')"/>
+            <label for="freteMotoboy">Motoboy (R$ 15,00)</label>
+        </div>
+    </div>
 </div>
 
-<!-- Exibição do total com frete -->
-<h2>Total: R$ <span id="total" th:text="${total}">0,00</span></h2>
-
-<!-- Seção de frete -->
-<div class="frete">
-    <h3>Escolha o Frete:</h3>
-
-    <!-- Opções de frete com valores fixos -->
-    <div>
-        <input type="radio" id="freteSedex" name="frete" value="Sedex" th:checked="${frete == 'Sedex'}" onclick="atualizarFrete('Sedex')" />
-        <label for="freteSedex">Sedex (R$ 10,00)</label>
-    </div>
-
-    <div>
-        <input type="radio" id="fretePAC" name="frete" value="PAC" th:checked="${frete == 'PAC'}" onclick="atualizarFrete('PAC')" />
-        <label for="fretePAC">PAC (R$ 5,00)</label>
-    </div>
-
-    <div>
-        <input type="radio" id="freteMotoboy" name="frete" value="Motoboy" th:checked="${frete == 'Motoboy'}" onclick="atualizarFrete('Motoboy')" />
-        <label for="freteMotoboy">Motoboy (R$ 15,00)</label>
-    </div>
-</div>
-
-<!-- Formulário para finalizar compra -->
-<form th:action="@{/finalizarCarrinho}" method="post" id="finalizarCompraForm" onsubmit="return validarFrete()">
-    <input type="hidden" name="frete" id="inputFrete" />
-    <input type="hidden" name="total" id="inputTotal" />
-    <button type="submit">Finalizar Compra</button>
-</form>
-
-<!-- Formulário para voltar para a home -->
+<!-- Botões -->
 <div class="botao">
     <form th:action="@{/home}" method="get">
         <button type="submit">Voltar para Home</button>
+    </form>
+
+    <form th:action="@{/finalizarCarrinho}" method="post" id="finalizarCompraForm" onsubmit="return validarFrete()">
+        <input type="hidden" name="frete" id="inputFrete"/>
+        <input type="hidden" name="total" id="inputTotal"/>
+        <button type="submit">Finalizar Compra</button>
     </form>
 </div>
 
