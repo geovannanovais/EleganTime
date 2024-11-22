@@ -1,85 +1,183 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detalhes do Produto</title>
-  <link rel="stylesheet" th:href="@{/css/detalhesProduto.css}">
-  <!-- Incluindo o Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJX3KwF5cWzHcYq0a0Jl0u6ROE4lY7zDP1eQLgBivj1J8Fq+Y1hdqB/NX/Zl" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto</title>
+    <link rel="stylesheet" th:href="@{/css/detalhesProduto.css}">
 </head>
 
 <body>
 <header>
-  <div class="top-bar">
-    <div class="logo">
-      <a th:href="@{/home}">
-        <img th:src="@{/img/Elegantime.jpg}" alt="Logo Elegantime">
-      </a>
+    <div class="top-bar">
+        <div class="logo">
+            <a th:href="@{/home}">
+                <img th:src="@{/img/Elegantime.jpg}" alt="Logo Elegantime">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Digite o que você procura">
+            <button>Buscar</button>
+        </div>
+        <div class="menu-icons">
+            <a th:href="@{/login}">Entrar ou Cadastrar</a>
+            <form th:action="@{/carrinho}" method="get" class="menu-icons">
+                <input type="hidden" name="clienteId" th:value="${clienteId}">
+                <button type="submit" class="menu-icons">Ir para Carrinho</button>
+            </form>
+        </div>
     </div>
-    <div class="search-bar">
-      <input type="text" placeholder="Digite o que você procura">
-      <button>Buscar</button>
-    </div>
-    <div class="menu-icons">
-      <a th:href="@{/login}">Entrar ou Cadastrar</a>
-      <form th:action="@{/carrinho}" method="get" class="menu-icons">
-        <input type="hidden" name="clienteId" th:value="${clienteId}">
-        <button type="submit" class="menu-icons">Ir para Carrinho</button>
-      </form>
-    </div>
-  </div>
 </header>
 
-<div class="container mt-5">
-  <!-- Carrossel de Imagens do Produto -->
-  <div id="produtoCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <!-- Exibindo as imagens do produto -->
-      <div th:each="imagem, iterStat : ${produto.imagens}"
-           th:classappend="${iterStat.index == 0 ? 'carousel-item active' : 'carousel-item'}">
-        <img th:src="@{/images/{caminho}(caminho=${imagem.caminho})}" class="d-block w-100" th:alt="${imagem.nome}">
-      </div>
+<div class="container">
+    <div class="carousel-container">
+        <div class="carousel-slide" id="carousel-slide">
+            <!-- Exibindo as imagens do produto -->
+            <div th:each="imagem, iterStat : ${produto.imagens}"
+                 th:classappend="${iterStat.index == 0 ? 'carousel-item active' : 'carousel-item'}">
+                <img th:src="@{/images/{caminho}(caminho=${imagem.caminho})}" class="d-block w-100"
+                     th:alt="${imagem.nome}">
+            </div>
+        </div>
+
+        <!-- Controles para navegação -->
+        <div class="carousel-nav">
+            <button onclick="prevSlide()">&#10094;</button>
+            <button onclick="nextSlide()">&#10095;</button>
+        </div>
+        <div class="carousel-dots" id="carousel-dots">
+            <span class="carousel-dot" onclick="currentSlide(0)"></span>
+            <span class="carousel-dot" onclick="currentSlide(1)"></span>
+        </div>
     </div>
 
-    <!-- Controles para navegação -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#produtoCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#produtoCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
+
+    <!-- Dados do Produto -->
+    <div class="right-side">
+        <div class="content">
+            <h1 th:text="${produto.nome}">Nome do Produto</h1>
+            <p th:text="${produto.descricao}">Descrição do Produto</p>
+            <div class="prices">
+                <p><strong>Preço:</strong> R$ <span th:text="${produto.preco}">0,00</span></p>
+            </div>
+            <!-- Adicionar ao Carrinho -->
+            <!-- Mostrar o botão de compra apenas se o usuário não for ADMINISTRADOR -->
+
+            <!-- Botão de avaliação -->
+            <div class="rating">
+                <h4>Avaliação</h4>
+                <div class="stars">
+                    <span class="star" data-value="1">&#9733;</span>
+                    <span class="star" data-value="2">&#9733;</span>
+                    <span class="star" data-value="3">&#9733;</span>
+                    <span class="star" data-value="4">&#9733;</span>
+                    <span class="star" data-value="5">&#9733;</span>
+                </div>
+                <input type="hidden" id="rating-value" name="rating" value="0">
+            </div>
+
+            <div th:if="${not isAdmin}" class="options">
+
+                <div class="amount">
+                    <button id="decrease" class="minus">-</button>
+                    <span id="quantity">1</span>
+                    <button id="increase" class="plus">+</button>
+                </div>
+
+                <form th:action="@{/adicionar/{produtoId}(produtoId=${produto.id_Produto})}" method="post">
+                    <input type="hidden" name="clienteId" th:value="${clienteId}"/>
+                    <!-- CSRF Token -->
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                    <button type="submit" class="btn-add">Adicionar ao Carrinho</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    let currentIndex = 0;
 
-<!-- Dados do Produto -->
-<div class="container mt-4">
-  <h1 th:text="${produto.nome}">Nome do Produto</h1>
-  <p th:text="${produto.descricao}">Descrição do Produto</p>
-  <p><strong>Preço:</strong> R$ <span th:text="${produto.preco}">0,00</span></p>
+    function showSlide(index) {
+        const slide = document.getElementById("carousel-slide");
+        const dots = document.getElementsByClassName("carousel-dot");
 
-  <!-- Adicionar ao Carrinho -->
-  <!-- Mostrar o botão de compra apenas se o usuário não for ADMINISTRADOR -->
-  <div th:if="${not isAdmin}">
-    <form th:action="@{/adicionar/{produtoId}(produtoId=${produto.id_Produto})}" method="post">
-      <input type="number" name="quantidade" value="1" min="1" />
-      <input type="hidden" name="clienteId" th:value="${clienteId}" />
-      <!-- CSRF Token -->
-      <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-      <button type="submit" class="btn btn-primary">Adicionar ao Carrinho</button>
-    </form>
-  </div>
+        if (index >= slide.children.length) currentIndex = 0;
+        else if (index < 0) currentIndex = slide.children.length - 1;
+        else currentIndex = index;
 
-  <!-- Botão para voltar à lista de produtos -->
-  <a href="/home" class="btn btn-secondary mt-3">Voltar para a home</a>
-</div>
+        slide.style.transform = `translateX(-${currentIndex * 100}%)`;
 
-<!-- Scripts do Bootstrap (necessários para o funcionamento do carrossel) -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gyb3ccYIcLFIq0q0s2G5rP0xJ5pG0hSf7l0BfK8x7QXs83zXw9" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0JtLQyz5D6sTM4Zmgg3YhZf6tQkC8eOq6RY5Y7GGJCUqFOS1" crossorigin="anonymous"></script>
+        for (let dot of dots) {
+            dot.classList.remove("active");
+        }
+        dots[currentIndex].classList.add("active");
+    }
+
+    function nextSlide() {
+        showSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+        showSlide(currentIndex - 1);
+    }
+
+    function currentSlide(index) {
+        showSlide(index);
+        resetAutoSlide();
+    }
+
+    function autoSlide() {
+        interval = setInterval(nextSlide, 5000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(interval);
+        autoSlide();
+    }
+
+
+    showSlide(currentIndex);
+    autoSlide();
+
+    const decreaseButton = document.getElementById('decrease');
+    const increaseButton = document.getElementById('increase');
+    const quantityDisplay = document.getElementById('quantity');
+
+    let quantity = 1;
+
+    increaseButton.addEventListener('click', () => {
+        quantity++;
+        quantityDisplay.textContent = quantity;
+    });
+
+    decreaseButton.addEventListener('click', () => {
+        if (quantity > 1) {
+            quantity--;
+            quantityDisplay.textContent = quantity;
+        }
+    });
+
+    document.querySelectorAll('.star').forEach((star, index) => {
+    star.addEventListener('click', () => {
+        const stars = document.querySelectorAll('.star');
+        const ratingValue = document.getElementById('rating-value');
+
+        // Remove a classe ativa de todas as estrelas
+        stars.forEach((s) => s.classList.remove('active'));
+
+        // Adiciona a classe ativa às estrelas até o índice atual
+        for (let i = 0; i <= index; i++) {
+            stars[i].classList.add('active');
+        }
+
+        // Atualiza o valor do campo oculto
+        ratingValue.value = index + 1;
+    });
+});
+
+
+</script>
 
 </body>
 
